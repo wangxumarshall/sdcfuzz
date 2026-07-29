@@ -28,6 +28,7 @@
 #include <cerrno>
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
 
 #include "absl/base/macros.h"
 #include "./snap/snap.h"
@@ -161,15 +162,15 @@ void EnterSeccompFilterMode(const SeccompOptions& options) {
   };
 
   constexpr size_t kMaxSockFilters =
-      ABSL_ARRAYSIZE(kSockFiltersPrefix) + ABSL_ARRAYSIZE(kAllowWrite) +
-      ABSL_ARRAYSIZE(kAllowExitGroup) + ABSL_ARRAYSIZE(kAllowKill) +
-      ABSL_ARRAYSIZE(kAllowMmap) + ABSL_ARRAYSIZE(kAllowRtSigreturn) +
-      ABSL_ARRAYSIZE(kSockFiltersSuffix);
+      std::size(kSockFiltersPrefix) + std::size(kAllowWrite) +
+      std::size(kAllowExitGroup) + std::size(kAllowKill) +
+      std::size(kAllowMmap) + std::size(kAllowRtSigreturn) +
+      std::size(kSockFiltersSuffix);
 
   sock_filter filters[kMaxSockFilters];
   uint16_t num_filters = 0;
   auto append_filters = [&filters, &num_filters](auto&& f) {
-    const size_t n = ABSL_ARRAYSIZE(f);
+    const size_t n = std::size(f);
     CHECK_LE(num_filters + n, kMaxSockFilters);
     for (size_t i = 0; i < n; ++i, ++num_filters) {
       filters[num_filters] = f[i];
