@@ -144,7 +144,7 @@ class MinimizerTest(parameterized.TestCase):
           str, str
       ] = types.MappingProxyType({}),
   ) -> None:
-    actual_flags = self.common_flags | flag_overrides
+    actual_flags = self.common_flags | flag_overrides  # pyrefly: ignore[unsupported-operation]
     with self.assertRaisesRegex(flags.IllegalFlagValueError, expected_error):
       # Only flagsaver can trigger required flag validators.
       with flagsaver.flagsaver(**actual_flags):

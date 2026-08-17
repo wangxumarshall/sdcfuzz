@@ -629,7 +629,7 @@ class RunIterativePassTest(parameterized.TestCase):
     )
     config = schedule_pb2.PassConfig()
     config.CopyFrom(self.default_config)
-    override_config = schedule_pb2.PassConfig(**config_overrides)
+    override_config = schedule_pb2.PassConfig(**config_overrides)  # pyrefly: ignore[bad-argument-type]
     config.MergeFrom(override_config)
 
     mock_find = mock.Mock(side_effect=find_side_effect, spec_set=True)
