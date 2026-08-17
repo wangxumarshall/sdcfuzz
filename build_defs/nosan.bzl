@@ -19,7 +19,13 @@
 # sanitized tests.
 # See https://docs.bazel.build/versions/3.2.0/skylark/config.html#user-defined-transitions
 def _nosan_transition_impl(settings, attr):
-    features_to_strip = ["asan", "tsan", "msan"]
+    features_to_strip = [
+        "asan",
+        "hwasan",
+        "msan",
+        "tsan",
+        "ubsan",
+    ]
     filtered_features = [x for x in settings["//command_line_option:features"] if x not in features_to_strip]
     return {
         "//command_line_option:custom_malloc": None,  # minimize deps
