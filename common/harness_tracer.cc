@@ -23,7 +23,6 @@
 #include <cstddef>
 #include <memory>
 #include <optional>
-#include <thread>
 #include <utility>
 
 #include "absl/synchronization/mutex.h"
@@ -38,6 +37,19 @@ namespace silifuzz {
 
 namespace {
 
+// TRAP_UNK (5) is defined in Linux <asm-generic/siginfo.h> as "undiagnosed
+// trap" (which can occur upon entering a signal handler under ptrace), but is
+// omitted from standard glibc <signal.h>.
+inline constexpr int kTrapUnk = 5;
+
+// Returns true if `info` represents a hardware single-step trap (TRAP_TRACE) or
+// an internal ptrace stop artifact (kTrapUnk / TRAP_UNK) rather than an
+// intentional application-generated signal (such as raise(), int3, or icebp).
+inline bool IsSingleStepOrPtraceTrap(const siginfo_t& info) {
+  return info.si_signo == SIGTRAP &&
+         (info.si_code == TRAP_TRACE || info.si_code == kTrapUnk);
+}
+
 inline bool LooksLikeBogusTrap(const siginfo_t& info) {
 #if defined(__aarch64__)
   // When single stepping on aarch64, we've seen ptrace sometimes catch strange
@@ -51,6 +63,13 @@ inline bool LooksLikeBogusTrap(const siginfo_t& info) {
   // seen the problem don't enable the workaround.
   return false;
 #endif
+}
+
+// Returns true if `info` represents a residual single-step or ptrace stop
+// artifact that should be suppressed rather than injected into the tracee
+// while the tracer is inactive.
+inline bool ShouldSuppressInactiveTrap(const siginfo_t& info) {
+  return IsSingleStepOrPtraceTrap(info) || LooksLikeBogusTrap(info);
 }
 
 }  // namespace
@@ -149,7 +168,10 @@ bool HarnessTracer::Trace(int status, bool is_active) const {
   if (!is_active) {
     siginfo_t info;
     PTraceOrDie(PTRACE_GETSIGINFO, pid_, 0, &info);
-    ContinueTraceeWithSignal(info.si_signo);
+    VLOG_INFO(2, "Inactive stop: signo = ", info.si_signo,
+              ", si_code = ", HexStr(info.si_code));
+    ContinueTraceeWithSignal(ShouldSuppressInactiveTrap(info) ? 0
+                                                              : info.si_signo);
     return false;
   }
 
@@ -177,14 +199,12 @@ bool HarnessTracer::Trace(int status, bool is_active) const {
           // endpoint or an embedded trap. Inject it and continue tracing.
           return kSignalStop;
         } else if (info.si_code == TRAP_TRACE || info.si_code == TRAP_BRKPT ||
-                   info.si_code == 5) {
+                   info.si_code == kTrapUnk) {
           // PTRACE_SINGLESTEP does not document si_code values but
-          // experimentally this appears to hold
-          // syscall instruction in RestoreUContext triggers TRAP_BRKPT branch
-          // in SINGLESTEP mode.
-          // 5 is TRAP_UNK, an "undiagnosed trap" according to
-          // include/uapi/asm-generic/siginfo.h. In practice this seems to
-          // happen on entering a sighandler in the tracee.
+          // experimentally this appears to hold.
+          // Syscall instruction in RestoreUContext triggers TRAP_BRKPT branch
+          // in SINGLESTEP mode. kTrapUnk (TRAP_UNK) in practice seems to happen
+          // on entering a sighandler in the tracee.
           return kSingleStepStop;
         } else {
           LOG_FATAL("unexpected siginfo = ", info.si_signo,
