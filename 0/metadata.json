@@ -1,0 +1,114 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0ZHTYXFH543ENYW4ES9HBGB",
+  "session_id": "93c2ff1c-d114-438e-a8a4-4cd24cae2cdb",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T17:28:16.21557739Z",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "seeds/c3_l3_128b.S",
+    "seeds/i2_branch_dense.S",
+    "seeds/l1_disambig.S",
+    "seeds/l2_dualagu_split.S",
+    "seeds/m3_cross_page.S",
+    "seeds/o2_mispredict_rollback.S",
+    "seeds/v1_fsu_vdroop.S",
+    "seeds/v3_prf_mispredict.S",
+    "seeds/v6_crypto_toggle.S"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "6339f2afa2a4",
+  "checkpoint_transcript_start": 1863,
+  "transcript_lines_at_start": 1863,
+  "compact_transcript_start": 380,
+  "token_usage": {
+    "input_tokens": 593147,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7008512,
+    "output_tokens": 9692,
+    "api_call_count": 25
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-goal-2026-08-26T08:40:22.59338042Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "3ffec6f62367",
+      "timestamp": "2026-08-26T08:40:22.59338042Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-loop-2026-08-26T10:25:44.69959063Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "loop"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "c5f03797ad74",
+      "timestamp": "2026-08-26T10:25:44.69959063Z",
+      "native": {
+        "command": "/loop"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/loop",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 7
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T17:28:15.77190343Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2580,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".claude/scheduled_tasks.lock": 1,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "http.log": 3,
+        "patch.py": 23,
+        "seeds/v1_fsu_vdroop.S": 1,
+        "test.log": 859
+      }
+    }
+  ]
+}
