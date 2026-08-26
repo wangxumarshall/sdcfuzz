@@ -1,0 +1,5 @@
+0101单板用整个路径下的gem5：/home/sdc/wangxu/gem5-fi
+
+---
+
+继续，但0101单板用整个路径下的gem5：/home/sdc/wangxu/gem5-fi
