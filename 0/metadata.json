@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0YGSVE2HJQ566PRK0NGY7ZH",
+  "session_id": "93c2ff1c-d114-438e-a8a4-4cd24cae2cdb",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T07:50:56.15288801Z",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "scripts/collect_results.py",
+    "scripts/deploy_board.sh",
+    "scripts/distributed_scan.py",
+    "scripts/ssh_lib.py"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "094f8fd223a6",
+  "checkpoint_transcript_start": 1002,
+  "transcript_lines_at_start": 1002,
+  "compact_transcript_start": 202,
+  "token_usage": {
+    "input_tokens": 22268,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6756224,
+    "output_tokens": 13539,
+    "api_call_count": 34
+  },
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T07:50:55.86124549Z",
+    "agent_lines": 407,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 407,
+    "total_lines_changed": 407,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
