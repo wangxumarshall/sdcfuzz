@@ -244,6 +244,10 @@ cc_library_plus_nolibc(
         "crc32c_zero_extension_tables.cc",
     ],
     hdrs = ["crc32c.h"],
+    copts = select({
+        "@silifuzz//build_defs/platform:aarch64": ["-march=armv8-a+crc"],
+        "//conditions:default": [],
+    }),
     deps = [
         ":cpu_features",
         ":crc32c_internal",
