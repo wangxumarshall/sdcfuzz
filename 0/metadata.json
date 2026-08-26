@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0Y98A44BARZJEXJ2Q13F35M",
+  "session_id": "1ad822e3-891e-4d39-acb2-b6db501c35ab",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T05:39:00.04959683Z",
+  "branch": "docs/sdc-concept-weakness-factors",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/plan/kunpeng920_sdc_design_concept.md"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "051faea53051",
+  "checkpoint_transcript_start": 112,
+  "transcript_lines_at_start": 112,
+  "compact_transcript_start": 20,
+  "token_usage": {
+    "input_tokens": 772,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 52736,
+    "output_tokens": 915,
+    "api_call_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T05:38:59.99382324Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}
