@@ -31,14 +31,14 @@ def run_one(i, first_clock, outdir):
     simout = ""
     p = os.path.join(outdir, "simout.txt")
     if os.path.exists(p):
-        with open(p) as f: simout = f.read()
+        with open(p, errors='replace') as f: simout = f.read()
     wl = ""
     for line in simout.splitlines():
         if "SUM=" in line: wl = line.strip(); break
     faults = ""
     fp = os.path.join(outdir, "fault_injections.log")
     if os.path.exists(fp):
-        with open(fp) as f: faults = f.read().strip()
+        with open(fp, errors='replace') as f: faults = f.read().strip()
     return {"gem5rc": proc.returncode, "workload": wl, "fault": faults.splitlines()[0] if faults else ""}
 
 def main():
