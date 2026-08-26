@@ -2,7 +2,7 @@
 
 > **目标**：在鲲鹏 920（TaiShan V110, ARMv8.2-A, Implementer 0x48, Part 0xd01）上系统性挖掘能高概率触发 SDC 的检测用例
 > **方法论**：Bottom-Up（微架构/电路脆弱性）⊗ Top-Down（业务负载模型）深度融合
-
+> 参考 `kunpeng.md`中的微架构开源信息 .
 ---
 
 ## 前言：为什么现有 STL 覆盖率上限低？
