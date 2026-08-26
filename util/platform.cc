@@ -162,6 +162,8 @@ PlatformId ArmPlatformIdFromMainId(uint32_t implementer, uint32_t part_number) {
     }
     LOG_ERROR("Unknown Ampere part number: ", HexStr(part_number));
     return PlatformId::kUndefined;
+  } else if (implementer == 0x48) {
+    return PlatformId::kArmNeoverseN1;
   }
 
   LOG_ERROR("Unknown implementer: ", HexStr(implementer));
