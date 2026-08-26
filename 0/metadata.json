@@ -1,0 +1,54 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0Y97SAMADBQ5CZVH4KMKT5C",
+  "session_id": "1ad822e3-891e-4d39-acb2-b6db501c35ab",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T05:38:42.86812593Z",
+  "branch": "docs/sdc-concept-weakness-factors",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/plan/kunpeng920_sdc_design_concept.md"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "051faea53051",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 45904,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 506752,
+    "output_tokens": 29745,
+    "api_call_count": 13
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T05:38:42.82023987Z",
+    "agent_lines": 133,
+    "agent_removed": 40,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 133,
+    "total_lines_changed": 173,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2670,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.json": 84,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "http.log": 3,
+        "output/corpus_metadata": 1,
+        "output/shard_list": 10,
+        "patch.py": 23,
+        "test.log": 859
+      }
+    }
+  ]
+}
