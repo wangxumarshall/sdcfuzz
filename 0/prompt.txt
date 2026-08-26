@@ -1,0 +1,13 @@
+docs/plan/kunpeng920_sdc_plan.md，为什么删除原来的“SDC物理根因与攻击面”、“六个攻击向量的详细设计与可执行汇编代码”？你还删除了哪些？为什么
+
+---
+
+补救。不是新旧版本替换，而是合并保留两边价值
+
+---
+
+/goal 深度理解 @docs/AArch64_Deployment.md 设计silifuzz方案，针对arm64架构（kunpeng920）cpu，参考 @docs/plan/kunpeng.md ，基于 @docs/plan/kunpeng920_sdc_design_concept.md 设计思路和 @docs/plan/kunpeng920_sdc_plan.md。然后执行该方案，最终生成能够高效精准检测sdc故障的可执行检测用例。然后通过silifuzz工具，在如下单板上验证并收集数据，迭代变异改进，确保最终生成高检出率的sdc检测用例： # 内外ssh登录：root密码和sdc用户密码都是SDC@2026
+0101单板：172.168.177.97
+0102单板：172.168.160.42
+0103单板：172.168.59.158
+0201单板：172.168.178.81
