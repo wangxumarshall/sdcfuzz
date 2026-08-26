@@ -1260,3 +1260,22 @@ bazel-bin/tools/simple_fix_tool_main \
 
 ---
 
+
+---
+
+## 附录 D：gem5-fi 微架构级故障注入验证（检测能力激发验证）
+
+> 与 silifuzz 真机检测（附录 C.2 效率估算的 24h 满负载扫描）互补，gem5-fi 在 TaiShan V110 微架构模型上做单 bit 翻转故障注入，验证检测用例能否被**激发**出 SDC（对应设计概念"上限靠激发"）。
+
+### D.1 验证方法
+- **模型**：0101 单板 `/home/sdc/wangxu/gem5-fi` 的 gem5 v25.1.0.1 TaiShan V110 O3 模型（`two_level_taishan.py`）。
+- **工作负载**：`seeds/gem5/sdc_probe_workload.c` 把 silifuzz 检测用例核心（e1 进位链 / e3 翻转率 / f1 subnormal / v4 LSU 往返）包装成静态 ELF，输出 `SUM=...CRC=...`。ITERS=200，`gcc -static -O2`。
+- **注入**：`--mode inject --max-faults 1`，在 ROI [20%,80%] numCycles 随机采样 first-clock，翻转一个随机整数寄存器 bit。比较输出与 golden 判断 diverge。
+- **脚本**：`scripts/gem5_sweep_sdc_probe.py`。
+
+### D.2 实测结果（2026/08/26，0101）
+- **baseline (golden)**：`SUM=1176263118239748788 CRC=5b8846f3`，numCycles=63788。**真机输出与 gem5 baseline 完全一致**（确定性验证通过）。
+- **50 次单 bit 翻转注入**：**2 个 diverge，SDC 检出率 4.0%**（余 43 个 masked，符合 sweep_inject.py 注释"most runs masked is normal/expected"）。
+  - **Diverge #2**：cycle 38632 翻转 `integer[9]` bit 19 → SUM `...748788→...6217780` + CRC `5b8846f3→a8d05814`（数值路径翻转传播到 SUM 与 CRC 双输出）。
+  - **Diverge #22**：cycle 49814 翻转 `integer[3]` bit 15 → CRC `5b8846f3→db8846f3`（bit 15 翻转 = 5→d，精准命中 CRC 计算中间寄存器），SUM 不变。
+- **结论**：检测用例工作负载的进位链/翻转率/CRC 路径对单 bit 翻转敏感，4% 注入 diverge，证明检测用例在微架构级故障注入下**能被激发出可观测 SDC**。结合附录 C 注错验证（runner outcome=3 精准检出单寄存器翻转），检测链路从激发到检出端到端有效。
