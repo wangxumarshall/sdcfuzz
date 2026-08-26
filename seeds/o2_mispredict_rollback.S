@@ -11,6 +11,7 @@
     .text
     .globl _start
 _start:
+    // MUT: int
     LOAD_ALL_ONES  x0
     LOAD_ALT_01    x1
 

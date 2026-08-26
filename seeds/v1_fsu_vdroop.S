@@ -21,6 +21,7 @@ _start:
 
     // ---- 操作数构造: 向量寄存器注入操作数字典全谱 ----
     // v16/v17 = 全 1 (最大翻转); v18/v19 = 交替 01/10 (50%/100% toggle)
+    // MUT: int
     LOAD_ALL_ONES  x0
     fmov    d16, x0
     dup     v16.4s, v16.s[0]              // v16 = 全 1 ×4 lane
