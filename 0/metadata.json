@@ -1,0 +1,57 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0YFZX9ZBJJM7ZT20KC8WFBJ",
+  "session_id": "93c2ff1c-d114-438e-a8a4-4cd24cae2cdb",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T07:36:45.83253257Z",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "seeds/c1_l2_eviction.S",
+    "seeds/c3_l3_128b.S",
+    "seeds/e1_carry_chain.S",
+    "seeds/e2_mul_extreme.S",
+    "seeds/e3_toggle_rate.S",
+    "seeds/f1_subnormal_nan.S",
+    "seeds/i1_icache_boundary.S",
+    "seeds/i2_branch_dense.S",
+    "seeds/l1_disambig.S",
+    "seeds/l2_dualagu_split.S",
+    "seeds/m1_tlb_thrash.S",
+    "seeds/m3_cross_page.S",
+    "seeds/o1_rob_full_wakeup.S",
+    "seeds/o2_mispredict_rollback.S",
+    "seeds/v2_alu_complex_saturation.S",
+    "seeds/v3_prf_mispredict.S",
+    "seeds/v4_lsu_cross_boundary.S",
+    "seeds/v6_crypto_toggle.S"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "094f8fd223a6",
+  "checkpoint_transcript_start": 580,
+  "transcript_lines_at_start": 580,
+  "compact_transcript_start": 122,
+  "token_usage": {
+    "input_tokens": 39211,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 9536000,
+    "output_tokens": 28417,
+    "api_call_count": 60
+  },
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T07:36:45.57326718Z",
+    "agent_lines": 830,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 830,
+    "total_lines_changed": 830,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}

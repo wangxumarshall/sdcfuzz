@@ -1,0 +1,43 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0YFZX9ZBJJM7ZT20KC8WFBJ",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "seeds/c1_l2_eviction.S",
+    "seeds/c3_l3_128b.S",
+    "seeds/e1_carry_chain.S",
+    "seeds/e2_mul_extreme.S",
+    "seeds/e3_toggle_rate.S",
+    "seeds/f1_subnormal_nan.S",
+    "seeds/i1_icache_boundary.S",
+    "seeds/i2_branch_dense.S",
+    "seeds/l1_disambig.S",
+    "seeds/l2_dualagu_split.S",
+    "seeds/m1_tlb_thrash.S",
+    "seeds/m3_cross_page.S",
+    "seeds/o1_rob_full_wakeup.S",
+    "seeds/o2_mispredict_rollback.S",
+    "seeds/v2_alu_complex_saturation.S",
+    "seeds/v3_prf_mispredict.S",
+    "seeds/v4_lsu_cross_boundary.S",
+    "seeds/v6_crypto_toggle.S"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 39211,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 9536000,
+    "output_tokens": 28417,
+    "api_call_count": 60
+  }
+}
