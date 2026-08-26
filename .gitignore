@@ -2,3 +2,4 @@
 *.swp
 /bazel-*
 output/
+seeds/bin/
