@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0ZM0WWEVC9YVQE9ENCZYJRH",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/collect_results.py",
+    "scripts/deploy_board.sh",
+    "scripts/distributed_scan.py",
+    "scripts/ssh_lib.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 32390,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 20874496,
+    "output_tokens": 18547,
+    "api_call_count": 65
+  }
+}
