@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0YEPCZ44N5CYXBZRKAYMPNV",
+  "strategy": "manual-commit",
+  "branch": "docs/sdc-concept-weakness-factors",
+  "checkpoints_count": 2,
+  "files_touched": [
+    ".claude/plans/sdc-detection-cases.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 330697,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5520256,
+    "output_tokens": 39118,
+    "api_call_count": 77
+  }
+}
