@@ -18,7 +18,7 @@ bazel_dep(name = "libpfm", version = "4.11.0.bcr.1")
 git_override(
     module_name = "fuzztest",
     commit = "7500662c6fb315ef3b71037329c862083687fe87",
-    remote = "https://github.com/google/fuzztest",
+    remote = "https://ghproxy.net/https://github.com/google/fuzztest",
 )
 
 # Non-module dependencies
@@ -27,12 +27,11 @@ new_git_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:git.bzl"
 
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-new_git_repository(
+http_archive(
     name = "lss",
     build_file = "@silifuzz//:third_party/BUILD.lss",
-    commit = "29164a80da4d41134950d76d55199ea33fbb9613",
-    remote = "https://chromium.googlesource.com/linux-syscall-support",
-    shallow_since = "1759359712 +0000",
+    url = "http://127.0.0.1:8000/lss.tar.gz",
+    sha256 = "360db5544e22a8d43b7dee8c51ae255810fb81c44e3bc92133f2e0b76d40544f",
 )
 
 new_git_repository(
@@ -41,12 +40,12 @@ new_git_repository(
     commit = "8af9b8c2b889d80c22d6bc26ba0df1afb79a30db",
     patch_cmds = [
         # Running "configure" creates the config.h file needed for this library.
-        "./configure",
+        "./configure --build=aarch64-unknown-linux-gnu",
         "mv config.h src",
         """sed -i -e 's/<city.h>/"city.h"/' src/*.cc src/*.h""",
         """sed -i -e 's/<citycrc.h>/"citycrc.h"/' src/*.cc""",
     ],
-    remote = "https://github.com/google/cityhash",
+    remote = "https://ghproxy.net/https://github.com/google/cityhash",
     shallow_since = "1375313681 +0000",
 )
 
@@ -54,7 +53,7 @@ new_git_repository(
     name = "mbuild",
     build_file = "@silifuzz//:third_party/BUILD.mbuild",
     commit = "75cb46e6536758f1a3cdb3d6bd83a4a9fd0338bb",
-    remote = "https://github.com/intelxed/mbuild",
+    remote = "https://ghproxy.net/https://github.com/intelxed/mbuild",
     shallow_since = "1659030943 +0300",
 )
 
@@ -65,7 +64,7 @@ new_git_repository(
     patch_cmds = [
         """sed -i -e 's/from genutil/from pysrc.genutil/' pysrc/*.py""",
     ],
-    remote = "https://github.com/intelxed/xed",
+    remote = "https://ghproxy.net/https://github.com/intelxed/xed",
     shallow_since = "1697457597 +0300",
 )
 
@@ -85,7 +84,7 @@ http_archive(
     build_file = "@silifuzz//:third_party/BUILD.typing_extensions",
     strip_prefix = "typing_extensions-4.12.2/src",
     urls = [
-        "https://github.com/python/typing_extensions/archive/4.12.2.tar.gz",
+        "https://ghproxy.net/https://github.com/python/typing_extensions/archive/4.12.2.tar.gz",
     ],
 )
 
@@ -94,7 +93,7 @@ new_git_repository(
     name = "capstone",
     build_file = "@silifuzz//:third_party/BUILD.capstone",
     commit = "702dbe78ca116de8ec65f122d9202c2c1f4a2b4c",
-    remote = "https://github.com/capstone-engine/capstone.git",
+    remote = "https://ghproxy.net/https://github.com/capstone-engine/capstone.git",
 )
 
 # Unicorn for the proxies
@@ -111,6 +110,6 @@ new_git_repository(
         """find qemu '(' -name "*.h" -o -name "*.c" ')' -type f \
                 -exec sed -i -e 's/\\b\\(crc32[c]\\{0,1\\}\\)(/unicorn_\\1(/' {} +""",
     ],
-    remote = "https://github.com/unicorn-engine/unicorn",
+    remote = "https://gitee.com/mirrors/Unicorn.git",
     shallow_since = "1687038706 +0200",
 )
