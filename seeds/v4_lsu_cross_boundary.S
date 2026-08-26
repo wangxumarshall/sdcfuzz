@@ -16,6 +16,7 @@
     .globl _start
 _start:
     // 操作数构造: 宽交替字节 (最大化拼接路径差异)
+    // MUT: int
     LOAD_BYTE_ALT  x0           // 0x00FF00FF00FF00FF
     LOAD_ALL_ONES  x1
     LOAD_ALT_01    x2

@@ -14,6 +14,7 @@
     .globl _start
 _start:
     LOAD_ALL_ONES  x0
+    // MUT: int
     LOAD_ALT_01    x1
 
     // 步长 65536 (L2 冲突步长), 装入 x7 (data2 基址寄存器, 此模板借用)

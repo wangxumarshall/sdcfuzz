@@ -23,6 +23,7 @@ _start:
     // SDC 验证: x3 必须 = 1 (符号处理逻辑)
 
     // 全 1 × 交替 (不同乘法器内部路径)
+    // MUT: int
     LOAD_ALL_ONES  x4
     LOAD_ALT_01    x5
     mul     x6, x4, x5             // 全1 × 01, 走 Complex

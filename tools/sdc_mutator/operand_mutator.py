@@ -73,13 +73,40 @@ def parse_template(path):
                 muts.append((slot, j, lines[j]))
     return lines, muts
 
+def extract_reg(line):
+    """从一条 LOAD_* / mov / fmov 指令提取目标寄存器名。
+    例: 'LOAD_ALL_ONES  x1' -> 'x1'; 'LOAD_SUBNORMAL_MIN d1, x0' -> 'd1'(首目标)。
+    支持 'rd, xt' 形式 (取 rd)。"""
+    # 去注释 + strip
+    code = line.split('//')[0].strip()
+    # 去宏名/指令助记符 (第一个 token)
+    parts = code.split(None, 1)
+    if len(parts) < 2:
+        return None
+    operands = parts[1].replace(',', ' ').split()
+    for op in operands:
+        # 取第一个寄存器操作数 (x/d/v/w/h + 数字)
+        if re.match(r'^[xdvwqh]\d+', op):
+            return op
+    return None
+
+def adapt_code(code, reg):
+    """把字典构造代码的目标寄存器替换为模板的 reg。
+    字典代码形如 'LOAD_ALL_ONES  x1' 或 'fmov d1, #1.0' 或 'LOAD_SUBNORMAL_MIN d1, x0'。
+    首个寄存器替换为 reg。"""
+    # 找首个寄存器 token 替换
+    m = re.search(r'\b([xdvwqh]\d+)\b', code)
+    if m:
+        return code[:m.start()] + reg + code[m.end():]
+    return code
+
 def generate_variants(template_path, out_dir, max_variants=None):
     lines, muts = parse_template(template_path)
     if not muts:
         return 0
-    # 每个槽的字典
+    # 每个槽的字典 + 原寄存器
     dicts = []
-    for slot, _, _ in muts:
+    for slot, _, orig in muts:
         d = SLOTS.get(slot, INT_DICT)
         dicts.append(d)
     # 笛卡尔积
@@ -91,10 +118,12 @@ def generate_variants(template_path, out_dir, max_variants=None):
     n = 0
     for combo in combos:
         variant = lines[:]
-        for (slot, line_idx, _orig), (label, code) in zip(muts, combo):
-            # 替换可变异指令行 (保留缩进)
+        for (slot, line_idx, orig), (label, code) in zip(muts, combo):
+            # 提取原寄存器, 注入到字典代码
+            reg = extract_reg(orig) or 'x1'
+            adapted = adapt_code(code, reg)
             indent = len(variant[line_idx]) - len(variant[line_idx].lstrip())
-            variant[line_idx] = ' ' * indent + code + f"    // variant:{slot}={label}"
+            variant[line_idx] = ' ' * indent + adapted + f"    // variant:{slot}={label}"
         tag = "_".join(label for _, (label, _) in zip(muts, combo))
         out = os.path.join(out_dir, f"{base}__{tag}.S")
         with open(out, 'w') as f:
