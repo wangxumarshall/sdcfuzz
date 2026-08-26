@@ -11,8 +11,8 @@
     .globl _start
 _start:
     movi    d0, #0                // +0.0 (所有位清零)
-
     // 构造最小正 Subnormal (0x0000000000000001)
+    // MUT: fsu
     LOAD_SUBNORMAL_MIN d1, x0     // d1 = 最小正 subnormal
 
     fadd    d2, d0, d1            // 0 + Subnormal → FSU 慢路径

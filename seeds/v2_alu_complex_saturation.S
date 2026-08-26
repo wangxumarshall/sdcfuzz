@@ -14,6 +14,7 @@
     .globl _start
 _start:
     // 操作数构造 (字典全谱)
+    // MUT: int
     LOAD_ALL_ONES  x10
     LOAD_ALT_01    x11
     LOAD_ALT_10    x12
