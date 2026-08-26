@@ -1,0 +1,88 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M0ZMAXXBHDXNAA6GQ2YF3Q7C",
+  "session_id": "93c2ff1c-d114-438e-a8a4-4cd24cae2cdb",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-26T18:11:56.94149804Z",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/gem5_sweep_multibit.py",
+    "seeds/v5_lse_cross_die.S"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "6339f2afa2a4",
+  "checkpoint_transcript_start": 2342,
+  "transcript_lines_at_start": 2342,
+  "compact_transcript_start": 483,
+  "token_usage": {
+    "input_tokens": 11819,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6479488,
+    "output_tokens": 7389,
+    "api_call_count": 19
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-goal-2026-08-26T08:40:22.59338042Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "3ffec6f62367",
+      "timestamp": "2026-08-26T08:40:22.59338042Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-loop-2026-08-26T10:25:44.69959063Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "loop"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "c5f03797ad74",
+      "timestamp": "2026-08-26T10:25:44.69959063Z",
+      "native": {
+        "command": "/loop"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/loop",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 7
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-26T18:11:56.44138569Z",
+    "agent_lines": 129,
+    "agent_removed": 0,
+    "human_added": 2,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 131,
+    "total_lines_changed": 133,
+    "agent_percentage": 96.99248120300751,
+    "metric_version": 2
+  }
+}
