@@ -550,6 +550,24 @@ b .Lnext4              // 4B
 > - **寻址约束**：`stp/ldp` 只接受 `[Xn,#imm]`(imm 为 8 倍数) 或 `[Xn]`，**不接受** `[Xn,Xm]`；跨 16B/64B/128B 边界须先 `add x8,x6,#14` 计算非对齐地址到寄存器，再 `stp x0,x1,[x8]`（已验证往返捕获）。`ldr/str` 单寄存器形式可接受 `[Xn,Xm]`。
 > - banned 指令：PAC/WFE/WFI/排他 store/MRS/MSR/UDF。18 模板的核心指令（FMLA/ALU/MUL/MADD/LDP/STP/AES/SHA/CRC32/LDR/STR/fadd/fmul）**全部通过**过滤。
 
+> **工程实现产物清单（2026/08/26，feat/sdc-detection-cases-kunpeng920 分支）**：
+> - `seeds/operand_dict.md` + `seeds/asm_common.S.inc`：操作数变异字典 + 可复用宏（MOVK_ALL/LOAD_SUBNORMAL_MIN/LOAD_QNAN 等）。
+> - `seeds/*.S`：19 个微架构定向压力模板（V1-V6 + E1-E3 + F1 + M1/M3 + C1/C3 + L1/L2 + O1/O2 + I1/I2）。实测 **19/19** 全部 `fuzz_filter_tool exit 0` + `snap_tool make` 成功 + `runner replay code:1`。end-state 抽查精确：e1 `x0=0`(64位进位链)/`x5=0x100000000`(32位边界)；e2 `x0=0xFFFFFFFE00000001`(umull)/`x3=1`(smull)；v4 `x18=0`(跨边界 store→load 往返校验)。
+> - `scripts/build_seeds.sh`：遍历 `seeds/*.S` 用 `as`/`objcopy` 产 `.bin`（主机原生 aarch64，无需交叉工具链；V6 需 `.arch armv8-a+crypto+crc`）。
+> - `tools/sdc_mutator/operand_mutator.py`：操作数空间引导变异引擎。解析模板 `// MUT: <slot>` 标记，用 operand_dict 对可变异操作数槽做**笛卡尔积替换**生成 N 变体。实测 e1 生成 10 变体（全1/交替01-10/进位边界32-48/字节交替/半字/最大正/最小负/零），carry32 变体 `x0=0x100000000`（32位进位边界精确激活），10 变体全部 make+replay `code:1`。
+> - `scripts/run_guided_mutation.sh`：两阶段——**阶段A 确定性笛卡尔积**（保覆盖下限）+ **阶段B Centipede `--corpus_from_files` 引导探索**（提检出上限），`-j=10` 防 MCE。
+> - `scripts/build_sdc_corpus.sh`：阶段A `.bin`→`snap_tool make`→`generate_corpus` 出 SnapCorp（runner 可读）；阶段B Centipede blob→`simple_fix_tool` 出 sharded SnapCorp；合并 `sdc_shard_list`+`sdc_corpus_metadata`。实测阶段A 29 `.pb`→147KB corpus→orchestrator 30s 冒烟无 SIGSEGV/mismatch。
+> - `scripts/ssh_lib.py` + `deploy_board.sh` + `distributed_scan.py` + `collect_results.py`：分布式扫描集群（详见 4.2）。
+> - `scripts/sdc_evolve.sh`：演化反馈闭环（详见 4.3）。
+
+> **分布式接近满负载扫描实测（2026/08/26）**：3 单板并行 20s 扫描（`--max_cpus=$(nproc)`），结果：
+> | 单板 | 核数 | SDC命中 | SIGSEGV噪声 | SIGTERM(timeout) |
+> |------|------|---------|-------------|------------------|
+> | 0101 | 126 | 0 | 48 | 1 |
+> | 0102 | 192 | 0 | 97 | 15 |
+> | 0103 | 128 | 0 | 566 | 11 |
+> 总 SDC=0（语料干净，真机健康）。SIGSEGV 噪声是满负载 fork/mmap 资源耗尽击中 snap 外路径（非 SDC，非假阳性，orchestrator 容错继续）。`collect_results.py` 精确区分 SDC 命中（`Snapshot [hash] failed, outcome` 非信号杀）与噪声，已修正满负载日志交织导致的假阳性（旧正则把 SIGSEGV 行误判为 SDC）。
+
 ### 4.1 操作数变异引擎与 Centipede 种子集成
 
 将上述所有攻击向量的汇编代码编译为原始机器码，作为 Centipede 的初始种子。Centipede 基于这些种子进行自动化变异时，会在**操作数空间**中进一步探索。
@@ -613,28 +631,17 @@ bazel-bin/tools/simple_fix_tool_main \
 **满负载 SIGSEGV 容错（关键实测）**：`--max_cpus=$(nproc)`（如 0101 的 126）时 10s 出 ~8 次 `Received signal SIGSEGV while outside of snap`，`--max_cpus=8` 时 0 次。这是 fork/mmap 资源耗尽击中 **snap 外路径**，**非 SDC、非假阳性**，orchestrator 自身容错继续运行。脚本须区分：`SIGSEGV-outside-snap` 计为噪声统计，`SNAPSHOT_FAILED`/`mismatch` 计为 SDC 命中。
 
 ```bash
-#!/bin/bash
-# distributed_scan.sh - 3 单板并行接近满负载 + 环境毒化
-# 零依赖密码 SSH（pty.fork，无 sshpass 也能用）
+# 1. 部署静态二进制 + SDC 语料到 0101/0102 (0103 本机已有)
+bash scripts/deploy_board.sh --all
 
-BOARDS="0101:172.168.177.97 0102:172.168.160.42 0103:172.168.59.158"
-DURATION=8h
+# 2. 3 单板并行接近满负载扫描 + stress-ng 环境毒化 (di/dt 带宽风暴放大器)
+python3 scripts/distributed_scan.py --duration 8h
+#   每板: orchestrator --max_cpus=$(nproc) + 后台 stress-ng --cpu 8 --cpu-method matrixprod
+#   0103 走本地分支(语料在 output/), 余走零依赖密码 SSH
 
-for entry in $BOARDS; do
-  name=${entry%%:*}; ip=${entry##*:}
-  # 每单板: orchestrator 接近满负载 + 后台 stress-ng 制造 di/dt 带宽风暴
-  python3 scripts/ssh_lib.py $ip "timeout $DURATION /sdc_tools/silifuzz_orchestrator_main \
-    --duration=$DURATION --max_cpus=\$(nproc) \
-    --runner=/sdc_tools/reading_runner_main_nolibc \
-    --shard_list_file=/sdc_corpus/shard_list \
-    --corpus_metadata_file=/sdc_corpus/corpus_metadata 2>&1 | tee /sdc_corpus/scan.$name.log" 'SDC@2026' &
-  # 环境毒化放大器 (stress-ng on 剩余核心)
-  python3 scripts/ssh_lib.py $ip "stress-ng --cpu 16 --cpu-method matrixprod \
-    --taskset 0-15 --timeout $DURATION 2>/dev/null" 'SDC@2026' &
-done
-
-# 周期性拉取状态 + 终态聚合到 0103
-python3 scripts/collect_results.py "$BOARDS"
+# 3. 拉取各板状态 + 终态日志, 精确区分 SDC 命中 vs SIGSEGV/SIGTERM 噪声
+python3 scripts/collect_results.py
+#   汇总到 output/distributed/{results.json, logs/*.scan.log}
 ```
 
 **NUMA 维度（单板内）**：`numactl` 未装时回退 `taskset` first-touch。
@@ -675,6 +682,18 @@ numactl --cpunodebind=0 --interleave=all silifuzz_orchestrator_main ...
                      │               │
                      └───────────────┘
                     (循环, 持续放大)
+```
+
+```bash
+# 演化闭环落地脚本 (scripts/sdc_evolve.sh):
+# 1. 读 collect_results.py 的 results.json, 检查 SDC 命中数
+# 2. 若 SDC=0: 语料干净, 建议增加操作数变异密度或延长扫描 (干净退出)
+# 3. 若 SDC>0: 从 scan.log 提取 'Snapshot [hash] failed' 的 hash
+#    → snap_tool get_instructions 提取原始指令 → 回灌 seeds/evolved/ 高权重
+#    → Centipede 基于回灌种子做局部变异放大 (--corpus_from_files, -j=10)
+#    → build_sdc_corpus.sh 重新打包 → deploy_board.sh --all 重新部署
+#    → distributed_scan.py 再扫描 → 闭环
+bash scripts/sdc_evolve.sh --duration 8h
 ```
 
 ---
