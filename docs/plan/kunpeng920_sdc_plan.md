@@ -549,6 +549,7 @@ b .Lnext4              // 4B
 > - **内存布局**：`x6=data1_base(0x7'0000'0000,4MB)`、`x7=data2_base(0x1007'0000'0000,4MB)`、`sp=0x200'1000`，数据页初值 0；NUMA 拓扑实测与文档一致。
 > - **寻址约束**：`stp/ldp` 只接受 `[Xn,#imm]`(imm 为 8 倍数) 或 `[Xn]`，**不接受** `[Xn,Xm]`；跨 16B/64B/128B 边界须先 `add x8,x6,#14` 计算非对齐地址到寄存器，再 `stp x0,x1,[x8]`（已验证往返捕获）。`ldr/str` 单寄存器形式可接受 `[Xn,Xm]`。
 > - banned 指令：PAC/WFE/WFI/排他 store/MRS/MSR/UDF。18 模板的核心指令（FMLA/ALU/MUL/MADD/LDP/STP/AES/SHA/CRC32/LDR/STR/fadd/fmul）**全部通过**过滤。
+> - **注错验证（检测链路有效性证明，2026/08/26）**：为证明语料真能检出 SDC（而非检出能力不足），用 `snap_tool set_bytes` 篡改 e1_carry_chain 代码首条 `movz x1,#0xffff`→`nop`（`set_bytes 0x7e7f3000 ← \x1f\x20\x03\xd5`），runner 重放时 x1 不再是 0xFFFF…（高 48 位变 0），导致 `adds x0,x1,#1` 的结果翻转。runner **精准检出**：`Snapshot [hash] failed, outcome=3 (end-state mismatch)`，并报 `x[0]=0xffffffffffff0001 want 0x0`、`x[1]=0xffffffffffff0000 want 0xffffffffffffffff`。证明检测链路对**单寄存器位翻转**敏感，语料在真机未检出 SDC 是因真机健康，非检出能力不足。
 
 > **工程实现产物清单（2026/08/26，feat/sdc-detection-cases-kunpeng920 分支）**：
 > - `seeds/operand_dict.md` + `seeds/asm_common.S.inc`：操作数变异字典 + 可复用宏（MOVK_ALL/LOAD_SUBNORMAL_MIN/LOAD_QNAN 等）。
