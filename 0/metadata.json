@@ -1,0 +1,222 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M119D5TEMTPMHGZ542TB2Y38",
+  "session_id": "93c2ff1c-d114-438e-a8a4-4cd24cae2cdb",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-27T09:39:25.77018824Z",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 3,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "5c7b37078611",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 8108369,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 159606400,
+    "output_tokens": 319671,
+    "api_call_count": 623
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-goal-2026-08-26T08:40:22.59338042Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "3ffec6f62367",
+      "timestamp": "2026-08-26T08:40:22.59338042Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-loop-2026-08-26T10:25:44.69959063Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "loop"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "c5f03797ad74",
+      "timestamp": "2026-08-26T10:25:44.69959063Z",
+      "native": {
+        "command": "/loop"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/loop",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-loop-2026-08-27T01:07:03.85718852Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "loop"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "6315f6262c79",
+      "timestamp": "2026-08-27T01:07:03.85718852Z",
+      "native": {
+        "command": "/loop"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/loop",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-grill-me-2026-08-27T02:27:55.35446481Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "grill-me"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "13fa623b0282",
+      "timestamp": "2026-08-27T02:27:55.35446481Z",
+      "native": {
+        "command": "/grill-me"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/grill-me",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-grill-me-2026-08-27T06:14:07.91454431Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "grill-me"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "99b89a8129e7",
+      "timestamp": "2026-08-27T06:14:07.91454431Z",
+      "native": {
+        "command": "/grill-me"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/grill-me",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-goal-2026-08-27T08:46:35.75887999Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "5c7b37078611",
+      "timestamp": "2026-08-27T08:46:35.75887999Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-call_19c4a4ff4f23429982b74b4d",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "grilling"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "5c7b37078611",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 2658,
+        "end": 2659,
+        "entry_ids": [
+          "456d133c-b7e3-4ee2-a84c-235fc2dca462"
+        ],
+        "tool_use_id": "call_19c4a4ff4f23429982b74b4d"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_19c4a4ff4f23429982b74b4d"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: grilling",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-call_cc732c8e276f4b308888258c",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "grilling"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "5c7b37078611",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 3021,
+        "end": 3022,
+        "entry_ids": [
+          "b3a2dda9-4fae-4a53-affb-37c473673ae5"
+        ],
+        "tool_use_id": "call_cc732c8e276f4b308888258c"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_cc732c8e276f4b308888258c"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: grilling",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 19
+  }
+}
