@@ -1,0 +1,109 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M10D1HBBCKKYHNSNDWTCX0KH",
+  "session_id": "93c2ff1c-d114-438e-a8a4-4cd24cae2cdb",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-27T01:23:44.18957134Z",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/kunpeng920_sdc_research_report.md"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.2[1m]",
+  "turn_id": "6315f6262c79",
+  "checkpoint_transcript_start": 2560,
+  "transcript_lines_at_start": 2560,
+  "compact_transcript_start": 528,
+  "token_usage": {
+    "input_tokens": 11406,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3232640,
+    "output_tokens": 7440,
+    "api_call_count": 9
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-goal-2026-08-26T08:40:22.59338042Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "3ffec6f62367",
+      "timestamp": "2026-08-26T08:40:22.59338042Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-loop-2026-08-26T10:25:44.69959063Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "loop"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "c5f03797ad74",
+      "timestamp": "2026-08-26T10:25:44.69959063Z",
+      "native": {
+        "command": "/loop"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/loop",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-loop-2026-08-27T01:07:03.85718852Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "loop"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "6315f6262c79",
+      "timestamp": "2026-08-27T01:07:03.85718852Z",
+      "native": {
+        "command": "/loop"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/loop",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 7
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-27T01:23:43.61633391Z",
+    "agent_lines": 34,
+    "agent_removed": 20,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 34,
+    "total_lines_changed": 54,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
