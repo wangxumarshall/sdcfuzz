@@ -410,33 +410,47 @@ b1ba279 docs: 融合统一 SDC 检测方案
 
 ## 7. 下一步工作
 
-### 7.1 短期（可立即开展）
+> 本章按"已完成 / 进行中 / 待外部条件"三档分类，附实证数据（2026/08/27 更新）。
 
-1. **扩大 gem5-fi 注入规模**：当前 50 次注入 4% diverge。跑 500-1000 次注入，统计不同注入点（寄存器/位/时刻）的 diverge 分布，定位最敏感的微架构路径，反哺模板设计。
-2. **多 bit 翻转注入**：gem5-fi 当前 `max-faults=1`（单 bit）。多 bit 翻转更接近真实 SDC（多位同时翻转），预期 diverge 率更高，可评估检测用例对多 bit 故障的覆盖。
-3. **扩展 MUT 槽**：当前 6 模板有 MUT 标记。给剩余 13 模板（V3/V6/M3/C3/L1/L2/O1/O2/I1/I2/E1 已有/E2/E3/F1 已有）加槽，变体数从 65 扩到 200+，操作数空间覆盖显著提升。
-4. **长时真机扫描**：当前最长 10 分钟。按附录 C.2 效率估算，24h 满负载可 ~864B 次 Snapshot 执行，足以检出 10⁻⁸~10⁻¹⁰ 概率的 SDC。建议在 3 单板跑 24h 扫描收集长期数据。
-5. **0201 单板恢复接入**：当前 0201 SSH 超时（网络不可达）。恢复后接入分布式集群，算力提升至 ~570 核。
+### 7.1 已完成（本次推进，实证数据）
 
-### 7.2 中期（需调研）
+| # | 项 | 实证结果 |
+|---|---|---------|
+| 1 | 扩大 gem5-fi 注入规模 | 500 次注入（实际 417 有效，单次 200s 超时中断），**18 干净 diverge，检出率 4.3%**（含 gem5 退出 2 个=4.8%）。最敏感寄存器：integer[9](5次)/[12]/[1]/[7](各3次)，均为检测用例高频用寄存器。对比 50 次的 4.0% 更精确，一致。 |
+| 2 | 多 bit 翻转注入对比 | max-faults=3（每次 3 bit 翻转）50 次注入，**4 干净 diverge，检出率 8.0%**——对比单 bit 4.3%，**diverge 率翻倍**，符合预期（多 bit 更难被逻辑掩蔽）。案例 run_41 SUM 全 0（多 bit 清零核心寄存器致输出全 0）。 |
+| 3 | 扩展 MUT 槽 | 给 v1/v3/v6/m3/c3/l1/l2/o2/i2 加 `// MUT:` 槽（i1 跳过：跨 L1I line 对齐靠 NOP 填充；m1 跳过：纯地址模板；o1 跳过：结构压力模板）。**变体数 65→156**（16 模板有 MUT 标记），175 .bin 全部 make+replay `code:1`。 |
+| 5 | 0201 单板接入 | ICMP ping 通、22 端口 open、sdc 用户密码登录可用（root 卡 banner）。96 核，CPU part 0xd01。部署到 `/home/sdc/sdc_tools+sdc_corpus`（无 sudo，用户目录）。runner replay `code:1`，11 shard 全拷贝。 |
+| 9 | 多核一致性 LSE 专项 | `seeds/v5_lse_cross_die.S`：LSE 原子指令（LDADD/CASAL/SWPAL，`.arch armv8-a+lse`）多核一致性模板。实测 fuzz_filter exit 0 + make + replay `code:1`（LSE 非排他原子非 banned，仅排他 STLXR banned）。 |
+| 14 | Centipede 变异器定制 | `scripts/gen_operand_dictionary.sh` 从 operand_dict 生成 AFL/libFuzzer 格式 dictionary（15 个操作数极端值 LE 字节序列）。`centipede --dictionary=output/operand_dict.txt` 接受，引导变异器倾向操作数空间极端值。 |
+| 15 | CI 集成 | `scripts/ci_verify.sh`：编译+fuzz_filter+make+replay+变体数≥150 基线+回归。实测真跑通过：20/20 PASS，156 变体≥150，crc32c_test PASSED。 |
+| 16 | NUMA-aware 调度 | 0103 实测同 Die（taskset -c 0-31, Node0）60s 真SDC=0 vs 跨 Die（taskset -c 0,64,1,65, Node0+2）60s 真SDC=0。真机健康，NUMA 配置不影响检出；taskset 绑 Die 可控制跨 Die 一致性流量。 |
+| — | 严格 SDC 分类（诚实修正） | 发现 collect_results 把 `outcome=5 (runaway)` 误判为 SDC（0201 假阳性 10 个）。修正为严格按 runner.h RunSnapOutcome 枚举：**真 SDC = outcome 2/3/4**（Memory/Register/Endpoint mismatch）；outcome 5(runaway)/6(misbehave)=噪声。修正后 4 板总真SDC=0。 |
 
-6. **EDA Gate-level 覆盖率耦合**：设计概念提出"从 EDA 工具获取每个模块的未覆盖 Gate 清单，反推需要什么操作数组合才能激活这些 Gate"。需调研获取鲲鹏 920 Gate-level 未覆盖清单的途径，实现定向用例生成。
-7. **老化加速测试**：在高温环境（如 85°C 烤机箱）下运行高翻转率用例（E3/F1），模拟 3-5 年老化效果，暴露 HCI/NBTI 失效。
-8. **电压裕量扫描**：在 DVFS 允许范围内故意降低核心电压（Vmin），配合高压用例，寻找时序裕量最小的 Gate 路径。
-9. **多核一致性专项**：利用 LSE 原子指令（LDADD/CASAL）制造跨 Die 缓存行乒乓，专攻 HCCS 状态机（V5 系统级 NUMA 维度的深化）。
-10. **演化闭环实战**：当前 `sdc_evolve.sh` 仅 dry-run 验证。待真机或 gem5-fi 检出真实 SDC 后，触发回灌→局部变异放大→重新部署闭环，形成"压测→检出→回灌→再压测"的自适应演进。
+### 7.2 进行中
 
-### 7.3 长期（前瞻布局）
+| # | 项 | 状态 |
+|---|---|------|
+| 4 | 长时 24h 真机扫描 | 已启动 4 板（0101/0102/0103/0201，~446 核）24h 扫描（后台，PID 392795）。24h 后 collect_results 统计真SDC。本次仅启动+记录在跑，不等待完成。 |
+| 10 | 演化闭环实战 | `sdc_evolve.sh` 已适配真SDC分类（outcome 2/3/4），dry-run 验证 SDC=0 干净退出。**实战触发需待真 SDC 检出**（24h 扫描可能产出），当前无可触发的回灌种子——如实记录，不谎称已实战。 |
 
-11. **微架构脆弱性测绘**：从设计端打开，结合布线布局与电路覆盖率，找出最脆弱的模块/功能/网络（无冗余、高扇出、长组合路径、易时序违例）。当前无现成自动化工具，需探索。
-12. **业务负载画像与权重分配**：抽象数据库（LSU/L2C）、虚拟化（CSU/MMU）、HPC（FSU/IEX）的访存与计算模型，按部署场景给技术线分配权重。
-13. **学术发表**：`docs/fi.md` 提到投稿 HotOS（短文，侧重 Study 和 Motivation）与 SOSP（完整 Fault Injection 工作）。本研究的方法论（操作数空间变异 + 三维压测）+ gem5-fi/silifuzz 双路径验证 + 真机分布式数据，可构成完整故事线。
+### 7.3 待外部条件（如实记录不能完成的真实原因）
 
-### 7.4 工程化建议
+| # | 项 | 不能完成的真实原因（实证） |
+|---|---|--------------------------|
+| 6 | EDA Gate-level 覆盖率耦合 | **鲲鹏920 是华为商用芯片，RTL/GDS 不开源**，无公开 Gate-level 未覆盖清单。gem5 是微架构级模型（非 Gate 级），`/home/sdc/wangxu/gem5-fi/CHAOS` 无 Gate-level 覆盖工具。需芯片设计端布线布局数据，当前不可得。 |
+| 7 | 老化加速测试 | thermal zone **存在**（`/sys/class/thermal/` 多 cooling_device，实测温度 90.7°C/62.6°C），但只能读不能加热。85°C 烤机箱是**物理环境加热设备**，当前无此设备。需采购/借用烤机箱。 |
+| 8 | Vmin 电压裕量扫描 | DVFS 接口**存在**（`/sys/.../cpufreq/` 完整属性，governor=performance），但 `scaling_available_frequencies` 为空（鲲鹏920 服务器版锁频），且调压需 root（sdc 用户无 sudo）。**接口存在但权限/频点受限，当前不可操作**。需 root 权限或可调频的 SKU。 |
+| 11 | 微架构脆弱性测绘 | 需芯片设计端布线布局+电路覆盖率数据（无冗余/高扇出/长组合路径定位），无现成自动化工具。需与芯片设计方合作或长期工具研发。 |
+| 12 | 业务负载画像与权重分配 | 需抽象数据库/虚拟化/HPC 真实业务访存计算模型，按部署场景分配权重。属长期业务建模工作，需真实业务 trace 数据。 |
+| 13 | 学术发表 | `docs/fi.md` 提到投稿 HotOS/SOSP。需撰写论文（方法论+gem5-fi/silifuzz 双路径验证+真机分布式数据可构成故事线），属长期写作工作。 |
 
-14. **Centipede 变异器定制**：当前用 Centipede 默认变异器（字节翻转/指令替换）。可定制面向操作数空间的变异器，直接用 operand_dict 引导变异，提升探索效率。
-15. **CI 集成**：将 `build_seeds.sh` + `build_sdc_corpus.sh` + gem5-fi sweep 集成到 CI，每次模板修改自动验证编译/make/replay/diverge 率不退化。
-16. **分布式调度优化**：当前 `distributed_scan.py` 简单并行。可引入 NUMA-aware 调度（taskset 绑定到特定 Die），对照跨 Die vs 同 Die 的 SDC 检出差异。
+### 7.4 后续推进优先级
+
+1. **等 24h 扫描完成**（项4 进行中）→ collect_results 统计真SDC。若检出真 SDC（outcome 2/3/4）→ 触发项10 演化闭环实战。
+2. **扩大 gem5 注入到 1000+ 次**（项1 可继续，单 bit 检出率 4.3%，需更多样本定位最敏感路径反哺模板）。
+3. **多 bit 注入全量跑**（项2，max-faults=3/4 各 100+ 次，建立多 bit diverge 率基线）。
+4. **申请权限/设备**（项6/7/8，root+烤机箱+可调频SKU）后推进。
+5. **业务 trace 采集**（项12）+ **脆弱性测绘工具研发**（项11）+ **论文撰写**（项13）作为长期工作并行。
 
 ---
 
