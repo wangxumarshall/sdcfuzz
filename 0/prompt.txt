@@ -278,3 +278,7 @@ The full CHAOS module set on disk is exactly 7: `CHAOSLSQFwd`, `CHAOSAddrPath`, 
 Relevant paths: paper at `/home/sdc/wangxu/gem5-fi/docs/cases/core179-microarch-rootcause-synthesis/PAPER.md`; injectors at `/home/sdc/wangxu/gem5-fi/CHAOS/CHAOSLSQFwd/` (header `CHAOSLSQFwd.hh` carries the `StructuralFault` enum), `/home/sdc/wangxu/gem5-fi/CHAOS/CHAOSAddrPath/`, `/home/sdc/wangxu/gem5-fi/CHAOS/CHAOSPTW/`.</result>
 <usage><subagent_tokens>0</subagent_tokens><tool_uses>10</tool_uses><duration_ms>140847</duration_ms></usage>
 </task-notification>
+
+---
+
+开干
