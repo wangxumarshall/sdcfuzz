@@ -27,13 +27,16 @@ DEFAULT_BOARDS = {
     "0101": "172.168.177.97",
     "0102": "172.168.160.42",
     "0103": "172.168.59.158",
+    "0201": "172.168.178.81",
 }
-REMOTE_TOOLS = "/sdc_tools"
-REMOTE_CORPUS = "/sdc_corpus"
-RUNNER = f"{REMOTE_TOOLS}/reading_runner_main_nolibc"
-ORCH = f"{REMOTE_TOOLS}/silifuzz_orchestrator_main"
-LOG = f"{REMOTE_CORPUS}/scan.log"
-STAT = f"{REMOTE_CORPUS}/scan.stat"   # 周期性状态快照
+# 每板独立配置: (ssh_user, remote_tools_dir, remote_corpus_dir)
+# 0101/0102/0201 部署机; 0103 本机 (output/ + /usr/local/bin)
+# 0201 无 sudo, 用 sdc 用户 + 用户目录 (/home/sdc/...)
+BOARD_CFG = {
+    "0101": ("root", "/sdc_tools", "/sdc_corpus"),
+    "0102": ("root", "/sdc_tools", "/sdc_corpus"),
+    "0201": ("sdc", "/home/sdc/sdc_tools", "/home/sdc/sdc_corpus"),
+}
 
 def parse_duration_seconds(dur):
     """'60s' -> 60, '8h' -> 28800, '30m' -> 1800"""
@@ -68,13 +71,18 @@ def board_scan_thread(name, ip, duration, stress, results):
         except Exception as e:
             results[name] = {"ip": ip, "status": "error", "error": str(e)}
         return
+    # 远程板: 按板取 user/path (0201 用 sdc 用户+用户目录)
+    user, rtools, rcorpus = BOARD_CFG.get(name, ("root", "/sdc_tools", "/sdc_corpus"))
+    runner_r = f"{rtools}/reading_runner_main_nolibc"
+    orch_r = f"{rtools}/silifuzz_orchestrator_main"
+    log_r = f"{rcorpus}/scan.log"
     cmd = (
-        f"cd {REMOTE_CORPUS} && "
-        f"timeout {dur_s} {ORCH} --duration={duration} --max_cpus=$(nproc) "
-        f"--runner={RUNNER} "
-        f"--shard_list_file={REMOTE_CORPUS}/shard_list "
-        f"--corpus_metadata_file={REMOTE_CORPUS}/corpus_metadata "
-        f"2>&1 | tee {LOG}; "
+        f"cd {rcorpus} && "
+        f"timeout {dur_s} {orch_r} --duration={duration} --max_cpus=$(nproc) "
+        f"--runner={runner_r} "
+        f"--shard_list_file={rcorpus}/shard_list "
+        f"--corpus_metadata_file={rcorpus}/corpus_metadata "
+        f"2>&1 | tee {log_r}; "
         f"echo SCAN_DONE_$?"
     )
     # 后台 stress-ng (环境毒化) — 留 8 核给系统, 其余跑 matrixprod 制造 di/dt
@@ -83,21 +91,23 @@ def board_scan_thread(name, ip, duration, stress, results):
             f"stress-ng --cpu 8 --cpu-method matrixprod --timeout {duration} "
             f">/dev/null 2>&1 &"
         )
-        try: ssh(ip, stress_cmd, timeout=15)
+        try: ssh(ip, stress_cmd, timeout=15, user=user)
         except: pass
     try:
-        out = ssh(ip, cmd, timeout=dur_s + 120)
+        out = ssh(ip, cmd, timeout=dur_s + 120, user=user)
         results[name] = {"ip": ip, "status": "done", "tail": out[-2000:]}
     except Exception as e:
         results[name] = {"ip": ip, "status": "error", "error": str(e)}
 
 def poll_status(name, ip, results, stop_event):
     """周期性拉取单板状态 (SIGSEGV/SDC 计数) 回 0103。"""
+    user, _, rcorpus = BOARD_CFG.get(name, ("root", "/sdc_tools", "/sdc_corpus"))
+    log_r = f"{rcorpus}/scan.log"
     while not stop_event.is_set():
         try:
-            stat = ssh(ip, f"grep -c 'SIGSEGV' {LOG} 2>/dev/null; "
-                          f"grep -cE 'mismatch|SNAPSHOT_FAILED' {LOG} 2>/dev/null; "
-                          f"echo ALIVE", timeout=15)
+            stat = ssh(ip, f"grep -c 'SIGSEGV' {log_r} 2>/dev/null; "
+                          f"grep -cE 'mismatch|SNAPSHOT_FAILED' {log_r} 2>/dev/null; "
+                          f"echo ALIVE", timeout=15, user=user)
             results.setdefault(name, {"ip": ip})["last_stat"] = stat
         except: pass
         time.sleep(30)

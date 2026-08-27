@@ -14,6 +14,7 @@
     .globl _start
 _start:
     // 构造向量操作数 (全 1 + 交替, 用于 AES/SHA 内部)
+    // MUT: int
     LOAD_ALL_ONES  x0
     fmov    d0, x0
     dup     v0.16b, v0.b[0]    // v0 = 全 0xFF ×16

@@ -18,6 +18,13 @@ DEFAULT_BOARDS = {
     "0101": "172.168.177.97",
     "0102": "172.168.160.42",
     "0103": "172.168.59.158",
+    "0201": "172.168.178.81",
+}
+# 每板 ssh 用户 + corpus 目录 (0201 用 sdc + /home/sdc/sdc_corpus)
+BOARD_CFG = {
+    "0101": ("root", "/sdc_corpus"),
+    "0102": ("root", "/sdc_corpus"),
+    "0201": ("sdc", "/home/sdc/sdc_corpus"),
 }
 REMOTE_CORPUS = "/sdc_corpus"
 OUT = "output/distributed"
@@ -30,16 +37,27 @@ def parse_log(text):
     SIGSEGV-outside-snap / SIGTERM(timeout) 是噪声, 不算 SDC。"""
     sigsegv_outside = len(re.findall(r'SIGSEGV while outside of snap', text))
     sigterm = len(re.findall(r'SIGTERM', text))
-    # SDC 命中: 'Snapshot [hash] failed, outcome' 行 (排除被信号杀的)
-    # 满负载交织日志里, 行可能跨多行; 用 findall 计 'failed, outcome' 出现次数
-    sdc_markers = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome', text)
-    # 进一步: 真正 end-state mismatch 的 outcome 通常含 'mismatch' 或非信号
-    sdc_hits = [m for m in sdc_markers if 'signal' not in m.lower() and 'SIG' not in m]
+    # runner RunSnapOutcome 枚举 (runner/runner.h):
+    #   0=kAsExpected 1=kPlatformMismatch 2=kMemoryMismatch 3=kRegisterStateMismatch
+    #   4=kEndpointMismatch 5=kExecutionRunaway 6=kExecutionMisbehave
+    # 真 SDC = outcome 2 (Memory mismatch) 或 3 (Register mismatch) 或 4 (Endpoint mismatch)
+    #   — 这些是计算结果与预期不符 (静默数据损坏)
+    # outcome 5 (runaway, 满负载调度延迟超时) / 6 (misbehave, 信号) = 噪声, 非 SDC
+    all_failed = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = (\d+)', text)
+    # 真 SDC: outcome ∈ {2,3,4}
+    sdc_outcomes = [o for o in all_failed if o in ('2', '3', '4')]
+    # 噪声: outcome ∈ {5 (runaway), 6 (misbehave)}
+    runaway = sum(1 for o in all_failed if o == '5')
+    misbehave = sum(1 for o in all_failed if o == '6')
+    # SDC 详情 (含 hash + outcome)
+    sdc_details = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = [234]', text)[:10]
     return {
         "sigsegv_noise": sigsegv_outside,
         "sigterm": sigterm,
-        "sdc_hits": len(sdc_hits),
-        "sdc_details": sdc_hits[:10],
+        "runaway_noise": runaway,      # outcome=5, 满负载超时, 非 SDC
+        "misbehave_noise": misbehave, # outcome=6, 信号, 非 SDC
+        "sdc_hits": len(sdc_outcomes),  # 真 SDC = outcome 2/3/4
+        "sdc_details": sdc_details,
     }
 
 def collect_one(name, ip, all_results):
@@ -58,9 +76,10 @@ def collect_one(name, ip, all_results):
         except FileNotFoundError:
             text = ""
     else:
-        # 远程拉取
+        # 远程拉取 (按板取 user + corpus 目录)
+        user, rcorpus = BOARD_CFG.get(name, ("root", REMOTE_CORPUS))
         try:
-            text = ssh(ip, f"cat {REMOTE_CORPUS}/scan.log 2>/dev/null", timeout=30)
+            text = ssh(ip, f"cat {rcorpus}/scan.log 2>/dev/null", timeout=40, user=user)
             with open(local_log, "w") as f:
                 f.write(text)
         except Exception as e:
@@ -87,11 +106,13 @@ def main():
     for name, r in results.items():
         sdc = r.get("sdc_hits", 0)
         noise = r.get("sigsegv_noise", 0)
+        runaway = r.get("runaway_noise", 0)
+        misbehave = r.get("misbehave_noise", 0)
         total_sdc += sdc
-        print(f"  {name} ({r.get('ip')}): SDC命中={sdc} | SIGSEGV噪声={noise} | SIGTERM(timeout)={r.get('sigterm',0)}")
+        print(f"  {name} ({r.get('ip')}): 真SDC={sdc} | runaway噪声={runaway} | misbehave噪声={misbehave} | SIGSEGV噪声={noise} | SIGTERM={r.get('sigterm',0)}")
         if r.get("sdc_details"):
-            print(f"    详情: {r['sdc_details'][0][:120]}")
-    print(f"  总 SDC 命中: {total_sdc}")
+            print(f"    SDC详情: {r['sdc_details'][0][:120]}")
+    print(f"  总真 SDC 命中 (outcome 2/3/4): {total_sdc}")
 
     with open(f"{OUT}/results.json", "w") as f:
         json.dump(results, f, indent=2, default=str)

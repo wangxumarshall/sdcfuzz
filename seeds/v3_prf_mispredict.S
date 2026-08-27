@@ -14,6 +14,7 @@
     .globl _start
 _start:
     // 阶段1: 写入所有 31 个通用寄存器, 耗尽整数 PRF 映射
+    // MUT: int
     LOAD_ALL_ONES  x0
     LOAD_ALT_01    x1
     LOAD_ALT_10    x2
