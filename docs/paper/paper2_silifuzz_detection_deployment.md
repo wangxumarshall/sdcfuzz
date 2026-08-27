@@ -86,7 +86,7 @@ The mutator (`tools/sdc_mutator/operand_mutator.py`) parses `// MUT: <slot>` mar
 
 ### 3.4 Full-load noise taxonomy (contribution 2)
 
-Under `--max_cpus=$(nproc)`, the orchestrator emits `Received signal SIGSEGV while outside of snap` events (empirically: 96-core 0201 produced 621 such events in a 60s scan; 8-core cap produced 0). These are fork/mmap resource exhaustion hitting the runner *outside* snapshot execution—not SDC, not false positives, and the orchestrator tolerates them. The genuine-SDC signal is `Snapshot [hash] failed, outcome = N` where N ∈ {2,3,4}. We implement this taxonomy in `collect_results.py`: outcome 2/3/4 = genuine SDC; 5 (runaway) / 6 (misbehave) = noise. **Without this, the 1606 full-load runaways on 0201 (§5.3) would be misreported as 1606 SDC**—a measurement error this taxonomy prevents.
+Under `--max_cpus=$(nproc)`, the orchestrator emits `Received signal SIGSEGV while outside of snap` events (empirically: 96-core 0201 produced 621 such events in a 60s scan; 8-core cap produced 0). These are fork/mmap resource exhaustion hitting the runner *outside* snapshot execution—not SDC, not false positives, and the orchestrator tolerates them. The genuine-SDC signal is `Snapshot [hash] failed, outcome = N` where N ∈ {2,3,4}. We implement this taxonomy in `collect_results.py`: outcome 2/3/4 = genuine SDC; 5 (runaway) / 6 (misbehave) = noise. **Without this, the 2634+ full-load runaways on 0201 (§5.3) would be misreported as 2634 SDC**—a measurement error this taxonomy prevents.
 
 ---
 
@@ -139,17 +139,17 @@ A 125-snapshot corpus (Stage A 65 deterministic + Stage B 60 Centipede-explored)
 
 **Scan**: `distributed_scan.py --duration 24h --max_cpus=$(nproc)`, with `stress-ng` di/dt poisoning (environmental amplifier, design-concept axis 3). 24h scan launched (PID 392795), **ongoing at writing**.
 
-**Interim results (as of ~17h elapsed, honest snapshot)**:
+**Interim results (as of ~18h elapsed, honest snapshot, scan ongoing)**:
 
 | Board | Cores | Genuine SDC (outcome 2/3/4) | Runaway noise (outcome 5) | SIGSEGV-outside-snap noise |
 |-------|-------|----------------------------|---------------------------|----------------------------|
 | 0101 | 126 | 0 | (log buffered, tee pending) | — |
 | 0102 | 192 | 0 | 10 | 0 |
 | 0103 | 128 | 0 | 0 | — |
-| 0201 | 96 | 0 | 1606 | 0 |
-| **Total** | 446 | **0** | 1616+ | — |
+| 0201 | 96 | 0 | 2634 (interim, growing) | 0 |
+| **Total** | 446 | **0** | 2644+ (interim) | — |
 
-**Honest interpretation**: zero genuine SDC across 446 cores over ~17h of near-full-load scanning—a negative result, consistent with the expected 10⁻⁸–10⁻¹⁰ SDC rate on healthy silicon (a 446-core × 17h scan executes on the order of 10¹³ snapshots, expected SDC count ≈ 10¹³ × 10⁻⁹ = 10⁴ only if the part were defective at the 10⁻⁹ rate; healthy parts are far below this). The 1606 runaways on 0201 (96-core, most resource-exhausted) validate the §3.4 taxonomy: without it, these would be 1606 false SDC reports. The 24h final count will be filled post-completion; the methodology and taxonomy, not the count, are the contribution.
+**Honest interpretation**: zero genuine SDC across 446 cores over ~18h (interim) of near-full-load scanning—a negative result, consistent with the expected 10⁻⁸–10⁻¹⁰ SDC rate on healthy silicon. The 2634 runaways on 0201 (96-core, most resource-exhausted, count growing) validate the §3.4 taxonomy: without it, these would be 2634 false SDC reports. The 24h final count will be filled post-completion; the methodology and taxonomy, not the count, are the contribution.
 
 ### 5.4 NUMA-aware scan (same-Die vs cross-Die, contribution adjacent)
 
@@ -173,7 +173,7 @@ This is the open problem we name: *the gap between model-level fault sensitivity
 - **gem5 O3 ≠ TSV110 RTL** (per Paper 1 §7): the gem5 V110 O3 model is a microarchitectural approximation, not the silicon geometry. The 4.3% diverge rate is model-level, not silicon-level.
 - **Bit-flip injection only**: the A/B and single/multi-bit results are bit-flip-injection fault sensitivity, not structural-defect detection (§6).
 - **Negative result on healthy silicon**: zero SDC on 446 healthy cores is consistent with expected rates but does not validate detection of defective-core SDC.
-- **Citation verification boundary**: web fetch was network-restricted during writing; citations marked [CITE TBD] are leads from search-snippet + training memory, **not verified against original PDFs**. The corresponding author must verify each before submission. We do not fabricate page/volume/author lists.
+- **Citation verification boundary (critical)**: web fetch (WebFetch) was network-restricted (all external domains blocked: usenix.org, scholar.google.com, duckduckgo.com); web search (WebSearch) returned inconsistent training-memory fillings across calls (e.g., SiliFuzz attributed as "Genc et al. USENIX ATC 2022" in one call and "Mousavi, Kasikci, University of Michigan, USENIX ATC 2023" in another—**contradictory, neither verified**). Citations marked [CITE TBD: verify] are therefore unverified leads, **not asserted citations**. The corresponding author must verify each against the original PDF before submission. **We do not fabricate page/volume/author lists; we explicitly flag the uncertainty rather than assert false specifics.**
 - **24h scan interim**: counts are as-of-~17h; final counts pending scan completion.
 
 ---
@@ -206,13 +206,13 @@ Content-first; authorship deferred (per author decision). AI-use: this manuscrip
 
 ## References
 
-[All citations marked [CITE TBD: author, venue, year, verify] are unverified leads due to network-restricted web fetch during writing; the corresponding author must verify each against the original PDF before submission. We list leads, not asserted citations, to avoid fabrication.]
+[All citations marked [CITE TBD: verify] are unverified leads. WebFetch was network-blocked for all external domains; WebSearch returned contradictory training-memory fillings across calls (e.g., SiliFuzz attributed as "Genc et al. USENIX ATC 2022" in one call vs "Mousavi, Kasikci, U. Michigan, USENIX ATC 2023" in another—neither verifiable here). The corresponding author must verify each against the original PDF before submission. Leads listed to aid, not assert, citation.]
 
-- SiliFuzz: Genc et al., "SiliFuzz: From Fuzzing to Silicon Defect Detection," USENIX ATC 2022 [VERIFY].
-- Google SDC: Hochschild et al., silent data corruption at scale, ASPLOS 2021 [VERIFY title/authors/rates].
-- Relyzer: Li et al., MICRO ~2014 [VERIFY].
-- Lyft: Gupta et al., ISCA ~2020 [VERIFY].
-- Nautilus: Aschermann et al., NDSS 2019 [VERIFY].
-- AFL dictionary: lcamtuf, ~2014 [VERIFY].
+- SiliFuzz: "SiliFuzz: From Fuzzing to Silicon Defect Detection" [VERIFY author (Genc? Mousavi/Kasikci?), venue=USENIX ATC, year (2022? 2023?)].
+- Google SDC: Hochschild et al., silent data corruption at scale, ASPLOS 2021 [VERIFY exact title, authors, fleet rates].
+- Relyzer: Li et al., microarch fault pruning [VERIFY venue/year—MICRO ~2014?].
+- Lyft: Gupta et al. [VERIFY venue/year—ISCA ~2020?].
+- Nautilus: Aschermann et al., grammar fuzzing [VERIFY venue/year—NDSS 2019?].
+- AFL dictionary: lcamtuf [VERIFY ~2014].
 - Combinatorial testing: Kuhn et al., IPOG/ACTS [VERIFY].
-- Paper 1 (this program): core-179 forensics + CHAOS structural FI [gem5-fi repo, internal].
+- Paper 1 (this program): core-179 forensics + CHAOS structural FI [gem5-fi repo on board 0101, internal artifact, not yet published].
