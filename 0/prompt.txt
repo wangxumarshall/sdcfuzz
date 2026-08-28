@@ -370,3 +370,324 @@ Relevant paths: paper at `/home/sdc/wangxu/gem5-fi/docs/cases/core179-microarch-
   4. 0103 24h 扫描 orchestrator stall（已解决）：系统过载致 0% CPU，已停止
   5. B/C 500 次脚本 nohup 路径错（已解决）：相对路径改 cd+绝对路径
   6. 引用不可机器核实（已定位）：WebFetch 被封 + WebSearch 冲突，标 [CITE TBD: verify]
+
+---
+
+/goal 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+/goal 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+Background agent "Verify Unicorn coverage-guided targeting feasibility" was stopped by the user.
+
+---
+
+<task-notification>
+<task-id>a430301526c085507</task-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/a430301526c085507.output</output-file>
+<status>failed</status>
+<summary>Background agent "Verify Unicorn coverage-guided targeting feasibility" was running when the previous Claude Code process exited and did not complete. Its in-process state was lost. Check its worktree/output for partial work before assuming the task landed.</summary>
+</task-notification>
+
+---
+
+Goal set: 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+/goal 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
