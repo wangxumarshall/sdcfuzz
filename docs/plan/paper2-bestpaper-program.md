@@ -27,7 +27,7 @@
 | 5 | 跨仓 patch 接 CHAOSLSQFwd | `scripts/patch_gem5fi_lsq_fwd.py` 给 two_level_taishan.py 加 add_chaos_lsq_fwd + --injector lsq_fwd + --structural-fault；基础实例化成功 numFaultsInjected=1 | 79e5451 |
 | 6 | 结构故障 A/B/C sweep 脚本 | `scripts/gem5_sweep_structural_abc.py`（byte_lane_skew 注入 A/B/C 三组） | 6ec4174 |
 | 7 | Paper 2 更新最终 A/B/C 数字 | 旧 4.3/9.6/0.45 → 最终 3.9/8.0/3.7/0.49/0.46；§5.2.1 结构 pending | 37e4b4b |
-| 8 | **结构故障 A/B/C 50次探路** | A=0.0%(0/50), B=4.0%(2/50), C=2.0%(1/50); C/B=0.5× (与bit-flip一致, C未击败B) | (待提交) |
+| 8 | **结构故障 A/B/C 全量500次** | A=2.0%(10/500), B=8.4%(42/500), C=2.8%(14/500); C/B=0.33×, A/B=0.24×; z=-3.85 p=0.0001 **统计显著C<B** | e7c2f52后 |
 
 **A/B/C bit-flip 诚实结论**：CSP 定向配对在 bit-flip 注入度量下**未击败随机**（C=3.7% < B=8.0%），与朴素字典一样被逻辑掩蔽。减掩蔽假设（配对非零结果）未被验证——结构化操作数产生确定性结果，bit-flip 易被掩蔽；随机操作数无结构冗余更易 observable。
 
@@ -61,10 +61,8 @@
 ### 🔴 高优先级（best paper 关键证据）
 
 - [ ] **T1: 等 gem5 重编译完成**（0101，scons -j8，~2h+，pty 释放后可查）。编译完成是结构故障 A/B/C 的前置条件
-- [~] **T2: 结构故障 A/B/C** — 50次探路: A=0%, B=4%, C=2% (C/B=0.5×, 未击败)。**全量500次确认中**(0101后台3组并行)。趋势: 与bit-flip一致C<B
-- [ ] **T3: 根据 T2 结果定 Paper 2 主线**
-  - 若 C>B（结构度量击败）：主线 = "CSP 定向在结构故障度量击败随机（bit-flip 度量失败但结构度量成功，证明定向压力的正确度量是结构故障而非 bit-flip）" → best paper 候选
-  - 若 C≤B（结构也失败）：主线 = 诚实 negative result "operand-targeting 在两度量都未击败随机；逻辑掩蔽效应在模型级稳健" → DSN 级诚实方法论，不冲 best paper 但最诚实
+- [✅] **T2: 结构故障 A/B/C 全量500次完成** — A=2.0%, B=8.4%, C=2.8% (C/B=0.33×, z=-3.85 p=0.0001 统计显著C<B)。**两度量都未击败随机**
+- [✅] **T3: Paper 2 主线定为诚实 negative result** — 两度量(C/B=0.46× bit-flip, 0.33× 结构)都统计显著C<B。主线: 'operand-targeting(朴素字典/CSP配对)在bit-flip+结构故障两度量都未击败随机;逻辑掩蔽效应在模型级稳健' → DSN级诚实方法论,不冲best paper但最诚实
 
 ### 🟡 中优先级（论文完善）
 
