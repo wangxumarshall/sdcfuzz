@@ -14,9 +14,9 @@
 #include <stdint.h>
 #define ITERS 200
 
-/* 进化引擎雪崩爬山演化种子 (序列雪崩=19.6bits, 远超B随机6.4) — 作为 xorshift 种子 */
-#define D_SEED1 0x512DF5C13594AC91ULL
-#define D_SEED2 0x2A46EDCBCEC37B6FULL
+/* ACE-比例定向爬山演化种子 (ACE=1.0, 远超B随机0.85) — 作为 xorshift 种子 */
+#define D_SEED1 0x9510D3BF1AA8D548ULL
+#define D_SEED2 0xA5C11881A68E546EULL
 
 /* xorshift64 (演化种子引导的高压随机: 每次循环不同, 但种子来自进化引擎) */
 static uint64_t xs_state1 = D_SEED1;
