@@ -95,13 +95,18 @@ class EvolutionEngine:
         diff = sum(popcount(r1[i] ^ r2[i]) for i in range(5))
         return diff
 
-    def toggle_hill_climb(self, regs_init, iterations=30):
-        """变异算子一: Toggle-Driven 梯度爬山
-        随机翻转操作数 bit, 若 T(翻转量)上升则接受 (梯度上升)
-        自动逼近该指令序列的物理翻转极限"""
+    def toggle_hill_climb(self, regs_init, iterations=30, avalanche=True):
+        """变异算子一: Toggle-Driven 梯度爬山 (方案三: 加反掩蔽雪崩约束)
+        随机翻转操作数 bit, 若 T(翻转量)上升 AND 雪崩差异上升则接受 (梯度上升+反掩蔽)
+        雪崩: 1bit扰动→大输出差异, 直击掩蔽 (bit-flip命中后更易observable diverge)"""
         best_regs = dict(regs_init)
         _, best_T, _, _, best_score = self.run_once(best_regs)
-        history = [(0, best_T, best_score)]
+        # 雪崩基线: 对每个寄存器bit31扰动, 取平均输出差异
+        best_avalanche = 0
+        if avalanche:
+            for reg in range(5):
+                best_avalanche += self.avalanche_test(best_regs, reg, 31)
+        history = [(0, best_T, best_score, best_avalanche)]
         for it in range(iterations):
             # 随机选一个寄存器和若干 bit 翻转
             reg_idx = random.choice(list(best_regs.keys()))
@@ -112,11 +117,20 @@ class EvolutionEngine:
                 candidate[reg_idx] ^= (1 << bit)
             # 跑
             _, cand_T, cand_M, cand_E, cand_score = self.run_once(candidate)
-            # 梯度上升: T 上升则接受
-            if cand_T > best_T or (cand_T == best_T and cand_score > best_score):
+            # 雪崩: 候选的1bit扰动输出差异
+            cand_avalanche = 0
+            if avalanche:
+                for reg in range(5):
+                    cand_avalanche += self.avalanche_test(candidate, reg, 31)
+            # 方案三接受条件: T上升 AND 雪崩差异不降 (反掩蔽约束)
+            # 雪崩差异高 = bit-flip命中后输出变化大 = 不易被掩蔽
+            t_improved = cand_T > best_T or (cand_T == best_T and cand_score > best_score)
+            av_improved = (not avalanche) or cand_avalanche >= best_avalanche
+            if t_improved and av_improved:
                 best_regs = candidate
                 best_T, best_score = cand_T, cand_score
-                history.append((it+1, best_T, best_score))
+                best_avalanche = cand_avalanche
+                history.append((it+1, best_T, best_score, best_avalanche))
         return best_regs, best_T, best_score, history
 
     def boundary_amplify(self, regs_init, iterations=20):
