@@ -1279,3 +1279,57 @@ bazel-bin/tools/simple_fix_tool_main \
   - **Diverge #2**：cycle 38632 翻转 `integer[9]` bit 19 → SUM `...748788→...6217780` + CRC `5b8846f3→a8d05814`（数值路径翻转传播到 SUM 与 CRC 双输出）。
   - **Diverge #22**：cycle 49814 翻转 `integer[3]` bit 15 → CRC `5b8846f3→db8846f3`（bit 15 翻转 = 5→d，精准命中 CRC 计算中间寄存器），SUM 不变。
 - **结论**：检测用例工作负载的进位链/翻转率/CRC 路径对单 bit 翻转敏感，4% 注入 diverge，证明检测用例在微架构级故障注入下**能被激发出可观测 SDC**。结合附录 C 注错验证（runner outcome=3 精准检出单寄存器翻转），检测链路从激发到检出端到端有效。
+
+---
+
+## 附录 E：自适应进化引擎（从静态字典证伪到动态进化）
+
+> 与附录 A-D 互补：A-D 是**静态操作数字典**（全0/全1/交替/subnormal/NaN + 笛卡尔积）驱动的检测用例生成与验证，本附录记录该静态路径被**两度量证伪**后的范式转向——用自适应进化引擎替代静态字典，在操作数空间做**梯度引导**而非均匀遍历。
+
+### E.1 证伪背景：A/B/C 两度量证伪静态字典
+
+附录 C.1 的静态操作数字典（全0/全1/交替01-10/subnormal/NaN 等）在两度量（bit-flip + structural diverge）下被证伪：
+
+| 度量 | A（字典） | B（随机对照） | C（结构化高 Toggle） | C/B | p 值 | 结论 |
+|------|----------|--------------|---------------------|-----|------|------|
+| bit-flip | 3.9% | 8.0% | 3.7% | 0.46× | 0.0083 | C 显著低于 B |
+| structural (byte_lane_skew) | 2.0% | 8.4% | 2.8% | 0.33× | 0.0001 | C 显著低于 B |
+
+**逻辑掩蔽根因**：结构化操作数 → 确定性计算结果 → bit-flip 被逻辑掩蔽。静态字典的"极端值"反而因路径可预测而**降低**功能检出率。
+
+### E.2 范式转向：自适应进化引擎
+
+证伪后转向**动态进化引擎** `tools/sdc_mutator/evolution_engine.py`，用适应度引导在操作数空间做梯度上升，替代静态字典的均匀遍历。
+
+**适应度函数**：
+```
+Fitness = W1·T(di/dt) + W2·M(Path) + W3·E(AntiMasking)
+  T = 寄存器 bit 翻转计数 (popcount)，度量 di/dt 压力
+  M = 指令数 (周期代理，cycle proxy)
+  E = Shannon 熵 (反掩蔽：全0/全1 → E=0；随机 → E→1)
+```
+T 对应附录 A.1 的瞬态电压骤降攻击面，E 直接惩罚静态字典的掩蔽根因（全0/全1 熵为 0）。
+
+### E.3 三种变异器
+
+1. **toggle-driven hill-climbing**：翻转操作数 bit，若 T 上升则接受（梯度上升）。
+2. **boundary amplification**：±1/移位变异，检测进位链断裂等变异点。
+3. **context crossover**：注入高功耗指令序列（FMLA 爆发）制造电压骤降上下文。
+
+### E.4 进化流水线
+
+```
+Seed → Evaluate → Mutate/Simulate/Score/Select/AntiMasking → Emit → silicon
+```
+
+### E.5 已验证结果
+
+从 `ADDS X0,X1,X2` + 普通操作数出发，进化后 T 从 8 升至 70（**8.8×**），进化出的操作数呈随机外观但 Toggle 最大，E=0.999（接近最大熵）。Unicorn `ArchFeatureGenerator` 经 `EmitSetBitFeatures` 逐 bit 输出 `reg_toggle`，覆盖信号完全支撑适应度函数。
+
+### E.6 待办：A/B/C/D 对比
+
+预注册假设：进化语料 D 的 bit-flip + structural diverge 检出率 **D ≥ 2×B** 视为显著。待与 A（字典）/B（随机）/C（结构化）做四臂对比。
+
+### E.7 参考
+
+详细实现计划见 `docs/superpowers/plans/2026-08-27-sdc-evolutionary-engine-paper.md`。
