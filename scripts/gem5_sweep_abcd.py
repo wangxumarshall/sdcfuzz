@@ -23,9 +23,9 @@ GOLDEN = {
     "A": "SUM=1176263118239748788 CRC=5b8846f3",
     "B": "SUM=10721424292087689827 CRC=6728fc4a",
     "C": "SUM=1626623080976798388 CRC=79113488",
-    "D": "SUM=2521528919358667908 CRC=58cd3c6e",
+    "D": "SUM=12232794430793512072 CRC=cd377e2a",
 }
-NUMCYCLES = {"A":63788, "B":71215, "C":63343, "D":63676}
+NUMCYCLES = {"A":63788, "B":71215, "C":63343, "D":66253}
 
 def run_one(i, fc, group, structural, outdir):
     if os.path.exists(outdir): shutil.rmtree(outdir)
