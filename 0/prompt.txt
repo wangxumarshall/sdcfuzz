@@ -691,3 +691,7 @@ Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩�
 Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
 
 上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+/superpowers:writing-plans 总结当前工作，并为后续所有工作撰写实现、验证、输出paper等完整方案
