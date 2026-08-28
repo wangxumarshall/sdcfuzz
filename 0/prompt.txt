@@ -1,0 +1,701 @@
+/grill-me 调用paper skill （academic-research-skill）撰写skill，撰写paper，要求基于对当前工作的深刻理解和全面回顾、当前项目的深刻洞察，内容要完整的全面的深刻的，有建设性意见的，符合系统领域和体系结构领域顶级paper的水准，经得起时间考验和学者专家的推敲，必须是经典之作。要求必须诚实、真诚、尊重事实。要求逻辑严密、结构清晰。如果当前实验不完备，需要补充完成。
+
+---
+
+<task-notification>
+<task-id>a453e0a7cc543ce45</task-id>
+<tool-use-id>call_db5502be1cc043069982a08e</tool-use-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/a453e0a7cc543ce45.output</output-file>
+<status>completed</status>
+<summary>Agent "Honest contribution and novelty assessment" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result># Brutally Honest Assessment
+
+## 1. NOVELTY
+
+**Operand-space stress testing**: Not novel. Carry-chain stress (`0xFFFF...+1`), toggle-maximizing patterns (`0x5555/0xAAAA`), boundary values — these are textbook VLSI path-delay/stuck-at fault patterns (decades old). The "cartesian product over operands" is combinatorial testing (Kuhn et al., 1990s). As a *fuzzing* tactic it's AFL-dictionary-guided mutation applied to operand slots — engineering application, not a research contribution. Calling it a "paradigm shift" (report §2.2) is marketing language.
+
+**"Weak three factors"**: Taxonomy restatement. Design-redundancy deficiency, HCI/NBTI/EM aging, and workload-induced vulnerability are canonical failure-mode categories in the dependability/SDC literature (Govindarajulu et al. on SDC; Mukherjee AVF work). Clean packaging, not new science.
+
+**"3D stress space"**: Re-labeling. The three axes map directly onto AVF decomposition (structural fault sites × activation context × workload), ISCA 2003-era. "Down-Top + Top-Down fusion" is a slogan, not a method.
+
+**Dual-path validation (gem5-fi + silifuzz)**: Combination is methodologically legitimate but incremental. gem5 FI is standard practice; end-state replay divergence is the SiliFuzz contribution (ASPLOS 2022). Stitching them is a workshop-grade integration, not a paradigm.
+
+## 2. THE CENTRAL HONEST PROBLEM
+
+"Built a methodology, found 0 real SDC on healthy silicon" is a **null result on a healthy part**. At ASPLOS/SOSP/ISCA this is a near-automatic reject — reviewers want positive evidence. At DSN/ATC it is *defensible only if* the methodology is rigorous and the negative result is well-motivated. The report's own §5.3 admits "总 SDC=0" across 446 cores. The gem5 4.0–4.3% diverge rate is on a *model* under *synthetic bit-flips*, not real defects — it proves the corpus is fault-sensitive in simulation, not that it detects silicon SDC. The `set_bytes`→`outcome=3` injection (§3.7) is tautological: it re-confirms SiliFuzz's baseline end-state checker works.
+
+**Minimum defensible framing**: "A reproducible methodology for constructing operand-targeted SDC stress corpora for closed-RTL commercial ARM server silicon, validated to a 4.3% model-level fault-detection rate and deployed at 446-core scale; no real SDC was observed on healthy Kunpeng920, consistent with the expected 10⁻⁸–10⁻¹⁰ SDC rate." That is an honest, publishable-at-DSN methodology paper. It is *not* an ASPLOS/SOSP paper.
+
+## 3. EVIDENCE GAPS (paper-killing)
+
+- **A/B operand-dict vs random corpus — MISSING** (you are correct). The report gives 4.3% diverge on the operand corpus only (§5.2, §7.1 item1). No baseline random-corpus diverge rate under identical gem5 injection exists. Without this, the *central causal claim* ("operand-space targeting improves detection") is unsupported. This alone sinks review.
+- **gem5-fi = model only, not silicon** (§7.3 item6): bit-flips are an architectural fault model, not timing/voltage/physical defects. "Excitation capability" is proven only against an injected-fault model.
+- **No EDA gate-level ground truth** (§7.3 item6, explicit): RTL/GDS closed. The coverage table (§1.2: MMU 20%, L2C 40%…) is **unsourced** — no tool, no RTL, no methodology stated. A reviewer will ask "measured how?" and there is no answer.
+- **"core-179 real SDC"**: I find no such event in these documents. The report's strict SDC count (outcome 2/3/4) is **0 across all boards** (§7.1, "修正后 4 板总真SDC=0"). There is nothing to reproduce. If you are referring to the upstream SiliFuzz paper's core-179 anecdote, that is a different study not present here.
+
+## 4. STRONGEST DEFENSIBLE CONTRIBUTION + THESIS
+
+The only contribution that survives scrutiny is **the reproducible end-to-end toolchain + 125-snapshot corpus operationalizing V110-parameters-targeted stress generation for a closed-RTL commercial CPU, with model-level fault-sensitivity evidence and 446-core real-silicon deployability**. Everything else is prior-art rephrasing or a null result.
+
+**Honest one-sentence thesis**: "Dictionary-guided operand-space mutation, parameterized against published TaiShan V110 microarchitecture, yields a corpus whose 4.3% gem5 single-bit-injection diverge rate establishes a lower bound on detection sensitivity, and which is deployable at 446-core scale on closed-RTL Kunpeng920 silicon — though no real SDC was observed on healthy parts, exposing the gap between model-level fault sensitivity and silicon-level defect detection as the open problem."
+
+Relevant files: `/home/sdc/wangxu/silifuzz/docs/kunpeng920_sdc_research_report.md`, `/home/sdc/wangxu/silifuzz/docs/plan/kunpeng920_sdc_plan.md`, `/home/sdc/wangxu/silifuzz/docs/plan/kunpeng920_sdc_design_concept.md`, `/home/sdc/wangxu/silifuzz/docs/plan/kunpeng.md`.</result>
+<usage><subagent_tokens>0</subagent_tokens><tool_uses>5</tool_uses><duration_ms>75184</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ace078f5989bdfffe</task-id>
+<tool-use-id>call_3e23079bd0a9456288f64a7c</tool-use-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/ace078f5989bdfffe.output</output-file>
+<status>completed</status>
+<summary>Agent "Related work SOTA for novelty positioning" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>**Important transparency note:** I was unable to perform live web searches in this environment — the WebSearch tool returned either hallucinated results or refused, and WebFetch was blocked. The following is from my training knowledge, not verified live. Treat citations as leads to confirm, not ground truth. I will not fabricate specifics.
+
+---
+
+## 1. SiliFuzz
+- Paper: Genc et al., "SiliFuzz: From Fuzzing to Silicon Defect Detection," USENIX ATC 2022.
+- Contribution: fuzz a CPU proxy (Unicorn emulator) with Centipede to accumulate a corpus of (instruction sequence, expected end state); run that corpus at fleet scale on real cores; flag cores whose end state diverges.
+- Mutation model: Centipede's default byte/bit/arithmetic mutation on instruction bytes — coverage-guided, NOT operand-aware, NOT cartesian, NOT guided by any circuit-vulnerability dictionary.
+- So: the "operand-space cartesian product + vuln-dictionary" angle is NOT in SiliFuzz. SiliFuzz is x86_64 in the paper; your AArch64/Kunpeng framing is also distinct.
+
+## 2. SDC literature
+- Google: Hochschild et al., "Silent Data Corruptions at Scale," ASPLOS 2021. Fleet-scale study; reported that a small but non-zero fraction of machines (on the order of 1 in 10^5–10^6 over multi-year observation) exhibited silent corruptions; root causes span CPU bugs, silicon defects, memory; mitigations rely on replication/checksums. (Exact numbers — please verify from the PDF.)
+- Meta: Meza et al. did large-scale memory-reliability studies; I am not aware of a peer-reviewed Meta CPU-SDC paper comparable to Google's. Flag this as uncertain.
+- Kunpeng/TaiShan V110-specific SDC work: I am not aware of any public peer-reviewed study. This is a genuine gap you can claim — but verify via Scholar before asserting.
+
+## 3. Operand-space / cartesian fuzzing
+- AFL dictionaries (lcamtuf, ~2014) are standard.
+- Grammar/structured fuzzing: Nautilus (Aschermann et al., NDSS 2019), Grimoire, Superion — tree-level mutation.
+- Combinatorial/cartesian (t-wise, IPOG/ACTS, Kuhn et al.) is a well-established software-testing technique.
+- "Operand dictionary + cartesian product" as such is NOT a named SOTA fuzzing technique, but it is a straightforward recombination of combinatorial testing + dictionary fuzzing applied to ISA operands. Honest verdict: **incremental**, not wholly novel.
+
+## 4. Microarch FI tools
+- Relyzer (Li et al., MICRO ~2014): prunes equivalent microarch faults.
+- Lyft (Gupta et al., ISCA ~2020): statistical pruning for tractable campaigns.
+- SimFi: simulator-based FI (arXiv ~2303.06733 — verify).
+- Banshee: a resilient OoO processor (mitigation), not strictly an FI tool.
+- "gem5-Fi" and "CHAOS": I cannot give you a confident citation from memory — I am not certain these are published names. Do NOT cite them without verifying; risk of hallucination.
+
+## 5. Honest novelty verdicts
+- **Operand-space cartesian mutation guided by circuit-vuln dictionary:** incremental. Pieces known; the specific dictionary source is the novel twist.
+- **Dual validation (microarch FI excitation + production runner end-state detection):** likely **novel as a bridge** — FI and fleet SDC scanning are separate communities; coupling them is a real contribution.
+- **Distributed near-full-load Kunpeng scanning with stress-ng poisoning:** incremental/known. SiliFuzz already does distributed fleet scanning; stress-based screening is standard practice; the "poisoning" framing is a variant.
+- **Distinguishing resource-exhaustion SIGSEGV (noise) from real SDC:** incremental. Outcome classification is routine in fuzzing; your taxonomy under load is a practical engineering contribution, not a paradigm shift.
+
+**Action item:** before submission, verify every citation above against the actual PDFs — especially SDC rates, Lyft/Relyzer venues/years, and whether "gem5-Fi"/"CHAOS" are real published artifacts. I could not, and I refuse to invent those details.</result>
+<usage><subagent_tokens>0</subagent_tokens><tool_uses>11</tool_uses><duration_ms>109822</duration_ms></usage>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>ab6f38252c5ea1c03</task-id>
+<tool-use-id>call_8902850cd055414b8513cea4</tool-use-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/ab6f38252c5ea1c03.output</output-file>
+<status>completed</status>
+<summary>Agent "Investigate 0101 gem5-fi SDC case study" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>Now I have the complete picture across both repos. Let me synthesize my findings.
+
+## Investigation Report: gem5-fi "core 179" SDC Case Study
+
+### 1. Is the "core 179" SDC a REAL, REPRODUCIBLE hardware SDC on Kunpeng 920?
+
+**Yes — this is a real, well-documented hardware SDC, forensically pinned to a single physical core.** Evidence from `docs/cases/core179-microarch-rootcause-synthesis/PAPER.md` and `CORE179_SDC_ROOTCAUSE_REPORT.md`:
+
+- **Symptom**: 5 fatal kernel panics + 73 spurious-translation-fault warnings over 12 days (2026-08-14 to 08-25), **78/78 events on logical CPU 179, zero on the other 191 cores** (verified via `grep -h 'WARNING: CPU:'`). Also an Eigen `SimplicialCholesky` numeric SDC (Case 2: 256 solution-vector elements corrupted, mantissa-biased) under same-socket ≥47-core load.
+- **Root-cause hypothesis**: A core-private defect in the **load data-return path** (fill-buffer/replay-merge ≈ L1D readout assembly), with a co-located sibling in the page-table-walker readout path. The decisive forensic evidence: a load of `__per_cpu_offset[146]` returned a value bit-identical to `__per_cpu_offset[0]` **right-rotated by one byte** (Hamming distance 0, not expressible as any single-byte bit flip) — a structural byte-lane skew. Two independent boots gave rol1 and rol6, both hitting the array head (≈2⁻⁵⁸ chance coincidence). The competing **physical-register-file-liveness hypothesis was falsified** (PTW-path corruption and stale-array-head replay are things PRF can't explain). `fi.md` additionally records Case 1 (read-history-aliasing, 9/9 reproduced) and Case 3 (illegal register values under undervoltage).
+- **Excluded**: software bug, FP-pipe damage, cache/TLB/branch anomalies, memory ECC, EINJ injection, single-bit SEU.
+
+### 2. Is there a minimal reproducer (MRU)?
+
+**Yes.** `mru_eigenmc.c` + `eigen_cabidrv.cpp` + `build_mru_eigenmc.sh` exist at `docs/cases/sdc1-01-02-core179-diagnostics/`. The build script produces `mrueig`, a binary linking **only libc/libm** (Eigen 5.0 templates compiled `-fno-exceptions -fno-rtti` with locally-provided `operator new/delete`; `ldd` shows only libc+libm). The script header documents real reproduction on silicon:
+```
+- 179 under load: 6-18 / 2500-3000 fails (multi-bit, elem[0], data-aliasing)
+- 176 under load: 0 fails   (healthy core)
+- 179 single-core: 0 fails  (load-triggered)
+```
+`reproduction_result.csv` records 3 fuzzed cases reproduced (YES, multi-bit, 21/15/14 popcount). **However, I could not run the MRU myself**: the prebuilt `mrueig` binary is absent, the Eigen header path (`~/arm64-sdc-fuzzing/opendcdiag/third-party`) does not exist on this board, and re-running the real-silicon reproduction requires same-socket ≥47-core load that triggers RCU-stall + hardware watchdog reset (the report explicitly warns: *"禁止再用'满载 + 核 179 跑触发程序'的方式复现"* — the earlier "timeout 75 = safe" claim was falsified on 2026-08-13). So the MRU is documented-as-reproduced but not re-runnable in this session.
+
+### 3. Could this SDC serve as a VALIDATION ANCHOR for an operand-space stress-test methodology?
+
+**Partially — and the authors explicitly say bit-flip-only methodology cannot reach it.** PAPER.md line 127 states: *"structural data-path faults are a necessary addition to fault-injection toolkits for this class of defect; bit-flip-only injectors (the CHAOS/GeFIN/SiliFuzz norm) cannot reach it."* The core-179 signature is a **byte-lane structural skew + stale-line replay**, not a bit flip. A pure operand-space stress methodology (varying instruction operands to maximize path activation) could plausibly **trigger/detect** the SDC on real silicon (the MRU does exactly this via Eigen operand patterns + load pressure), but it **cannot reproduce the mechanism** in simulation without a structural (non-bit-flip) injector. The gem5-fi authors extended CHAOS with `byte_lane_skew`/`all_zero`/`StaleLineReplay` precisely to close this gap. So: as a *detection* anchor on real silicon — yes; as a *mechanism-reproduction* anchor in sim — only with structural-FI extensions, not operand-space alone.
+
+### 4. Relationship to silifuzz (`/home/sdc/wangxu/silifuzz`)?
+
+**Related but separate repos in a two-stage pipeline; gem5-fi is the "excitation/verification" stage, silifuzz is the "detection/deployment" stage.** The silifuzz repo's `docs/kunpeng920_sdc_research_report.md` states: *"通过 gem5-fi 微架构级故障注入验证检测用例的激发能力，通过 SiliFuzz 真机多单板满负载扫描验证检出能力"* and *"建立了从'激发(gem5-fi)→检出(silifuzz)→真机部署(分布式扫描)'的完整证据链."* gem5-fi's `fi_research/EXPERIMENT_DESIGN.md` positions CHAOSPhysReg as the increment over "ITC'23 / GeFIN / SiliFuzz / Veritas". PAPER.md names SiliFuzz as prior art (a bit-flip-only fuzzer). They share the same Kunpeng-920 target, the same CLAUDE.md patch-discipline boilerplate, and the same author, but are distinct codebases: silifuzz = Bazel/C++ proxy-fuzzing + runner; gem5-fi = gem5/CHAOS Python/C++ simulator + forensic docs. Notably, **the core-179 forensics live only in gem5-fi**; the silifuzz repo references gem5-fi as the FI validator but does not contain the core-179 case material.
+
+### 5. CHAOS fault-injection capabilities
+
+**Base CHAOS (7 modules, all gem5 SimObjects):**
+- **CHAOSReg** — architectural register injection (all ISAs, all CPU models); bit_flip / stuck_at_zero / stuck_at_one / random; configurable faultMask, bitsToChange, regTargetClass (integer/floating_point/both), PC-targeted, cycle-granular.
+- **CHAOSPhysReg** — **physical register file** injection, **O3CPU only** (reaches PRF, rename maps, free list); same three fault types; this is the key differentiator vs. other FI tools.
+- **CHAOSCache** — cache-line injection.
+- **CHAOSMem** — main-memory location injection.
+- **CHAOSAddrPath**, **CHAOSLSQFwd**, **CHAOSPTW** — extended by this project for the core-179 work.
+
+**Fault types (base)**: single-bit and **multi-bit** (via faultMask/bitsToChange), plus permanent stuck-at-0/1. **Microarchitectural structures reachable**: architectural regfile (CHAOSReg), **physical regfile + rename map + free list** (CHAOSPhysReg, O3-only), cache lines, memory, LSU store-forward path (CHAOSLSQFwd), address path (CHAOSAddrPath), page-table-walker readout (CHAOSPTW).
+
+**Extensions added by this project (P-D1/D2/D3, in `CHAOS/gem5/src/cpu/o3/`)**: structural (non-bit-flip) faults — `byte_lane_skew` (rotate data by k bytes), `StaleLineReplay` (replay old fill-buffer/LQ line), `all_zero` (zero entire 8-byte word). H5 (byte-lane-skew → oops chain) is **end-to-end verified in gem5** (`numStructuralByteLaneSkew=30`, 28/30 SDC-detectable, multi-seed). H6/H7 (address-path, PTW) **implemented and compiled in but unverifiable in SE mode** — honestly documented: SE mode's flat physical memory (512 MiB from addr 0) absorbs byte7-zeroed addresses without faulting; needs FS (full-system) mode with MMU-on translation. Physical vs. architectural regfile: both — CHAOSPhysReg hits the physical regfile behind rename; CHAOSReg hits architectural (post-commit) state.
+
+### Key file paths (all absolute, on 0101 board `172.168.177.97`)
+- `/home/sdc/wangxu/gem5-fi/docs/fi.md` — case-study overview (3 cases, HotOS/SOSP plan)
+- `/home/sdc/wangxu/gem5-fi/docs/cases/sdc1-01-02-core179-diagnostics/CORE179_SDC_ROOTCAUSE_REPORT.md` — main root-cause report (70 KB)
+- `/home/sdc/wangxu/gem5-fi/docs/cases/sdc1-01-02-core179-diagnostics/{mru_eigenmc.c,eigen_cabidrv.cpp,build_mru_eigenmc.sh,reproduction_result.csv}` — MRU + results
+- `/home/sdc/wangxu/gem5-fi/docs/cases/core179-microarch-rootcause-synthesis/{PAPER.md,DIAGNOSIS_REPORT.md,FI_DESIGN_SUPPLEMENT.md}` — paper draft + FI design
+- `/home/sdc/wangxu/gem5-fi/fi_research/EXPERIMENT_DESIGN.md` — H0–H4 hypothesis design, CHAOSPhysReg verification evidence
+- `/home/sdc/wangxu/gem5-fi/CHAOS/README.md` — base CHAOS capabilities
+- `/home/sdc/wangxu/silifuzz/docs/kunpeng920_sdc_research_report.md` — silifuzz-side report referencing gem5-fi as FI validator</result>
+<usage><subagent_tokens>0</subagent_tokens><tool_uses>15</tool_uses><duration_ms>232353</duration_ms></usage>
+</task-notification>
+
+---
+
+Q1 选b，Q2选a，Q3 接受，Q4 选a，Q5选 业界经验估计，Q6 中文+英文abstract，Q7 接受
+
+---
+
+<task-notification>
+<task-id>a546eadbe7c554c67</task-id>
+<tool-use-id>call_3f990e83eb9342f492834954</tool-use-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/a546eadbe7c554c67.output</output-file>
+<status>completed</status>
+<summary>Agent "Read gem5-fi PAPER.md and diagnosis docs" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>I have read all four files. Here is the structured summary.
+
+---
+
+## A. Existing thesis statement (PAPER.md, §1 Introduction, verbatim)
+&gt; "we show that **bit-exact cross-boot forensics on production vmcores, combined with ARMv8 architectural invariants, can localize a defect to a specific microarchitectural data path** — and that a **structural fault injector** (as opposed to the conventional bit-flip injector) is necessary to reproduce the observed signature in simulation."
+
+The Abstract additionally asserts the localization result: "We localize the defect to a **core-private load data-return path** (fill-buffer/replay-merge ≈ L1D readout assembly)... and we **falsify** the competing physical-register-file hypothesis."
+
+## B. Existing paper structure (section titles in order)
+1. Abstract 2. §1 Introduction (+1.1 Phenomenon, +1.2 Contributions) 3. §2 Background (+2.1 TSV110 microarch, +2.2 ARMv8 translation-fault semantics, +2.3 openEuler spurious-fault handler) 4. §3 Forensic Methodology and Findings (+3.1 Five-dump census, +3.2 D1 data-path signature, +3.3 D2 address-path, +3.4 D3 PTW signature, +3.5 Single-vs-multiple defects) 5. §4 Fault-Injection Methodology (+4.1 P-D1 CHAOSLSQFwd extension, +4.2 P-D2 CHAOSAddrPath, +4.3 P-D3 CHAOSPTW, +4.4 The probe) 6. §5 Results (+5.1 H5 verified, +5.2 Why bit-flip insufficient, +5.3 H6 SE-mode null, +5.4 H7 SE-mode null) 7. §6 Recommendations to Silicon Vendor 8. §7 Threats to Validity 9. §8 Data and Code Availability 10. §9 Author Contributions (CRediT) 11. §10 Conflict of Interest 12. §11 Funding 13. §12 AI-Use Statement 14. References.
+
+## C. Contributions claimed (PAPER.md §1.2, verbatim 4 bullets)
+1. A three-path microarchitectural decomposition (D1/D2/D3)... with pre-emptive rebuttals of the three strongest reviewer attacks.
+2. Falsification of the PRF-liveness hypothesis... using evidence the PRF hypothesis cannot account for: PTW-path corruption and bit-exact stale-array-head replay.
+3. A structural fault-injection methodology — extending CHAOS/gem5 with `byte_lane_skew` / `all_zero` data-path faults, an address-path injector, and a PTW-readout injector — and the end-to-end reproduction of the kernel oops chain via the structural (not bit-flip) model (H5 verified).
+4. Falsifiable hypotheses H6/H7 and an honest account of where verification was blocked by gem5's syscall-emulation translation model.
+
+## D. What is already covered
+- **(i) Core-179 forensics:** Fully covered. Five-kdump census (78/78 events on CPU 179); D1 data-path signature with the decisive `__per_cpu_offset[146] = rol1(slot[0])` Hamming-0 match (and a second boot rol6 match, p≈2⁻⁵⁸); D2 address-path MSB-zeroing (2/5 panics); D3 PTW 73 spurious faults on static mappings; PRF hypothesis falsified.
+- **(ii) CHAOS structural-fault extensions:** Fully implemented. `byte_lane_skew` + `all_zero` added to CHAOSLSQFwd (`structuralFault` enum, hook `lsq_unit.cc:1498`); new `CHAOSAddrPath` (address byte7, hook `lsq.cc::sendFragmentToTranslation`, added `Request::setVaddr()`); new `CHAOSPTW` (hook `table_walker.cc::doLongDescriptor`, `ptwEcc` knob). All three compiled in (`nm`-confirmed).
+- **(iii) Hypothesis testing H0–H7:** H5 verified (structural byte-lane-skew reproduces oops chain end-to-end, 28/30 PTR_CORRUPT). H6 executed, SE-mode null result root-caused to SE address-space geometry (VA==PA, 512 MiB from 0). H7 executed, SE-mode null root-caused to MMU-off/no-walk. H0–H4 live in the predecessor `EXPERIMENT_DESIGN.md` (referenced, not re-run). `StaleLineReplay` mentioned in FI_DESIGN_SUPPLEMENT §3.1 enum but PAPER.md §4.1 only ships `byte_lane_skew`/`all_zero`.
+- **(iv) SiliFuzz as prior art:** Mentioned exactly once, in §5.2: "bit-flip-only injectors (the CHAOS/GeFIN/SiliFuzz norm) cannot reach it." No deeper engagement, no corpus/runner/orchestrator detail.
+
+## E. What is NOT yet covered / explicitly future work
+- **Operand-space stress corpora:** Absent. No SiliFuzz-style snapshot/operand corpus, no Centipede proxy fuzzing.
+- **Fleet-scale real-silicon scanning:** Absent. §7 explicitly states "Second healthy machine was not reachable" (peer ports firewalled); single-machine-with-isolation only.
+- **125-snapshot SiliFuzz corpus:** Not mentioned anywhere.
+- **Distributed deployment / orchestrator-scale:** Absent.
+- **A/B operand-vs-random comparison:** Absent.
+- **FS-mode verification of H6/H7:** Explicitly future work — "requires an AArch64 kernel+dish image"; image download timed out.
+- **Vendor RTL/DFT single-vs-multiple adjudication (§3.5/§6.4):** Reserved for the silicon vendor.
+- **StaleLineReplay injector:** Designed in FI_DESIGN_SUPPLEMENT §3.1 but not shipped in PAPER.md's verified set.
+
+## F. Target venue and page limit
+PAPER.md header: **"Target venue: ASPLOS / MICRO / HPCA (systems + computer architecture)"**. No explicit page limit stated in the document.
+
+## G. Authorship / attribution
+- §9 CRediT: "Conceptualization, methodology, investigation, software, writing — **the agent author**." Single author (an AI agent). §12 AI-Use Statement: produced with Claude Code "under human-supervised patch discipline." No human co-author named, no institutional affiliation given. §10/§11: no COI, no funding.</result>
+<usage><subagent_tokens>0</subagent_tokens><tool_uses>7</tool_uses><duration_ms>69263</duration_ms></usage>
+</task-notification>
+
+---
+
+Q1:(β) 两篇独立论文(需要重新阅读PAPER.md，因为我做了更新). Q2: 先写先写论文2(silifuzz 检测/部署)。Q3：选c。Q4选a。Q5接受。Q6 同意。
+
+---
+
+<task-notification>
+<task-id>aa657dcabfaaf8eb0</task-id>
+<tool-use-id>call_3f0b1cd76b034ccea9439cc0</tool-use-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/aa657dcabfaaf8eb0.output</output-file>
+<status>completed</status>
+<summary>Agent "Re-read updated PAPER.md as baseline" finished</summary>
+<note>A task-notification fires each time this agent stops with no live background children of its own. The user can send it another message and resume it, so the same task-id may notify more than once.</note>
+<result>All three greps returned empty: no `staleline` anywhere in CHAOS source, no TODO/FIXME/placeholder markers in the three documented injectors, and **no SiliFuzz/operand-space/fleet/corpus/real-silicon coupling anywhere in the CHAOS codebase**. Let me also confirm the CHAOSCache/CHAOSMem/CHAOSPhysReg/CHAOSReg modules are pre-existing base-CHAOS (not new structural injectors) by checking one of them, and verify there's no `CHAOSDataReturn` or similar undocumented non-bit-flip module. The directory list already shows exactly 7 CHAOS modules — none undocumented.
+
+I have everything needed. Let me deliver the combined report.
+
+---
+
+# Combined Report: PAPER.md read + non-bit-flip injector audit
+
+## Part 1 — PAPER.md (Paper 1) summary
+File: `/home/sdc/wangxu/gem5-fi/docs/cases/core179-microarch-rootcause-synthesis/PAPER.md`, **247 lines**, fully read via `sed -n '1,247p'`.
+
+**A. Thesis (verbatim).** Abstract opens: "Silent data corruption (SDC) on a single physical core of a production ARM64 server (HiSilicon Kunpeng-920 / TaiShan V110) manifested as recurring kernel panics across five independent boots over twelve days, every event pinned to logical CPU 179. We perform a five-kdump forensic study… We localize the defect to a **core-private load data-return path**… and we **falsify** the competing physical-register-file hypothesis." §1 Intro: "we show that **bit-exact cross-boot forensics on production vmcores, combined with ARMv8 architectural invariants, can localize a defect to a specific microarchitectural data path** — and that a **structural fault injector** (as opposed to the conventional bit-flip injector) is necessary to reproduce the observed signature in simulation."
+
+**B. Section list (order):** Abstract; §1 Introduction (§1.1 phenomenon, §1.2 Contributions); §2 Background (§2.1 TSV110, §2.2 ARMv8 translation-fault semantics, §2.3 openEuler spurious-fault handler, §2.4 gem5 SE vs FS); §3 Forensic Methodology and Findings (§3.1–§3.5 D1/D2/D3 + single-vs-multiple); §4 Fault-Injection Methodology (§4.1 P-D1, §4.2 P-D2, §4.3 P-D3, §4.4 probe, §4.5 FS config); §5 Results (§5.1 H5 verified, §5.2 bit-flip insufficiency, §5.3 H6 D2, §5.4 H7 D3, §5.5 D2 vs D3 trigger density); §6 Recommendations to Silicon Vendor; §7 Threats to Validity; §8 Data and Code Availability; §9 Author Contributions (CRediT); §10 COI; §11 Funding; §12 AI-Use Statement; References.
+
+**C. Contributions (verbatim, 4 bullets, line 15–18).** (1) "A three-path microarchitectural decomposition (D1/D2/D3)…"; (2) "Falsification of the PRF-liveness hypothesis…"; (3) "A structural fault-injection methodology — extending CHAOS/gem5 with `byte_lane_skew` / `all_zero` data-path faults, an address-path injector, and a PTW-readout injector — and the **end-to-end reproduction** of the kernel oops chain via the structural (not bit-flip) model (H5 verified)."; (4) "Falsifiable hypotheses H6/H7, with the SE-mode null results statically root-caused (not merely asserted) to the ARM MMU translation model, and the corresponding FS-mode confirmation that the hooks fire under MMU-on translation…"
+
+**D. SiliFuzz-side material?** **NONE present or added.** The word "SiliFuzz" appears exactly once in the entire file (line 76, §5.2): "structural data-path faults are a necessary addition to fault-injection toolkits for this class of defect; bit-flip-only injectors (the CHAOS/GeFIN/SiliFuzz norm) cannot reach it." No mention of: SiliFuzz corpus, fleet scanning, operand-space, distributed deployment, A/B testing, or real-silicon 446-core fleet. **The update added FS-mode (gem5 full-system) confirmations, not any silifuzz-side material. Overlap with Paper 2 remains zero.**
+
+**E. Target venue.** Unchanged: line 2 — "**Target venue:** ASPLOS / MICRO / HPCA (systems + computer architecture)".
+
+**F. Authorship/AI-use.** §9 (line 131): "Conceptualization, methodology, investigation, software, writing — the agent author. The defect, machine, and vmcores are production artifacts." §12 (line 137): "The forensic analysis, injector implementation, and manuscript were produced with an AI coding assistant (Claude Code) under human-supervised patch discipline. All claims are machine-verifiable via the cited commands; no AI-generated evidence was accepted without real-command confirmation."
+
+**G. Exact wording positioning SiliFuzz (verbatim, line 76).** "This is the methodological point: **structural data-path faults are a necessary addition to fault-injection toolkits** for this class of defect; bit-flip-only injectors (the CHAOS/GeFIN/SiliFuzz norm) cannot reach it." → Paper 2 must align by NOT claiming SiliFuzz reproduces byte-lane-skew/structural faults; it positions SiliFuzz as bit-flip-norm, contrasted-and-found-insufficient by Paper 1.
+
+## Part 2 — Non-bit-flip injector audit (coordinator's 4 questions)
+
+I cross-checked PAPER.md §4 against the actual source under `/home/sdc/wangxu/gem5-fi/CHAOS/` on 0101.
+
+**Q1. Are byte_lane_skew / StaleLineReplay / all_zero / CHAOSAddrPath / CHAOSPTW "done/verified" or "future work" in §4?**
+- `byte_lane_skew` and `all_zero` (P-D1, §4.1): **done and verified** (H5 verified, §5.1; FS-mode D1 reproduces the oops chain).
+- `CHAOSAddrPath` (P-D2, §4.2): **done, hook verified** (`nm` confirms `CHAOSAddrPath::corruptAddr`; FS-mode fires, §5.3). Quantitative H6 = future work.
+- `CHAOSPTW` (P-D3, §4.3): **done, hook verified** (FS-mode fires 7860 injections, §5.4). Quantitative H7 = future work.
+- `StaleLineReplay`: **Does not exist.** No such name appears in PAPER.md, and `grep -rni staleline` across `/home/sdc/wangxu/gem5-fi/CHAOS/**/*.{hh,cc}` returned **zero matches**. The documented structural mode that captures stale-replay semantics is `byte_lane_skew` (the header comment explicitly says it models "rol_k(stale array-head content)"). The coordinator's premise of a separate `StaleLineReplay` injector is incorrect — there is no such module.
+
+**Q2. New vs base-CHAOS; which are the user's own extensions?**
+The full CHAOS module set on disk is exactly 7: `CHAOSLSQFwd`, `CHAOSAddrPath`, `CHAOSPTW`, `CHAOSPhysReg`, `CHAOSReg`, `CHAOSCache`, `CHAOSMem`. The three **user's own non-bit-flip extensions** (per PAPER.md §4.1–4.3 and the source comments) are:
+- **CHAOSLSQFwd + structural axis** — the `StructuralFault` enum in `CHAOSLSQFwd.hh` is exactly `{None, ByteLaneSkew, AllZero}` (verified verbatim in header). The legacy `FaultType` enum `{BitFlip, StuckAtZero, StuckAtOne, Random}` is the base-CHAOS bit-level path; the structural axis is the added extension.
+- **CHAOSAddrPath** — new module, hooks `lsq.cc::sendFragmentToTranslation`; zeroes a byte of `_vaddr` pre-`translateTiming`.
+- **CHAOSPTW** — new module, hooks `table_walker.cc::doLongDescriptor`; bit-flips the PTE post-fetch pre-eval; `ptwEcc` knob models ECC.
+`CHAOSPhysReg`/`CHAOSReg`/`CHAOSCache`/`CHAOSMem` are base-CHAOS (pre-existing) and were NOT modified into non-bit-flip instruments. **There are no additional non-bit-flip extensions beyond what PAPER.md §4 documents.** Code and paper are in 1:1 correspondence.
+
+**Q3. Does §4 claim these injectors EXCITE structural defects on real silicon, or only reproduce the signature in simulation (H5)?**
+**Simulation only.** §5.1 ("H5 verified… in simulation"), §5.3 ("FS-mode hook firing confirmed"), §5.4 ("FS-mode hook firing confirmed") — all claims are gem5-internal. PAPER.md explicitly disclaims silicon excitation: §7 Threats (line 123) "**gem5 O3 ≠ TSV110 RTL**. The injection points are gem5's O3 LSQ/address/PTW paths, not the silicon geometry. Ecological validity is supplied by the three on-silicon reproduction reports (movbe, cross-pathway, undervolt) and this study's vmcores." The on-silicon evidence is *forensic* (vmcores), not from running the structural injectors on silicon. §6 reframes silicon-side as **DFT recommendations to the vendor**, not something the injectors do.
+
+**Q4. Coupling with SiliFuzz-style instruction-pressure corpus for real-silicon detection?**
+**No.** `grep -rniE "silifuzz|operand.space|fleet|corpus|real.silicon"` across `/home/sdc/wangxu/gem5-fi/CHAOS/**/*.{hh,cc}` returned **zero matches**. PAPER.md contains no such coupling either. The probe `ptrskew_kernel.c` (§4.4) is a userspace store-then-reload pointer-dereference toy, not a SiliFuzz corpus, and runs in gem5, not on silicon fleet. **No SiliFuzz-coupling exists in code or paper.**
+
+## Implications for Paper 2 positioning
+- The gem5-fi "non-bit-flip modifications" are EXACTLY the three documented extensions (`CHAOSLSQFwd` structural axis `{byte_lane_skew, all_zero}`, `CHAOSAddrPath`, `CHAOSPTW`) — nothing undocumented, nothing called `StaleLineReplay`. Paper 2 can safely cite Paper 1's §4 as the complete inventory.
+- Paper 1's structural injectors are **simulation-only, reproducibility-of-signature** tools; they do NOT claim to excite defects on real silicon. The real-silicon detection / fleet / operand-space / corpus axis is therefore entirely Paper 2's territory — zero overlap, clean partition.
+- Paper 2 must NOT claim Paper 1's structural injectors are coupled with a SiliFuzz corpus (none exists); if Paper 2 proposes such coupling, it is a novel contribution of Paper 2, building on (not inheriting from) Paper 1.
+
+Relevant paths: paper at `/home/sdc/wangxu/gem5-fi/docs/cases/core179-microarch-rootcause-synthesis/PAPER.md`; injectors at `/home/sdc/wangxu/gem5-fi/CHAOS/CHAOSLSQFwd/` (header `CHAOSLSQFwd.hh` carries the `StructuralFault` enum), `/home/sdc/wangxu/gem5-fi/CHAOS/CHAOSAddrPath/`, `/home/sdc/wangxu/gem5-fi/CHAOS/CHAOSPTW/`.</result>
+<usage><subagent_tokens>0</subagent_tokens><tool_uses>10</tool_uses><duration_ms>140847</duration_ms></usage>
+</task-notification>
+
+---
+
+开干
+
+---
+
+/grill-me 汇报论文的进展，出现的问题，如何解决，达成best paper for 顶会顶刊
+
+---
+
+7小时定时已到。继续执行 docs/kunpeng920_sdc_research_report.md 第7章的后续工作（必须诚实、不能说谎、100%服从事实、所有结果基于实证或严格逻辑推理）。
+
+当前进度（feat/sdc-detection-cases-kunpeng920 分支）：
+- 项3 ✅ 扩展8模板MUT槽,变体65→156
+- 项1 ✅ gem5-fi 500次注入(417有效),18干净diverge 检出率4.3%
+- 项5 ✅ 0201接入(sdc用户+用户目录),96核,严格区分真SDC(outcome2/3/4) vs runaway(5)/misbehave(6)噪声
+- 项9 ✅ v5_lse LSE多核一致性模板(LDADD/CASAL/SWPAL)
+- 项2 ✅ 多bit(max-faults=3)50次,4 diverge 8.0% > 单bit 4.3% 翻倍
+- 项4 进行中: 24h扫描已部署最新语料到0101/0102, 需启动并记录
+
+待执行：
+1. 项4: 启动4板24h扫描(后台,本次仅启动+记录在跑,不等待)
+2. 项10/14/15/16: 演化实战(sdc_evolve.sh在检出SDC时触发)+Centipede变异器定制+CI集成+NUMA-aware调度
+3. 项6,7,8,11,12,13: 如实记录需外部条件/长期项不能完成的真实原因:
+   - EDA Gate-level覆盖率耦合(需芯片设计端Gate清单,不可得)
+   - 老化烤机箱(需85°C设备,无)
+   - Vmin调压(需DVFS权限/硬件)
+   - 微架构脆弱性测绘/业务画像/学术发表(长期调研)
+4. 全部完成后更新 docs/kunpeng920_sdc_research_report.md 第7章,把"下一步"改为"已完成/进行中/待外部条件"三档,附实证数据。每完成一项 git commit+push(one-patch-per-unit)。
+
+诚实红线: 严格区分真SDC(outcome 2/3/4)与runaway/misbehave噪声; gem5注入diverge严格区分干净diverge(SUM/CRC与golden不同)与gem5异常退出; 0201满负载runaway不是SDC。绝不谎称完成。
+
+---
+
+<task-notification>
+<task-id>b4acp01dj</task-id>
+<tool-use-id>call_d429ffe1402a464596c5feae</tool-use-id>
+<status>stopped</status>
+<summary>No completion record was found for this background shell command from the previous session. It may have been stopped (via the UI, Monitor timeout, or agent teardown — these leave no transcript marker), or it may have been running when the previous Claude Code process exited. Check the output file for partial results before assuming it completed.</summary>
+</task-notification>
+
+---
+
+用中文回复我
+
+---
+
+/goal 完成 /home/sdc/.claude/projects/-home-sdc-wangxu-silifuzz/memory/paper2-bestpaper-program.md 所有工作 出现的问题解决，达成best paper for 顶会顶刊
+
+---
+
+<task-notification>
+<task-id>baejdw7xy</task-id>
+<tool-use-id>call_7488224850cf43fbb3951c89</tool-use-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/baejdw7xy.output</output-file>
+<status>completed</status>
+<summary>Background command "Long wait then single compile check" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+汇报进展，写入待做事项,更新 docs/plan/paper2-bestpaper-program.md
+
+---
+
+<task-notification>
+<task-id>b7fttpmpq</task-id>
+<tool-use-id>call_e3bbf4bc25b44c6cbd5c90fa</tool-use-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/b7fttpmpq.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait 30min and check build monitor for DONE" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+继续
+
+---
+
+汇报进展
+
+---
+
+/grilling 一定能击破silifuzz，因为当前的定向编译太呆板了，不是真正的覆盖率引导的定向编译，你要设计方案解决这些问题：
+  1. bit-flip 度量 CSP 定向未击败随机（已诊断）：逻辑掩蔽——结构化极端值产生确定性结果，bit-flip 易被掩蔽
+  1. bit-flip 度量 CSP 定向未击败随机（已诊断）：逻辑掩蔽——结构化极端值产生确定性结果，bit-flip 易被掩蔽
+  2. 结构故障度量也未击败（已诊断）：与 bit-flip 一致，C=2.8% < B=8.4%
+  3. CHAOSLSQFwd structuralFault 参数需 gem5 重编译（已解决）：gem5.opt 早于参数，重编译后生效
+  4. 0103 24h 扫描 orchestrator stall（已解决）：系统过载致 0% CPU，已停止
+  5. B/C 500 次脚本 nohup 路径错（已解决）：相对路径改 cd+绝对路径
+  6. 引用不可机器核实（已定位）：WebFetch 被封 + WebSearch 冲突，标 [CITE TBD: verify]
+
+---
+
+/goal 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+/goal 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+Background agent "Verify Unicorn coverage-guided targeting feasibility" was stopped by the user.
+
+---
+
+<task-notification>
+<task-id>a430301526c085507</task-id>
+<output-file>/tmp/claude-1000/-home-sdc-wangxu-silifuzz/93c2ff1c-d114-438e-a8a4-4cd24cae2cdb/tasks/a430301526c085507.output</output-file>
+<status>failed</status>
+<summary>Background agent "Verify Unicorn coverage-guided targeting feasibility" was running when the previous Claude Code process exited and did not complete. Its in-process state was lost. Check its worktree/output for partial work before assuming the task landed.</summary>
+</task-notification>
+
+---
+
+Goal set: 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+/goal 真正的“激发 SDC 用例生成和变异方案”，绝对不能依赖写死的魔术数字（Magic Numbers）或固定模式，违背了覆盖率引导（Coverage-Guided）和动态变异（Mutation-based）的初衷，而必须是一个基于微架构反馈信号的“自适应进化引擎”（Evolutionary Engine）。它应该能从任意一段普通的指令开始，通过算法自动“变异”出具备高 SDC 激发概率的操作数。
+
+为了彻底摆脱固定模式，我们需要设计一套基于遗传算法和梯度下降思想的动态变异方案。按照如下端到端的设计来实现：
+
+核心设计：基于 Unicorn 反馈的 SDC 适度函数（Fitness Function）
+要让变异引擎自动往“容易激发 SDC”的方向走，首先要定义 Fuzzer 的“指南针”——也就是评分函数。我们废弃纯静态目标，改为基于 Unicorn Proxy 每次模拟执行后返回的动态信号进行评分：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+$T(di/dt)$：动态压力因子（基于 reg_toggle 特征）
+
+算法： 提取 Unicorn 吐出的 reg_toggle_zero_one 和 reg_toggle_one_zero。计算相邻两条指令间发生状态翻转的 Bit 总数。
+
+目的： 变异引擎不关心操作数是 0x55 还是 0xFF，它只认“翻转量”。只要某个变异能让翻转量上升，这个变异就被保留（类似梯度上升）。
+
+$M(Path)$：微架构深度因子（基于目标脆弱点）
+
+算法： 监控执行周期（Cycle count 代理）或特定微码分支的命中率。比如指令变异后，Unicorn 模拟器报告该除法/乘法指令消耗的 cycle 变长了（说明进入了慢路径 / 硬件复杂状态机）。
+
+$E(AntiMasking)$：反掩蔽高熵因子（基于执行结果测算）
+
+算法： 检查 Unicorn 执行结果的汉明重量（Hamming Weight）和位间香农熵。如果输出结果全是 0、全是 1、或者呈现高度周期性（如 0xAAAA...），该因子的得分为负。
+
+雪崩测试（Avalanche Test）： 引擎自动引入一个极小扰动（例如操作数改变 1 bit），对比两次 Unicorn 执行的输出结果。结果差异的 bit 数越多（雪崩效应越强），得分越高。这能彻底解决掩蔽问题。
+
+核心机制：自适应变异器（Adaptive Mutators）的设计
+既然没有固定模式，变异器（Mutator）如何生成操作数？我们需要设计特定的变异算子（Mutation Operators），让它们在上述评分函数的引导下演化：
+
+变异算子一：Toggle-Driven 梯度爬山（解决 di/dt 压力激发）
+绝不硬编码全0/全1，而是通过算法“算”出高压操作数。
+
+输入： 任意指令（例如 ADD RAX, RBX，初始 RAX=0x123, RBX=0x456）。
+
+变异动作： 随机反转 RBX 的若干个 bit。
+
+反馈循环： 扔进 Unicorn 跑。如果 reg_toggle 得分增加了（比如从 5 个 bit 翻转变成了 15 个），接受此次变异，并以此为基准继续翻转；如果降低了，回退变异。
+
+结果： 经过几十轮毫秒级的迭代，算法会自动逼近该指令序列的物理翻转极限。它最终生成的数字可能看起来毫无规律，但却能产生最大的电气瞬变。
+
+变异算子二：边界与差异放大（解决时序裕量激发）
+通过差异化演进，自动触碰长逻辑链（如进位链）。
+
+变异动作： 对操作数执行微小的算术增减（如 val + 1, val - 1）或位移。
+
+反馈循环： 对比变异前后的输出结果 $O_{old}$ 和 $O_{new}$。如果微小的输入改变，导致了 Unicorn 代理中巨大的微架构状态差异（比如不仅结果变了，还多触发了一个 op_reg_toggle 特征），说明触碰到了硬件逻辑的“突变点”（如进位链断裂点或符号扩展边界）。
+
+策略： 将触发突变点的操作数加入 Elite (精英) 种子池，重点繁衍。
+
+变异算子三：上下文污染与重组（Crossover）（解决业务负载高压）
+变异动作： 不仅变异单个操作数，还进行跨指令环境的基因重组。
+
+操作： Fuzzer 从业务集群抓取的“高频指令序列”（如一段连续的 AVX512 向量计算）中，随机截取一段，插入到当前正在变异的指令序列前后。
+
+目的： 利用前置的高功耗指令迅速拉低芯片电压（制造 Voltage Droop），紧接着执行我们刚刚通过算子一演化出的高 di/dt 指令。这种重组无需人工干预，完全靠基因交叉自动生成。
+
+工作流：端到端的动态生成与变异 Pipeline
+摒弃静态表，整个 SiliFuzz + Unicorn 的执行流将变成一个微缩的强化学习/遗传算法环路：
+
+Seed 选取： 从生产环境抓取一段真实的业务代码序列（例如一段加解密逻辑），初始操作数是真实的业务数据（纯天然，非固定模式）。
+
+Evaluate（基线评估）： 跑一遍 Unicorn，记录基础得分（Toggle率低，掩蔽概率未知）。
+
+Fuzzing Loop (Centipede Hook / Python Harness):
+
+Mutate: 同时应用梯度爬山（改 bit）、边界放大（微调数值）、上下文重组（塞入其他高功耗指令）。生成 100 个子代变异序列。
+
+Simulate: 100 个子代全部送入 Unicorn 代理执行。
+
+Score & Select: 计算它们的 $Score$。淘汰低分，保留得分最高的 5 个。
+
+Anti-Masking Check: 对这 5 个精英进行 1 bit 扰动测试，如果雪崩效应差（即容易被掩蔽），直接降权或淘汰。
+
+Emit SDC Testcase： 当某个序列的 $Score$ 突破设定的高压阈值，且通过了反掩蔽测试，系统将其输出为一个高价值 SDC 压测用例。
+
+上硅测试： 将生成的用例喂给真实的 SiliFuzz 硬件执行引擎，在裸机上进行压测比对。
+
+---
+
+/superpowers:writing-plans 总结当前工作，并为后续所有工作撰写实现、验证、输出paper等完整方案
+
+---
+
+更新整个项目的方案，所有docs下面的方案都需要同步更新
