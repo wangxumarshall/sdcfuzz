@@ -426,6 +426,7 @@ b1ba279 docs: 融合统一 SDC 检测方案
 | 16 | NUMA-aware 调度 | 同 Die/跨 Die 60s 均真SDC=0（真机健康）。 |
 | — | 严格 SDC 分类（诚实修正） | collect_results 把 `outcome=5(runaway)` 误判为 SDC。修正：**真 SDC=outcome 2/3/4**，5/6=噪声。修正后 4 板总真SDC=0。 |
 | **★** | **A/B/C 两度量统计显著证伪** | **bit-flip**：A(朴素字典)=3.9%(18/458), B(随机)=8.0%(40/500), C(CSP配对)=3.7%(14/380), C/B=0.46×, p=0.0083。**结构故障 byte_lane_skew**：A=2.0%(10/500), B=8.4%(42/500), C=2.8%(14/500), C/B=0.33×, p=0.0001。**两度量都统计显著 C<B**——静态字典因逻辑掩蔽失败。 |
+| **★** | **A/B/C/D1-D5 六版进化引擎对比** | D1(固定T)=3.0%, D2(动态T)=3.4%, D3(雪崩)=4.0%, D4(ACE)=2.0%, D5(全寄存器ACE)=5.2% bit-flip；D2结构=8.6%, D3=8.8%(略超B 1.05×不显著), D5=6.6%。**所有D bit-flip<B=8.0%**，D3结构略超B=8.4%但不显著(p>0.8)。雪崩目标(D3)最佳。根因(AVF定理)：B赢在ACE-比例高(随机分散输出相关数据)，不是'无数学结构'。 |
 | **★** | **自适应进化引擎原型** | `tools/sdc_mutator/evolution_engine.py`：适应度 Score=W1·T(di/dt)+W2·M(Path)+W3·E(AntiMasking)，三算子（toggle 梯度爬山/边界差异放大/上下文重组）。从 ADDS X0,X1,X2 + 普通操作数(0x123/0x456)，**T 8→70（8.8× 提升）**，演化操作数无规律但翻转量最大，E=0.999 高熵反掩蔽。Python unicorn+capstone（0103 阿里云镜像安装）。 |
 | **★** | **gem5 重编译 + CHAOSLSQFwd 结构注入启用** | gem5.opt 重编译完成，`structuralFault` 参数生效（`numStructuralByteLaneSkew=1` 验证）。byte_lane_skew 结构故障注入可用。 |
 
