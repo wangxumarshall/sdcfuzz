@@ -124,4 +124,4 @@
 - 2026/08/27 ~19:00 — A/B/C 结构故障全量 500 次完成，**两度量都证伪**（C/B=0.33×, p=0.0001）
 - 2026/08/27 ~21:00 — **pivot 到自适应进化引擎**：原型 + 三算子完整 pipeline，T 8→70（8.8×）
 - 2026/08/28 — 实现计划（8 任务 TDD）+ 全 docs 同步更新
-- **当前**：D8混合volatile **结构故障=26.6% 极显著超B=8.4%(3.17x, p<0.001)**! 首次击败SiliFuzz! bit-flip仍<B(3.2%<8.0%)。D8=carry/toggle去volatile+lsu保留volatile→forwarding+寄存器双路径。
+- **当前**：D10 **bit-flip=B持平(8.0%) + struct极显著超B(17.0%, 2.02x, p<0.001)**! 击败SiliFuzz! 全volatile+多引用+16操作数覆盖广→bit持平+struct极显著超B。
