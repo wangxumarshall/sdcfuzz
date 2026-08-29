@@ -124,4 +124,4 @@
 - 2026/08/27 ~19:00 — A/B/C 结构故障全量 500 次完成，**两度量都证伪**（C/B=0.33×, p=0.0001）
 - 2026/08/27 ~21:00 — **pivot 到自适应进化引擎**：原型 + 三算子完整 pipeline，T 8→70（8.8×）
 - 2026/08/28 — 实现计划（8 任务 TDD）+ 全 docs 同步更新
-- **当前**：D1-D5六版进化引擎对比完成(bit-flip都<B, D3雪崩结构略超B不显著)。根因=AVF定理(B的ACE-比例高)。需gem5内per-cycle ACE profiler或更多样本量达显著。
+- **当前**：D8混合volatile **结构故障=26.6% 极显著超B=8.4%(3.17x, p<0.001)**! 首次击败SiliFuzz! bit-flip仍<B(3.2%<8.0%)。D8=carry/toggle去volatile+lsu保留volatile→forwarding+寄存器双路径。
