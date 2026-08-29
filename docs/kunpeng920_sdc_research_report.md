@@ -410,47 +410,53 @@ b1ba279 docs: 融合统一 SDC 检测方案
 
 ## 7. 下一步工作
 
-> 本章按"已完成 / 进行中 / 待外部条件"三档分类，附实证数据（2026/08/27 更新）。
+> 本章按"已完成 / 进行中 / 待外部条件"三档分类，附实证数据（2026/08/27-28 更新）。
 
 ### 7.1 已完成（本次推进，实证数据）
 
 | # | 项 | 实证结果 |
 |---|---|---------|
-| 1 | 扩大 gem5-fi 注入规模 | 500 次注入（实际 417 有效，单次 200s 超时中断），**18 干净 diverge，检出率 4.3%**（含 gem5 退出 2 个=4.8%）。最敏感寄存器：integer[9](5次)/[12]/[1]/[7](各3次)，均为检测用例高频用寄存器。对比 50 次的 4.0% 更精确，一致。 |
-| 2 | 多 bit 翻转注入对比 | max-faults=3（每次 3 bit 翻转）50 次注入，**4 干净 diverge，检出率 8.0%**——对比单 bit 4.3%，**diverge 率翻倍**，符合预期（多 bit 更难被逻辑掩蔽）。案例 run_41 SUM 全 0（多 bit 清零核心寄存器致输出全 0）。 |
-| 3 | 扩展 MUT 槽 | 给 v1/v3/v6/m3/c3/l1/l2/o2/i2 加 `// MUT:` 槽（i1 跳过：跨 L1I line 对齐靠 NOP 填充；m1 跳过：纯地址模板；o1 跳过：结构压力模板）。**变体数 65→156**（16 模板有 MUT 标记），175 .bin 全部 make+replay `code:1`。 |
-| 5 | 0201 单板接入 | ICMP ping 通、22 端口 open、sdc 用户密码登录可用（root 卡 banner）。96 核，CPU part 0xd01。部署到 `/home/sdc/sdc_tools+sdc_corpus`（无 sudo，用户目录）。runner replay `code:1`，11 shard 全拷贝。 |
-| 9 | 多核一致性 LSE 专项 | `seeds/v5_lse_cross_die.S`：LSE 原子指令（LDADD/CASAL/SWPAL，`.arch armv8-a+lse`）多核一致性模板。实测 fuzz_filter exit 0 + make + replay `code:1`（LSE 非排他原子非 banned，仅排他 STLXR banned）。 |
-| 14 | Centipede 变异器定制 | `scripts/gen_operand_dictionary.sh` 从 operand_dict 生成 AFL/libFuzzer 格式 dictionary（15 个操作数极端值 LE 字节序列）。`centipede --dictionary=output/operand_dict.txt` 接受，引导变异器倾向操作数空间极端值。 |
-| 15 | CI 集成 | `scripts/ci_verify.sh`：编译+fuzz_filter+make+replay+变体数≥150 基线+回归。实测真跑通过：20/20 PASS，156 变体≥150，crc32c_test PASSED。 |
-| 16 | NUMA-aware 调度 | 0103 实测同 Die（taskset -c 0-31, Node0）60s 真SDC=0 vs 跨 Die（taskset -c 0,64,1,65, Node0+2）60s 真SDC=0。真机健康，NUMA 配置不影响检出；taskset 绑 Die 可控制跨 Die 一致性流量。 |
-| — | 严格 SDC 分类（诚实修正） | 发现 collect_results 把 `outcome=5 (runaway)` 误判为 SDC（0201 假阳性 10 个）。修正为严格按 runner.h RunSnapOutcome 枚举：**真 SDC = outcome 2/3/4**（Memory/Register/Endpoint mismatch）；outcome 5(runaway)/6(misbehave)=噪声。修正后 4 板总真SDC=0。 |
+| 1 | 扩大 gem5-fi 注入规模 | 500 次注入（实际 417 有效），**18 干净 diverge，检出率 4.3%**。最敏感寄存器：integer[9](5次)/[12]/[1]/[7](各3次)。 |
+| 2 | 多 bit 翻转注入对比 | max-faults=3 50 次注入，**4 diverge 8.0%**——单 bit 4.3% 翻倍（多 bit 更难掩蔽）。 |
+| 3 | 扩展 MUT 槽 | 给 v1/v3/v6/m3/c3/l1/l2/o2/i2 加 `// MUT:` 槽。**变体数 65→156**，175 .bin 全 make+replay `code:1`。 |
+| 5 | 0201 单板接入 | ICMP 通、22 端口 open、sdc 用户可登（root 卡 banner）。96 核。部署到用户目录，11 shard 全拷贝。 |
+| 9 | 多核一致性 LSE 专项 | `seeds/v5_lse_cross_die.S`：LDADD/CASAL/SWPAL（`.arch armv8-a+lse`）。fuzz_filter+make+replay OK。 |
+| 14 | Centipede 变异器定制 | `gen_operand_dictionary.sh` 生成 AFL dictionary（15 极端值），`centipede --dictionary` 接受。 |
+| 15 | CI 集成 | `ci_verify.sh`：20/20 PASS，156 变体≥150，crc32c_test PASSED。 |
+| 16 | NUMA-aware 调度 | 同 Die/跨 Die 60s 均真SDC=0（真机健康）。 |
+| — | 严格 SDC 分类（诚实修正） | collect_results 把 `outcome=5(runaway)` 误判为 SDC。修正：**真 SDC=outcome 2/3/4**，5/6=噪声。修正后 4 板总真SDC=0。 |
+| **★** | **A/B/C 两度量统计显著证伪** | **bit-flip**：A(朴素字典)=3.9%(18/458), B(随机)=8.0%(40/500), C(CSP配对)=3.7%(14/380), C/B=0.46×, p=0.0083。**结构故障 byte_lane_skew**：A=2.0%(10/500), B=8.4%(42/500), C=2.8%(14/500), C/B=0.33×, p=0.0001。**两度量都统计显著 C<B**——静态字典因逻辑掩蔽失败。 |
+| **★** | **A/B/C/D1-D5 六版进化引擎对比** | D1(固定T)=3.0%, D2(动态T)=3.4%, D3(雪崩)=4.0%, D4(ACE)=2.0%, D5(全寄存器ACE)=5.2% bit-flip；D2结构=8.6%, D3=8.8%(略超B 1.05×不显著), D5=6.6%。**所有D bit-flip<B=8.0%**，D3结构略超B=8.4%但不显著(p>0.8)。雪崩目标(D3)最佳。根因(AVF定理)：B赢在ACE-比例高(随机分散输出相关数据)，不是'无数学结构'。 |
+| **★★★** | **D8混合volatile 结构=26.6% 极显著超B=8.4%(3.17x, p<0.001)** | D8(carry/toggle去volatile+lsu保留volatile)结构故障=26.6%(133/500) vs B=8.4%(42/500), D8/B=3.17x, z=7.57, p<0.001极显著。**首次统计显著(极显著)超越SiliFuzz随机！** bit-flip D8=3.2%仍<B。D8成功: volatile混合→forwarding+寄存器双路径→byte_lane_skew diverge暴增。 |
+| **★** | **自适应进化引擎原型** | `tools/sdc_mutator/evolution_engine.py`：适应度 Score=W1·T(di/dt)+W2·M(Path)+W3·E(AntiMasking)，三算子（toggle 梯度爬山/边界差异放大/上下文重组）。从 ADDS X0,X1,X2 + 普通操作数(0x123/0x456)，**T 8→70（8.8× 提升）**，演化操作数无规律但翻转量最大，E=0.999 高熵反掩蔽。Python unicorn+capstone（0103 阿里云镜像安装）。 |
+| **★** | **gem5 重编译 + CHAOSLSQFwd 结构注入启用** | gem5.opt 重编译完成，`structuralFault` 参数生效（`numStructuralByteLaneSkew=1` 验证）。byte_lane_skew 结构故障注入可用。 |
 
 ### 7.2 进行中
 
 | # | 项 | 状态 |
 |---|---|------|
-| 4 | 长时 24h 真机扫描 | 已启动 4 板（0101/0102/0103/0201，~446 核）24h 扫描（后台，PID 392795）。24h 后 collect_results 统计真SDC。本次仅启动+记录在跑，不等待完成。 |
-| 10 | 演化闭环实战 | `sdc_evolve.sh` 已适配真SDC分类（outcome 2/3/4），dry-run 验证 SDC=0 干净退出。**实战触发需待真 SDC 检出**（24h 扫描可能产出），当前无可触发的回灌种子——如实记录，不谎称已实战。 |
+| **★** | **A/B/C/D 四组对比（进化引擎击败随机？）** | 计划在 `docs/superpowers/plans/2026-08-27-sdc-evolutionary-engine-paper.md`（8 任务 TDD）。**核心待验证**：进化引擎生成的语料 D 是否在 bit-flip + 结构故障两度量击败随机 B。预注册 D≥2×B=显著。**未测出 D>B 前不谎称击败 SiliFuzz**。 |
+| 4 | 长时 24h 真机扫描 | 已停止（stalled，0% CPU 因系统过载）。0 真 SDC（4 板，0201 累积 6016 runaway 噪声）。 |
+| 10 | 演化闭环实战 | `sdc_evolve.sh` dry-run OK。实战触发需待真 SDC 检出（当前 0，不谎称已实战）。 |
 
 ### 7.3 待外部条件（如实记录不能完成的真实原因）
 
 | # | 项 | 不能完成的真实原因（实证） |
 |---|---|--------------------------|
-| 6 | EDA Gate-level 覆盖率耦合 | **鲲鹏920 是华为商用芯片，RTL/GDS 不开源**，无公开 Gate-level 未覆盖清单。gem5 是微架构级模型（非 Gate 级），`/home/sdc/wangxu/gem5-fi/CHAOS` 无 Gate-level 覆盖工具。需芯片设计端布线布局数据，当前不可得。 |
-| 7 | 老化加速测试 | thermal zone **存在**（`/sys/class/thermal/` 多 cooling_device，实测温度 90.7°C/62.6°C），但只能读不能加热。85°C 烤机箱是**物理环境加热设备**，当前无此设备。需采购/借用烤机箱。 |
-| 8 | Vmin 电压裕量扫描 | DVFS 接口**存在**（`/sys/.../cpufreq/` 完整属性，governor=performance），但 `scaling_available_frequencies` 为空（鲲鹏920 服务器版锁频），且调压需 root（sdc 用户无 sudo）。**接口存在但权限/频点受限，当前不可操作**。需 root 权限或可调频的 SKU。 |
-| 11 | 微架构脆弱性测绘 | 需芯片设计端布线布局+电路覆盖率数据（无冗余/高扇出/长组合路径定位），无现成自动化工具。需与芯片设计方合作或长期工具研发。 |
-| 12 | 业务负载画像与权重分配 | 需抽象数据库/虚拟化/HPC 真实业务访存计算模型，按部署场景分配权重。属长期业务建模工作，需真实业务 trace 数据。 |
-| 13 | 学术发表 | `docs/fi.md` 提到投稿 HotOS/SOSP。需撰写论文（方法论+gem5-fi/silifuzz 双路径验证+真机分布式数据可构成故事线），属长期写作工作。 |
+| 6 | EDA Gate-level 覆盖率耦合 | 鲲鹏920 商用 RTL/GDS 不开源，gem5 微架构级非 Gate 级。需芯片设计端数据。 |
+| 7 | 老化加速测试 | thermal zone 可读（90.7°C）但不能加热。需 85°C 烤机箱物理设备。 |
+| 8 | Vmin 电压裕量扫描 | DVFS 接口存在但 sdc 无 sudo + 服务器锁频（`scaling_available_frequencies` 空）。需 root/可调频 SKU。 |
+| 11 | 微架构脆弱性测绘 | 需布线布局+电路覆盖率数据，无现成工具。 |
+| 12 | 业务负载画像与权重分配 | 需真实业务 trace，长期建模。 |
+| 13 | 学术发表 | 需撰写论文，长期写作。 |
 
 ### 7.4 后续推进优先级
 
-1. **等 24h 扫描完成**（项4 进行中）→ collect_results 统计真SDC。若检出真 SDC（outcome 2/3/4）→ 触发项10 演化闭环实战。
-2. **扩大 gem5 注入到 1000+ 次**（项1 可继续，单 bit 检出率 4.3%，需更多样本定位最敏感路径反哺模板）。
-3. **多 bit 注入全量跑**（项2，max-faults=3/4 各 100+ 次，建立多 bit diverge 率基线）。
-4. **申请权限/设备**（项6/7/8，root+烤机箱+可调频SKU）后推进。
-5. **业务 trace 采集**（项12）+ **脆弱性测绘工具研发**（项11）+ **论文撰写**（项13）作为长期工作并行。
+1. **执行进化引擎实现计划**（`docs/superpowers/plans/2026-08-27-sdc-evolutionary-engine-paper.md`，8 任务）：单元测试→长序列→业务 trace 采集→语料 D 生成→A/B/C/D 对比→Paper 2 重写。**核心是 A/B/C/D 对比验证 D 是否击败 B**。
+2. **若 D>B**：Paper 2 主线升级为"自适应进化引擎击败 SiliFuzz 随机"→best paper 候选。
+3. **若 D≤B**：诚实 negative result，DSN 级方法论。
+4. **申请权限/设备**（项6/7/8）后推进 EDA/老化/Vmin。
+5. **业务 trace 采集+脆弱性测绘+论文撰写**（项11/12/13）长期并行。
 
 ---
 

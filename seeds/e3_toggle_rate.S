@@ -10,6 +10,7 @@
     .globl _start
 _start:
     // MUT: int
+    // CSP: toggle_rate
     LOAD_ALT_01    x1             // 0x5555555555555555
     LOAD_ALT_10    x2             // 0xAAAAAAAAAAAAAAAA
 

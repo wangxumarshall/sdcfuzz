@@ -76,7 +76,34 @@ SDC 检测用例设计**必须深度分析底层，不能过度从 TOP-DOWN 分�
 - **DOWN-TOP（自底向上）**：结合 ARM64 微架构设计、**布线布局（floorplan/place&route）**、电路覆盖率——从物理实现层面定位哪些模块/功能/网络最脆弱（高扇出、长组合逻辑路径、无 ECC 保护、易时序违例）。
 - **TOP-DOWN（自顶向下）**：业务负载模型——数据库/虚拟化/HPC 各自激发哪些模块。
 
-ARM64 芯片设计师单纯追求电路覆盖率，不仅有上限，而且不具备业务负载模型，不清楚哪些是 weak module/function，仍有进步空间。**只有 DOWN-TOP 与 TOP-DOWN 融合，才能既知道“哪里脆弱”，又知道“现实里它会被怎么打”——从而把压力精确施加到最该打的地方。**
+ARM64 芯片设计师单纯追求电路覆盖率，不仅有上限，而且不具备业务负载模型，不清楚哪些是 weak module/function，仍有进步空间。**只有 DOWN-TOP 与 TOP-DOWN 融合，才能既知道”哪里脆弱”，又知道”现实里它会被怎么打”——从而把压力精确施加到最该打的地方。**
+
+### 3.3 范式三：静态字典 ──→ 自适应进化引擎（2026/08/27 新增，实证驱动）
+
+> **A/B/C 两度量统计显著证伪**催生本范式。静态操作数字典（全0/全1/交替/subnormal/NaN，含 CSP 配对定向）在 gem5 bit-flip 注入下 diverge 率 A=3.9%/C=3.7%，**统计显著地劣于随机 B=8.0%**（C/B=0.46×, p=0.0083）；结构故障（byte_lane_skew）下 A=2.0%/C=2.8% vs B=8.4%（C/B=0.33×, p=0.0001）。两度量都证伪——**逻辑掩蔽效应在模型级稳健**：静态字典的极端操作数产生确定性结构化结果（0xFFFF+1=0, 0x5555^0xAAAA=全1），bit-flip/byte_lane_skew 命中后被逻辑/CRC 掩蔽；随机操作数无结构冗余，更易 observable diverge。
+
+**范式三的核心洞察**：操作数定向不能用写死的魔术数字（Magic Numbers）或固定模式——那违背了覆盖率引导与动态变异的初衷。必须构建基于微架构反馈信号的**自适应进化引擎**（Evolutionary Engine），从任意普通指令开始，通过算法自动”变异”出具备高 SDC 激发概率的操作数。
+
+**适应度函数**（进化引擎的”指南针”）：
+
+$$Score = W_1 \times T(di/dt) + W_2 \times M(Path) + W_3 \times E(AntiMasking)$$
+
+- **T(di/dt) 动态压力因子**：提取 Unicorn 的 reg_toggle_zero_one/one_zero，计算相邻指令间 bit 翻转总量。引擎不关心操作数是 0x55 还是 0xFF，只认翻转量——翻转量上升则保留变异（梯度上升）。
+- **M(Path) 微架构深度因子**：监控执行周期（cycle 代理）或特定微码分支命中率。变异后 cycle 变长（进入慢路径/复杂状态机）则加分。
+- **E(AntiMasking) 反掩蔽高熵因子**：检查执行结果的汉明重量与位间香农熵。全 0/全 1/高度周期性（0xAAAA...）得分为负。**雪崩测试**：引入 1 bit 扰动对比两次输出，差异 bit 数越多（雪崩越强）得分越高——**这直击掩蔽问题**。
+
+**三个变异算子**（无固定模式，算法生成）：
+1. **Toggle-Driven 梯度爬山**（解决 di/dt 压力激发）：随机反转操作数 bit，跑 Unicorn，若 T 上升则接受并继续，否则回退。几十轮迭代自动逼近物理翻转极限，最终数字毫无规律但产生最大电气瞬变。
+2. **边界与差异放大**（解决时序裕量激发）：操作数 ±1/位移，对比变异前后微架构状态差异。微小输入变化导致大状态差异（多触发 op_reg_toggle feature）= 触碰”突变点”（进位链断裂/符号扩展边界），加入精英池。
+3. **上下文污染与重组（Crossover）**（解决业务负载高压）：从业务集群抓取高频指令序列插入当前序列前后，前置高功耗指令制造 Voltage Droop，紧接演化出的高 di/dt 指令。
+
+**端到端 pipeline**：Seed（真实业务代码+天然操作数）→ Evaluate（基线 Unicorn 跑）→ Fuzzing Loop（Mutate 100 子代/Simulate/Score&Select 保留 5/AntiMasking 雪崩淘汰）→ Emit SDC Testcase（Score 超阈值且过反掩蔽）→ 上硅测试。
+
+**实测验证**（原型 `tools/sdc_mutator/evolution_engine.py`）：从 ADDS X0,X1,X2 + 普通操作数(0x123/0x456)，三算子演化 **T 8→70（8.8× 提升）**，演化操作数无规律但翻转量最大，E=0.999 高熵反掩蔽。**验证了”算法自动逼近物理翻转极限”的核心机制**。
+
+**Unicorn 覆盖率信号支持**：ArchFeatureGenerator 的 reg_toggle 用 EmitSetBitFeatures+ForEachSetBit **per-bit 粒度**发射，BeforeExecution/AfterInstruction 有寄存器值——T(di/dt)=popcount 可直接计算，覆盖率信号完整支持适应度函数。
+
+**关键待验证**：进化引擎生成的语料 D 是否在 bit-flip + 结构故障两度量击败随机 B（A/B/C/D 四组对比）。预注册 D≥2×B=显著。**未测出 D>B 前不谎称击败 SiliFuzz**。详见实现计划 `docs/superpowers/plans/2026-08-27-sdc-evolutionary-engine-paper.md`。
 
 ---
 

@@ -10,6 +10,7 @@
     .globl _start
 _start:
     // 变体1: 64 位全进位链 (0xFFF..F + 1 = 0, C=1)
+    // CSP: carry_chain
     // MUT: carry_chain
     LOAD_ALL_ONES  x1
     mov     x2, #1

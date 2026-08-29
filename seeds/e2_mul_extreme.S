@@ -9,10 +9,10 @@
     .text
     .globl _start
 _start:
-    // 构造 0xFFFFFFFF (32-bit max)
-    movz    x1, #0xFFFF, lsl #0
-    movk    x1, #0xFFFF, lsl #16    // x1 = 0x00000000FFFFFFFF
-    mov     x2, x1                    // x2 = 0xFFFFFFFF
+    // 构造 0xFFFFFFFF (32-bit max) — CSP mul_extreme 配对构造
+    // CSP: mul_extreme
+    LOAD_IMM64 x1, 0xFFFF, 0xFFFF, 0x0000, 0x0000    // x1 = 0x00000000FFFFFFFF
+    LOAD_IMM64 x2, 0xFFFF, 0xFFFF, 0x0000, 0x0000    // x2 = 0x00000000FFFFFFFF
 
     // umull: 32×32→64 无符号, 0xFFFFFFFF × 0xFFFFFFFF = 0xFFFFFFFE00000001
     umull   x0, w1, w2
