@@ -80,3 +80,7 @@ def main():
 
 if __name__=="__main__":
     main()
+# D5 group (全寄存器ACE最大化)
+WL_D5 = PFX + "_d5"
+GOLDEN_D5 = "SUM=17836490570859964148 CRC=5837cfd3"
+NUMCYCLES_D5 = 69171
