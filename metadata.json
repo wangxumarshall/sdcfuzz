@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M16DNJ40AMKBVBMPRF7ZSM5B",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "seeds/gem5/sdc_probe_workload_d10.c"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 3016095,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7705216,
+    "output_tokens": 5808,
+    "api_call_count": 14
+  }
+}
