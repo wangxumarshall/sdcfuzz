@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M16DPWBVB528EDNJY7F6WGZP",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-detection-cases-kunpeng920",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/plan/paper2-bestpaper-program.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 35821391,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 366381056,
+    "output_tokens": 512623,
+    "api_call_count": 997
+  }
+}
