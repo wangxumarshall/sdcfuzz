@@ -13,3 +13,9 @@
 /goal 等 D13 结构故障 500 次完成，确认两度量都极显著超 B。Paper 2 重写主线 →
   "D13 随机+定向变异击败 SiliFuzz：bit-flip 2.46×
   极显著超 B" → best paper 候选。
+
+---
+
+/goal 等 D13 结构故障 500 次完成，确认两度量都极显著超 B。Paper 2 重写主线 →
+  "D13 随机+定向变异击败 SiliFuzz：bit-flip 2.46×
+  极显著超 B" → best paper 候选。
