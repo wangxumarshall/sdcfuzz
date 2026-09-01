@@ -1,0 +1,188 @@
+% References for Paper 2.
+% ACM-style BibTeX. Items marked [VERIFY] below require human DOI/arXiv
+% confirmation before submission (see docs/paper2/05a_citation_audit.md).
+% No fabricated entries. Items already confirmed from PDF internal text are
+% marked [CONFIRMED].
+
+@misc{silifuzz,
+  title        = {{SiliFuzz}: Fuzzing {CPUs} by proxy},
+  author       = {Serebryany, Kostya and Lifantsev, Maxim and Shtoyk, Konstantin and Kwan, Doug and Hochschild, Peter},
+  howpublished = {[VERIFY venue/year/arXiv]},
+  note         = {Full text in this checkout at \texttt{docs/paper/ref/silifuzz.pdf}, 12 pp.},
+}
+
+@inproceedings{harpocrates_isca24,
+  title     = {{Harpocrates}: Breaking the Silence of {CPU} Faults through Hardware-in-the-Loop Program Generation},
+  author    = {Karystinos, Nikos and Chatzopoulos, Odysseas and Fragkoulis, George-Marios and Papadimitriou, George and Gizopoulos, Dimitris and Gurumurthi, Sudhanva},
+  booktitle = {Proceedings of the 51st Annual IEEE/ACM International Symposium on Computer Architecture (ISCA)},
+  year      = {2024},
+  pages     = {516--531},
+  doi       = {10.1109/ISCA59077.2024.00045},
+  note      = {[CONFIRMED from PDF internal text]},
+}
+
+@article{harpocrates_micro26,
+  title   = {{Harpocrates++}: Automated Functional Program Generation Against {CPU} Faults and Silent Data Corruptions},
+  author  = {Karystinos, Nikos and Fragkoulis, George-Marios and Chatzopoulos, Odysseas and Gizopoulos, Dimitris and Gurumurthi, Sudhanva},
+  journal = {IEEE Micro},
+  year    = {2026},
+  month   = {January/February},
+  doi     = {10.1109/MM.2025.3640385},
+  note    = {[CONFIRMED from PDF internal text]},
+}
+
+@inproceedings{avf_mukherjee_micro03,
+  title     = {A Systematic Methodology to Compute the Architectural Vulnerability Factors for a High-Performance Microprocessor},
+  author    = {Mukherjee, S. S. and Weaver, C. and Emer, J. and Reinhardt, S. K. and Austin, T.},
+  booktitle = {Proceedings of the 36th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2003},
+  pages     = {29--40},
+  doi       = {10.1109/MICRO.2003.1253181},
+  note      = {[VERIFY exact DOI suffix (.181 vs .185)]},
+}
+
+@inproceedings{hochschild_hotos21,
+  title     = {Cores that don't count},
+  author    = {Hochschild, P. H. and Turner, P. and Mogul, J. C. and Govindaraju, R. and Ranganathan, P. and Culler, D. E. and Vahdat, A.},
+  booktitle = {Proceedings of the Workshop on Hot Topics in Operating Systems (HotOS)},
+  year      = {2021},
+  doi       = {10.1145/3458336.3465297},
+  note      = {[CONFIRMED from SiliFuzz ref [7]]},
+}
+
+@misc{dixit2021_sdc,
+  title  = {Silent Data Corruptions at Scale},
+  author = {Dixit, H. D. and Pendharkar, S. and Beadon, M. and Mason, C. and Chakravarthy, T. and Muthiah, B. and Sankar, S.},
+  year   = {2021},
+  eprint = {2102.11245},
+  archiveprefix = {arXiv},
+  note   = {[CONFIRMED from SiliFuzz ref [6]]},
+}
+
+@inproceedings{wang_sosp23,
+  title     = {Understanding Silent Data Corruptions in a Large Production {CPU} Population},
+  author    = {Wang, S. and Zhang, G. and Wei, J. and Wang, Y. and Wu, J. and Luo, Q.},
+  booktitle = {Proceedings of the 29th Symposium on Operating Systems Principles (SOSP)},
+  year      = {2023},
+  pages     = {216--230},
+  doi       = {10.1145/3600006.3613149},
+  note      = {[CONFIRMED from Harpocrates ref [3]]},
+}
+
+@misc{fleetscanner_ripple22,
+  title  = {Detecting silent data corruptions in the wild},
+  author = {Dixit, H. D. and Boyle, L. and Vunnam, G. and Pendharkar, S. and Beadon, M. and Sankar, S.},
+  year   = {2022},
+  eprint = {2203.08989},
+  archiveprefix = {arXiv},
+  note   = {[CONFIRMED from Harpocrates ref [11]]},
+}
+
+@inproceedings{veritas_hPCA25,
+  title     = {Veritas: Demystifying Silent Data Corruptions: Arch-Level Modeling and Fleet Data of Modern x86 {CPUs}},
+  author    = {[VERIFY authors]},
+  booktitle = {Proceedings of the International Symposium on High-Performance Computer Architecture (HPCA)},
+  year      = {2025},
+  note      = {[VERIFY DOI]},
+}
+
+@inproceedings{pindrop_hpca26,
+  title     = {{PinDrop}: Breaking the Silence on {SDCs} in a Large-Scale Fleet},
+  author    = {[VERIFY authors]},
+  booktitle = {Proceedings of the International Symposium on High-Performance Computer Architecture (HPCA)},
+  year      = {2026},
+  note      = {[VERIFY DOI]},
+}
+
+@inproceedings{sevi_asplos26,
+  title     = {{SEVI}: Silent Data Corruption of Vector Instructions in Hyper-Scale Datacenters},
+  author    = {[VERIFY authors]},
+  booktitle = {Proceedings of the International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  year      = {2026},
+  note      = {[VERIFY DOI]},
+}
+
+@inproceedings{orthrus_sosp25,
+  title     = {{Orthrus}: Efficient and Timely Detection of Silent User Data Corruption in the Cloud with Resource-Adaptive Computation Validation},
+  author    = {[VERIFY authors]},
+  booktitle = {Proceedings of the Symposium on Operating Systems Principles (SOSP)},
+  year      = {2025},
+  note      = {[VERIFY DOI]},
+}
+
+@misc{ithica,
+  title  = {{ITHICA}: Intra-Thread Instruction Checking Approach for Defect-Induced Silent Data Corruptions},
+  author = {[VERIFY authors]},
+  year   = {2026},
+  eprint = {2605.15638},
+  archiveprefix = {arXiv},
+  note   = {[VERIFY]},
+}
+
+@inproceedings{hwsentinel_asplos25,
+  title     = {Hardware Sentinel: Protecting Software Applications from Hardware Silent Data Corruptions},
+  author    = {[VERIFY authors]},
+  booktitle = {Proceedings of the International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  year      = {2025},
+  note      = {[VERIFY DOI]},
+}
+
+@inproceedings{delayavf_micro24,
+  title     = {{DelayAVF}: Calculating Architectural Vulnerability Factors for Delay Faults},
+  author    = {Deutsch, P. W. and Ulitzsch, V. Q. and Gurumurthi, S. and Sridharan, V. and Emer, J. S. and Yan, M.},
+  booktitle = {Proceedings of the 57th IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  year      = {2024},
+  pages     = {231--245},
+  doi       = {10.1109/MICRO61859.2024.00026},
+  note      = {[CONFIRMED from Harpocrates ref [7]]},
+}
+
+@inproceedings{gatestosdc_date25,
+  title     = {From Gates to {SDCs}: Understanding Fault Propagation Through the Compute Stack},
+  author    = {[VERIFY authors]},
+  booktitle = {Proceedings of the Design, Automation and Test in Europe (DATE)},
+  year      = {2025},
+  note      = {[VERIFY DOI]},
+}
+
+@misc{chaos_gem5,
+  title  = {{CHAOS}: Controlled Hardware fAult injectOr System for gem5},
+  author = {[VERIFY authors]},
+  year   = {2026},
+  eprint = {2602.02119},
+  archiveprefix = {arXiv},
+  note   = {[VERIFY]},
+}
+
+@misc{gem5,
+  title  = {The gem5 Simulator: Version 20.0+},
+  author = {The gem5 authors},
+  year   = {2020},
+  eprint = {2007.03152},
+  archiveprefix = {arXiv},
+  note   = {[CONFIRMED from SiliFuzz ref [35]]},
+}
+
+@inproceedings{vega_asplos24,
+  title     = {Proactive Runtime Detection of Aging-Related Silent Data Corruptions: A Bottom-Up Approach},
+  author    = {[VERIFY authors]},
+  booktitle = {Proceedings of the International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  year      = {2024},
+  note      = {[VERIFY DOI]},
+}
+
+@misc{trippel2021_fuzzhw,
+  title  = {Fuzzing Hardware Like Software},
+  author = {Trippel, T. and Shin, K. G. and Chernyakhovsky, A. and Kelly, G. and Rizzo, D. and Hicks, M.},
+  year   = {2021},
+  eprint = {2102.02308},
+  archiveprefix = {arXiv},
+  note   = {[CONFIRMED from SiliFuzz ref [1]]},
+}
+
+@misc{paper1_core179,
+  title  = {gem5-{CHAOS} forensic reconstruction of core-179 and the structural \texttt{byte\_lane\_skew} fault-injection extension},
+  author = {[Paper 1, this research program]},
+  year   = {2026},
+  note   = {Unpublished; on board 0101 at \texttt{/root/gem5-fi/PAPER.md}. Cited as ground truth for the structural fault model.},
+}
