@@ -1,4 +1,4 @@
-# ARM64架构 sdcfuzz方案架构设计
+# ARM64 sdcfuzz方案架构设计
 
 ## 1. 业务场景
 
