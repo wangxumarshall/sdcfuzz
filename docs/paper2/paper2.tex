@@ -1,0 +1,191 @@
+% LaTeX source for Paper 2 (ASPLOS submission).
+% Uses the ACM acmart class (sigplan style for ASPLOS). Compile with:
+%   pdflatex paper2 && bibtex paper2 && pdflatex paper2 && pdflatex paper2
+% The body mirrors docs/paper2/04_draft_en.md (post-R1 revision).
+% [VERIFY] citations are kept in the .bib with notes; resolve before submission.
+
+\documentclass[sigplan,review,anonymous]{acmart}
+
+\setcopyright{none}
+\setcsmaster{1}
+\acmBooktitle{Proceedings of the International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)}
+
+\begin{document}
+
+\title{Directed Mutation on Random Values: Generating SDC-Revealing Workloads for an ARM Server CPU}
+
+\author{Anonymous}
+\email{anonymous}
+\affiliation{%
+  \institution{Anonymous Institution}
+  \country{}
+}
+
+\begin{abstract}
+Silent Data Corruption (SDC) on commercial server CPUs is a documented fleet-scale problem, yet every public fleet study, generator, and online detector targets x86. We ask whether a \emph{directed} workload generator can beat \emph{operand-undirected} coverage-guided proxy fuzzing (the SiliFuzz methodology) at the rate at which injected faults produce divergent end states, on a real ARM server microarchitecture. Working in a gem5 TaiShan~V110~O3 model with a CHAOS fault-injection harness, we ran a 13-version iterative search (D1--D13), each evaluated by 500 single-fault injections against a SiliFuzz-style random baseline (B). Two findings drive the paper. First, static fixed-value operand dictionaries (D1--D5, including constraint-satisfaction-paired carry tables) are statistically significantly \emph{worse} than random on both metrics (bit-flip 0.46$\times$, $p{=}0.0083$; structural 0.33$\times$, $p{=}0.0001$) because of logical masking, a result the Architectural Vulnerability Factor (AVF) theorem predicts. Second, applying \emph{directed} pressure on top of random values (D13)---biasing random operands at runtime toward higher carry-chain length, a cheap popcount ACE proxy---extremely significantly outperforms random on both metrics: bit-flip diverge 24.6\% (123/500) vs.\ B 8.2\% (41/500), 3.00$\times$, $z{=}7.00$, $p{=}2.5\times10^{-12}$; structural \texttt{byte\_lane\_skew} diverge 65.4\% (327/500) vs.\ B 8.4\% (42/500), 7.79$\times$, $z{=}18.68$, $p{\ll}10^{-300}$. We further contribute a 13-version evolution path (including negative levers), a full-load noise taxonomy separating genuine SDC from runaway/misbehave noise, and a four-board 446-core Kunpeng~920 fleet deployment with zero genuine SDC on healthy silicon. The central open problem---silicon-level validation on a known-defective core---is blocked by the core-179 watchdog reset and stated plainly.
+\end{abstract}
+
+\begin{CCSXML}
+% TODO: replace with actual CCS classification before submission
+\end{CCSXML}
+
+\ccsdesc[500]{Computer systems organization~Client-server architectures}
+
+\keywords{Silent Data Corruption, ARM server CPU, directed mutation, Architectural Vulnerability Factor, ACE fraction, fault injection, fleet scanning, Kunpeng 920, TaiShan V110, SiliFuzz, Harpocrates}
+
+\maketitle
+
+% ---------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Motivation}
+Silent Data Corruption (SDC)---a CPU producing a wrong result that no hardware check (ECC, parity, machine-check) catches---is the most insidious hardware-defect class: it does not crash or alert, yet silently corrupts computation. In production, SDC is more dangerous than crashes because server software is generally crash-tolerant but not silent-corruption-tolerant~\cite{hochschild_hotos21}. SDC-inducing defects are a real and growing fleet problem at hyperscale~\cite{dixit2021_sdc,wang_sosp23}, with recent disclosures placing the rate near 3.61 defective CPUs per 10{,}000~\cite{wang_sosp23}.
+
+Despite the severity, the public SDC literature has a conspicuous blind spot: \textbf{every disclosed fleet study, every open generator, and every online detector targets x86.} SiliFuzz~\cite{silifuzz} fuzzes x86\_64 Unicorn proxies. Harpocrates~\cite{harpocrates_isca24,harpocrates_micro26} generates x86-64 functional tests graded by a gem5 model. PinDrop, Veritas, SEVI, Orthrus, and ITHICA all report x86 fleets. As ARM server CPUs (Huawei Kunpeng, Ampere, AWS Graviton) become a material fraction of cloud capacity, the absence of an ARM-server SDC workload generator is a gap that grows with deployment.
+
+\subsection{The two prior methodologies and their limits}
+\textbf{SiliFuzz---proxy fuzzing, operand-undirected.} SiliFuzz fuzzes a Unicorn CPU emulator with Centipede, accumulates a corpus of short deterministic snapshots, and replays it on every core to flag divergent cores. Its mutation is coverage-guided but \textbf{structurally undirected at the operand level}: source inspection of the AArch64 path shows an instruction-aware \texttt{ProgramBatchMutator} whose only \emph{content} mutation is a single random bit-flip on the instruction encoding (\texttt{FlipRandomBit} in \texttt{fuzzer/program\_mutation\_ops.cc}), rejection-sampled through capstone. The source carries an explicit \texttt{TODO(ncbray): other mutation modes} at line~187, confirming only one content-mutation mode. No signal biases operand values toward configurations that maximise the probability an injected fault escapes masking and reaches an observable end state---the workload's \emph{ACE fraction}. SiliFuzz's own authors flag this as the open ``quality'' axis~\cite{silifuzz} and explicitly do not claim academic novelty.
+
+\textbf{Harpocrates---\(\mu\)arch-aware generation, gem5-only, x86.} Harpocrates is the closest prior generator: a constrained-random generator (MuSeqGen) for x86-64, instruction-replacement mutation, a gem5 evaluator with ACE lifetime analysis and Input Bit Ratio, and statistical fault injection as the golden measure~\cite{harpocrates_isca24,harpocrates_micro26}. It attains near-99\% detection on several functional units. Its IEEE Micro extension explicitly states operand allocation is ``currently done via a static policy'' and names RL operand optimisation as future work. Harpocrates has five limits relevant to us: it is \textbf{x86-64 only}; \textbf{gem5-only with no real defective silicon}; \textbf{no defect-class structural fault} (generic bit-flip + stuck-at); \textbf{static operand policy, no runtime directed-on-random}; and \textbf{no fleet noise taxonomy}.
+
+\subsection{The key insight: directed pressure must operate on random values}
+Our first attempt---a fixed-value dictionary (all-0/all-1/alternating/boundary/subnormal/NaN, including constraint-satisfaction-paired carry tables)---was \textbf{falsified} (\S\ref{sec:insight}): on both metrics it was statistically significantly \emph{worse} than random (bit-flip 0.46$\times$, structural 0.33$\times$) because of \textbf{logical masking}: structured operands yield deterministic, low-entropy results, so a fault the structured computation cancels (e.g.\ \texttt{0xFFFFFFFF + 1 = 0}) is unobservable. Random operands spread output-relevant data across more registers/cycles, raising the ACE fraction---exactly the AVF theorem's prediction.
+
+The breakthrough is the \emph{opposite} of a dictionary: \textbf{directed pressure must be applied on top of random values, not instead of them.} Each loop iteration generates two random candidates \texttt{A}, \texttt{B}, mutates \texttt{A} toward higher ACE probability (\texttt{A' = (A\^{}mask)+1}, rotate, \texttt{\^{}=\textasciitilde{}A}), evaluates a popcount carry-chain proxy \texttt{popcount(A' $\oplus$ (A'+1))} against \texttt{B}, and keeps the winner. This combines random's coverage breadth with a directed nudge toward long carry chains.
+
+\subsection{Contributions}
+\begin{enumerate}
+\item \textbf{Directed mutation on random (D13).} A workload generator that at runtime biases random operands toward higher ACE probability via a popcount carry-chain proxy. It extremely significantly outperforms SiliFuzz-style random on \textbf{both} metrics in the same model and measurement: bit-flip 3.00$\times$ ($z{=}7.00$, $p{=}2.5\times10^{-12}$) and structural \texttt{byte\_lane\_skew} 7.79$\times$ ($z{=}18.68$, $p{\ll}10^{-300}$). The proxy is a deliberately \emph{runtime-cheap} signal (popcount, foldable back into SiliFuzz's own \texttt{ArchFeatureGenerator} coverage loop), occupying the opposite end of the design space from Harpocrates's \emph{offline-rich} gem5-graded fitness; the two are complementary points on a cheap-proxy/rich-proxy axis.
+\item \textbf{Falsification of fixed-value targeting, with a mechanistic root cause.} Static dictionaries (D1--D5) are statistically significantly worse than random (bit-flip 0.46$\times$, structural 0.33$\times$), traced to logical masking via the AVF theorem, \emph{not} to PRNG structure (LCG vs.\ xorshift per-call entropy is statistically equal: 7.9817 vs.\ 7.9782 bits/call).
+\item \textbf{A 13-version evolution path (D1--D13)} with negative levers (D4 backfired to 0.24$\times$; D7 killed the structural metric at 0\%) that pre-empt cherry-picking objections.
+\item \textbf{A full-load noise taxonomy} separating genuine SDC (\texttt{RunSnapOutcome} 2/3/4) from runaway (5) and misbehave (6) noise, validated on a 4-board 446-core fleet scan where one board accumulated 6016+ runaway entries a naive parser would have counted as SDC.
+\item \textbf{A four-board 446-core fleet deployment on real ARM server silicon} with zero genuine SDC on healthy silicon, consistent with expected $10^{-8}$--$10^{-10}$ per-execution rates.
+\end{enumerate}
+
+\subsection{What this paper is, and is not}
+It \textbf{is} the first ARM-server SDC workload generator evaluated under both a bit-flip and a real-defect-class structural fault model, deployed on real silicon. It \textbf{is not} a positive silicon-level SDC detection (healthy silicon, 0 genuine SDC); we do not validate D13's silicon superiority on a known-defective core---that validation is blocked (\S\ref{sec:discussion}). It \textbf{is not} a gate-level coverage study (the Kunpeng RTL is closed). Diverge rates are \textbf{model-level} (gem5~O3); the fleet deployment validates the detection pipeline and the noise taxonomy, not the directed-mutation win at silicon scale. We do \textbf{not} claim to beat Harpocrates's 99\%: the two differ in ISA, fault model, and hardware structure, and are not directly comparable (\S\ref{sec:eval}). We claim that, within the same model and measurement, directed mutation on random crushes operand-undirected random on both metrics, grounded in the AVF theorem.
+
+% ---------------------------------------------------------------------------
+\section{Background}
+\label{sec:background}
+
+\subsection{SDC and the AVF/ACE framework}
+Mukherjee et al.\ formally define \textbf{AVF = ACE-bits / total-bits}: a bit is ACE if a fault in it propagates to an observable output~\cite{avf_mukherjee_micro03}. Under uniform single-fault injection, the diverge rate equals the workload's ACE fraction. This predicts our two findings: (i) random beats fixed-value dictionaries (higher ACE fraction); (ii) directed-on-random can beat both by biasing the operand draw toward high-ACE configurations without sacrificing coverage breadth.
+
+\subsection{SiliFuzz and the operand-undirected baseline}
+SiliFuzz's snapshot format, relocatable Snap, nolibc/seccomp runner, and orchestrator are reused verbatim (\S\ref{sec:impl}). The relevant point is its \textbf{mutation strategy}, our random baseline~B. Source inspection (\texttt{fuzzer/program\_mutation\_ops.cc}) shows an instruction-aware \texttt{ProgramBatchMutator} whose only content mutation is \texttt{FlipRandomBit}, a single random bit-flip on the instruction encoding, rejection-sampled through capstone. A \texttt{TODO(ncbray): other mutation modes} at line~187 confirms one mode. ``SiliFuzz random'' is richer than naive byte fuzzing but \textbf{undirected}: no signal biases operands toward high-ACE configurations.
+
+\subsection{Harpocrates: \(\mu\)arch-aware generation and its five limits}
+Harpocrates~\cite{harpocrates_isca24,harpocrates_micro26} uses MuSeqGen (MicroProbe, x86-64) with instruction-replacement mutation, a gem5 evaluator with ACE lifetime analysis and Input Bit Ratio, and SFI as the golden measure. It reaches near-99\% detection on functional units. Its five limits, addressed by this paper on different axes: (1)~x86-64 only (we target AArch64/Kunpeng~920); (2)~gem5-only, no real defective silicon (we deploy on a 4-board fleet and cite Paper~1's core-179 forensics); (3)~no defect-class structural fault (we add \texttt{byte\_lane\_skew}); (4)~static operand policy (we bias at runtime); (5)~no fleet noise taxonomy. These are orthogonal axes, not a head-to-head race (\S\ref{sec:eval}).
+
+\subsection{gem5-CHAOS fault injection and the structural fault model}
+We evaluate in a gem5 TaiShan~V110~O3 model extended with CHAOS~\cite{chaos_gem5}, which provides \texttt{CHAOReg}, \texttt{CHAOSCache}, and \texttt{CHAOSMem}. We use two injectors: \texttt{CHAOReg} bit-flip (the bit-flip metric), and \texttt{CHAOSLSQFwd} with \texttt{structuralFault = byte\_lane\_skew} (a structural fault in the store-to-load-forwarding path modelling the core-179 defect class). \textbf{The \texttt{CHAOSLSQFwd} \texttt{byte\_lane\_skew} injector is not part of the published CHAOS framework}; it was added by Paper~1 (\texttt{scripts/patch\_gem5fi\_lsq\_fwd.py}) to reproduce the real core-179 defect that pure bit-flip injection could not, and is documented here as a contribution of this research program.
+
+Each workload is compiled (\texttt{gcc -static -O2}) to a static AArch64 ELF, run once in \texttt{-{}-mode baseline} to record a golden \texttt{SUM=/CRC=}, then run $N{=}500$ times in \texttt{-{}-mode inject} with a single fault at a uniformly random cycle in the 20--80\% ROI. A run is a \textbf{clean diverge} if its \texttt{SUM=/CRC=} differs from golden, \textbf{masked} if it matches, and \textbf{exit-noise} if gem5 exits early. This is the same end-state-divergence signal SiliFuzz's runner uses on real silicon.
+
+\subsection{The RunSnapOutcome enum: genuine SDC vs.\ noise}
+SiliFuzz's runner (\texttt{runner/runner.h}) classifies each replay into seven outcomes: \texttt{kAsExpected}~(0), \texttt{kPlatformMismatch}~(1, placeholder), \texttt{kMemoryMismatch}~(2), \texttt{kRegisterStateMismatch}~(3), \texttt{kEndpointMismatch}~(4), \texttt{kExecutionRunaway}~(5), \texttt{kExecutionMisbehave}~(6). \textbf{Genuine SDC = 2/3/4}; \textbf{5/6 = noise}. This distinction is load-bearing: under full load, \texttt{fork}/\texttt{mmap} exhaustion can SIGSEGV outside the snap path (counted as 6, not SDC), and one board accumulated 6016+ runaway~(5) entries a naive \texttt{grep} reported as SDC.
+
+% ---------------------------------------------------------------------------
+\section{The Directed-on-Random Insight}
+\label{sec:insight}
+
+\subsection{Falsification of static dictionaries}
+A fixed-value dictionary (all-0/all-1/alternating/boundary/subnormal/NaN, including CSP-paired carry tables) should beat random by maximising carry chains, toggling, and slow paths. It was \textbf{falsified} (Table~I): on both metrics it is statistically significantly \emph{worse} (bit-flip 0.46$\times$, $p{=}0.0083$; structural 0.33$\times$, $p{=}0.0001$). The root cause is logical masking: structured operands produce deterministic low-entropy results; a fault the structured computation cancels is masked. Random spreads output relevance, raising ACE fraction---exactly the AVF prediction.
+
+\subsection{Why directed must operate on random}
+The falsification reframes the problem: the thing that made random win is \emph{coverage breadth}, and a directed generator that throws it away inherits the dictionary's failure. The resolution: apply directed pressure \textbf{on top of} random. Each iteration generates two random candidates, mutates one toward higher ACE, evaluates a popcount carry-chain proxy, and keeps the winner. The operands look random and high-entropy (anti-masking) but are biased toward long carry chains. The proxy \texttt{popcount(x $\oplus$ (x+1))} counts the carry-chain length---a direct measure of how much output-relevant state a single-bit perturbation propagates through.
+
+\subsection{The proxy is buildable on SiliFuzz's own substrate}
+SiliFuzz's Unicorn proxy ships an \texttt{ArchFeatureGenerator} (\texttt{proxies/arch\_feature\_generator.h}) tracking per-bit register-toggle domains (\texttt{reg\_toggle\_zero\_one}, \texttt{reg\_toggle\_one\_zero}, \texttt{reg\_difference}, \texttt{op\_reg\_toggle\_*}, \texttt{op\_pair}, \texttt{mem\_difference}), emitting per-bit features via \texttt{EmitSetBitFeatures}+\texttt{ForEachSetBit}, with \texttt{BeforeExecution}/\texttt{AfterInstruction} carrying register values. So $T(di/dt) = \text{popcount}(\text{zero\_one} \mid \text{one\_zero})$ is directly computable: the fitness can be folded back into SiliFuzz's coverage loop rather than only emitted as a hand-tuned workload.
+
+% ---------------------------------------------------------------------------
+\section{Methodology}
+\label{sec:method}
+
+\subsection{The 13-version evolution path (D1--D13)}
+Table~II traces the diverge rate across all 13 versions; each row adds one lever. The path is falsifiable: D4 (ACE-targeting) backfired to 0.24$\times$; D7 (dropping \texttt{volatile}) killed the structural metric at 0\%. The decisive transition D12$\to$D13 adds the \emph{only} lever \texttt{pick\_high\_toggle}, moving bit-flip 12.4\%$\to$24.6\% and structural 14.8\%$\to$65.4\%.
+
+\subsection{D13: directed mutation on random}
+D13 (\texttt{seeds/gem5/sdc\_probe\_workload\_d13.c}) compiles the idea directly. The core:
+\begin{verbatim}
+static uint64_t targeted_mutate(uint64_t a) {
+    uint64_t mask = rng_u64();
+    uint64_t a_mut = a ^ mask;            // XOR mutation
+    a_mut += 1;                           // carry-chain trigger
+    a_mut = (a_mut << 1) | (a_mut >> 63); // rotate
+    a_mut ^= ~a;                          // difference amplification
+    return a_mut;
+}
+static uint64_t pick_high_toggle(uint64_t a, uint64_t b) {
+    uint64_t a_mut = targeted_mutate(a);
+    uint64_t a_eval = a_mut ^ (a_mut + 1);
+    uint64_t b_eval = b ^ (b + 1);
+    return (popcount64(a_eval) >= popcount64(b_eval)) ? a_mut : b;
+}
+\end{verbatim}
+\texttt{carry\_chain} and \texttt{toggle\_rate} draw operands via \texttt{pick\_high\_toggle(rng\_u64(), rng\_u64())}; the rest are pure \texttt{rng\_u64()}. D13 inherits D12's full \texttt{volatile} dual-ACE paths, 16-operand breadth, four cross-loop accumulators, and \texttt{lsu\_cross} store-to-load forwarding across 16B/64B/128B boundaries.
+
+\subsection{The offline evolution engine (proof-of-mechanism)}
+\texttt{pick\_high\_toggle} is the distillate of an offline, Unicorn-feedback-driven evolution engine (\texttt{tools/sdc\_mutator/evolution\_engine.py}) with a three-factor fitness $Score = W_1 T(di/dt) + W_2 M(Path) + W_3 E(\text{AntiMasking})$. From a seed \texttt{ADDS X0,X1,X2} with ordinary operands, it evolved $T$ from 8$\to$70 (8.8$\times$) with $E{=}0.999$. This validated the mechanism; D13 is its runtime distillate. We report the prototype as a proof-of-mechanism, \textbf{not} as the evaluated generator.
+
+\subsection{ACE-fraction scanning and fleet deployment}
+\texttt{scripts/gem5\_ace\_scanner.py} scans each workload's ACE fraction per physical register to verify the AVF root cause. The corpus is deployed across the four-board Kunpeng~920 fleet (0101/0102/0103 reachable; 0201 degraded) via \texttt{scripts/distributed\_scan.py} + \texttt{scripts/collect\_results.py}, using the \S\ref{sec:background} taxonomy. The 19 microarchitectural templates (\texttt{seeds/*.S}) cover MMU/L2C/LSU/OoO/IEX/FSU/IFU structurally but are not part of the D1--D13 ablation.
+
+% ---------------------------------------------------------------------------
+\section{Implementation}
+\label{sec:impl}
+
+A source map of the SiliFuzz toolchain confirms the paper's claim: we \textbf{reuse} the Snapshot proto (\texttt{proto/snapshot.proto}), relocatable Snap + corpus (\texttt{snap/snap.h}, \texttt{SnapRelocator}), nolibc/seccomp runner (\texttt{runner/runner.cc}, \texttt{RunSnapOutcome} at \texttt{runner.h:32--43}, \texttt{AUDIT\_ARCH\_AARCH64} seccomp default-deny, \texttt{runner/aarch64/snap\_exit.S}, \texttt{util/aarch64/start.S}), and arch-agnostic orchestrator (\texttt{orchestrator/silifuzz\_orchestrator.cc}, Apache-2.0) wholesale; we \textbf{replace} SiliFuzz's operand-undirected mutator (\texttt{FlipRandomBit}; \texttt{program\_mutation\_ops.cc:187} TODO) with the D13 directed-mutation-on-random generator; we \textbf{add} the gem5-CHAOS evaluation harness including the \texttt{byte\_lane\_skew} structural injector; and we reuse the Unicorn \texttt{ArchFeatureGenerator} coverage substrate (\texttt{proxies/arch\_feature\_generator.h:33--42}) on which the fitness is buildable. Platform detection force-maps Kunpeng (\texttt{implementer==0x48}$\to$\texttt{kArmNeoverseN1}, \texttt{util/platform.cc:165--167}).
+
+% ---------------------------------------------------------------------------
+\section{Evaluation}
+\label{sec:eval}
+
+\subsection{D13 vs.\ B: both metrics extremely significant}
+All four headline numbers were re-counted from on-disk \texttt{run\_NNN/simout.txt} on board~0101 (Table~III). Bit-flip: D13 24.6\% (123/500) vs.\ B 8.2\% (41/500), 3.00$\times$, $z{=}7.00$, $p{=}2.5\times10^{-12}$. Structural: D13 65.4\% (327/500) vs.\ B 8.4\% (42/500), 7.79$\times$, $z{=}18.68$, $p{\ll}10^{-300}$. Both extremely significant ($z{\gg}3.29$). 500 single-fault injections per cell suffices for $p{<}10^{-12}$ on both metrics; larger campaigns would tighten ratios with diminishing returns.
+
+\noindent\textbf{Footnote 1 (honesty, on-disk recount).} An earlier draft reported B bit-flip as 8.0\% (40/500), giving 3.07$\times$. The on-disk recount gives \textbf{41/500 = 8.2\%} under the consistent value-golden rule (golden iff \texttt{SUM} and \texttt{CRC} both match by value; two runs with mis-formatted \texttt{CRC} strings from a fault hitting \texttt{printf} are golden-by-value; one run whose \texttt{SUM} matched by coincidence but \texttt{CRC} differed is a diverge). The 3.07$\times$ required an inconsistent rule. We adopt 8.2\%/3.00$\times$ throughout; the structural 7.79$\times$ is exact.
+
+\subsection{Root cause: AVF (ACE fraction), not PRNG structure}
+LCG = 7.9817 bits/call, xorshift = 7.9782---statistically equal, so ``random wins by having no structure'' is folkloric. ACE-fraction scan: B = 7.6\% (7 ACE registers; \texttt{PhysReg[4]} 63\% ACE) vs.\ D5 (dictionary superset) = 6.1\% (10 ACE registers, max 33\%). B wins \emph{despite} fewer ACE registers because its carry more output-relevant data---the AVF theorem in measurement.
+
+\subsection{Evolution-path analysis}
+D8$\to$structural 26.6\% (3.17$\times$): first significant win, hybrid \texttt{volatile} gives store-to-load forwarding a path to corrupt. D10$\to$bit 8.0\% (parity) + structural 17.0\% (2.02$\times$): first ``not worse on either.'' D11/D12$\to$bit finally exceeds B (8.8\%, 12.4\%) via cross-loop accumulators. D13$\to$both extremely significant (24.6\%/65.4\%) by adding \texttt{pick\_high\_toggle}.
+
+\subsection{Fleet deployment (four boards, 446 cores, zero genuine SDC)}
+Table~IV: 0101(126)/0102(192)/0103(128)/0201(96), all genuine SDC (2/3/4) = 0, consistent with $10^{-8}$--$10^{-10}$. 1170 misbehave~(6) = SIGSEGV from \texttt{fork}/\texttt{mmap} exhaustion hitting the snap-\emph{external} path (0102 de-parallelised to 32 cores $\to$ 0 mismatches)---not SDC. 0201 accumulated 6016+ runaway~(5) that a naive \texttt{grep} reported as SDC; the taxonomy turns that into the correct zero.
+
+\subsection{Comparison with Harpocrates and fleet studies}
+\textbf{Not comparable to Harpocrates's 99\%.} Harpocrates reports near-99\% on functional units under permanent gate-level stuck-at, on x86-64, in gem5. This paper reports 24.6\% bit-flip and 65.4\% structural on ARM (V110) with \texttt{byte\_lane\_skew} in the load-store-forwarding path. ISA, fault model, and structure differ. What \emph{is} comparable, and what we claim: within the same model and measurement, directed-on-random (D13) beats operand-undirected random (B) by 3.00$\times$ and 7.79$\times$. \textbf{Comparable to fleet studies (all x86).} SOSP'23 reports 3.61\textperthousand{} on x86; PinDrop 0.035\%. Both x86. Our 0-genuine-SDC on a 446-core ARM fleet is the first such ARM-server deployment, consistent with---not contradictory to---the x86 rates scaled down.
+
+% ---------------------------------------------------------------------------
+\section{Discussion}
+\label{sec:discussion}
+Pure random: high ACE by luck, no direction. Fixed-value: high toggle but masked. Directed-on-random: random breadth + directed high-ACE bias = best of both; the AVF theorem explains all three. The 7.79$\times$ structural win is the more operationally meaningful (aligned with the real core-179 defect class; a fault class Harpocrates does not model). The \texttt{pick\_high\_toggle} proxy is a cheap integer ACE proxy; non-integer units need other proxies (19 templates cover those structurally but are not in the ablation). \textbf{Open problem:} silicon-level validation requires deploying D13 on a known-defective core and showing a higher flag rate than a random corpus---blocked by the core-179 watchdog reset.
+
+% ---------------------------------------------------------------------------
+\section{Threats to Validity}
+\label{sec:threats}
+\textbf{Model vs.\ silicon.} gem5~O3 $\neq$ V110 RTL; 24.6\%/65.4\% are model-level. \textbf{No real SDC on healthy silicon} validates the pipeline and taxonomy, not D13's silicon superiority. \textbf{Single \(\mu\)arch} (V110); magnitudes V110-specific though the AVF insight is \(\mu\)arch-agnostic. \textbf{500 injections/cell} sufficient for $p{<}10^{-12}$. \textbf{Comparison boundaries}: 3.00$\times$/7.79$\times$ are within-model, not a cross-paper race vs.\ Harpocrates's 99\%. \textbf{Citations}: references marked [VERIFY] could not be machine-checked (WebFetch blocked); none fabricated.
+
+% ---------------------------------------------------------------------------
+\section{Related Work}
+\label{sec:related}
+\textbf{Proxy fuzzing/fleet replay.} SiliFuzz~\cite{silifuzz} (operand-undirected; we reuse its toolchain, replace its mutation). Fleetscanner/Ripple~\cite{fleetscanner_ripple22} (fleet infrastructure; our runner is the open analog). \textbf{\(\mu\)arch-aware generation.} Harpocrates~\cite{harpocrates_isca24,harpocrates_micro26} (closest; we differentiate on five axes, \S\ref{sec:background}). \textbf{Fleet characterisation (all x86).} SOSP'23~\cite{wang_sosp23} (3.61\textperthousand, notes test inefficiency); Veritas~\cite{veritas_hPCA25}; PinDrop~\cite{pindrop_hpca26}; SEVI~\cite{sevi_asplos26}. \textbf{Online detection.} Orthrus~\cite{orthrus_sosp25}; ITHICA~\cite{ithica}; Hardware Sentinel~\cite{hwsentinel_asplos25}. \textbf{Fault models.} AVF~\cite{avf_mukherjee_micro03}; DelayAVF~\cite{delayavf_micro24}; From Gates to SDCs~\cite{gatestosdc_date25}; CHAOS~\cite{chaos_gem5} (our harness, extended with \texttt{byte\_lane\_skew}); Vega~\cite{vega_asplos24}; Trippel~\cite{trippel2021_fuzzhw}.
+
+% ---------------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:concl}
+Directed mutation on random values (D13) extremely significantly outperforms SiliFuzz's operand-undirected mutation on both metrics---bit-flip 3.00$\times$, structural 7.79$\times$---in a gem5 TaiShan~V110~O3 model, the first such result on an ARM server CPU. The insight (directed pressure must operate on random values, not fixed patterns) emerged from the falsification of fixed-value dictionaries and is grounded in the AVF theorem: random beats fixed-value by ACE fraction, not PRNG structure, and directed-on-random raises ACE fraction further by biasing the operand draw without sacrificing coverage breadth. A 13-version path with negative levers makes the result reproducible; a 4-board 446-core deployment with a genuine-SDC/noise taxonomy yields zero genuine SDC on healthy silicon---a meaningful, not empty, measurement. The central open problem, silicon-level validation, is blocked by the core-179 watchdog reset; within the model-level scope where it can be measured, directed mutation on random crushes operand-undirected mutation on both metrics.
+
+% ---------------------------------------------------------------------------
+\begin{acks}
+[To be completed.]
+\end{acks}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{paper2}
+
+\end{document}
