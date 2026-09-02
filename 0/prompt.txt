@@ -1,0 +1,9 @@
+调用 superpowers:writing-plans skill，研究 sdcfuzz方案 @"docs/scheme.md" ，撰写完备的实验验证方案。备注：真实物理环境验证，当前考虑在本机验证，并支持扩展到网络上的设备（由用户提供ip、端口、用户名和密码，通过ssh链接、测试、验证、获取反馈信息、迭代优化测试用例生成）。要求方案完备、严密、越详细越好。
+
+---
+
+“0101 有完整 gem5-CHAOS 注入环境（SSH 实测确认）” 改为 本机“/home/sdc/wangxu/gem5-fi” 中的故障注入。
+
+---
+
+调用 executing-plans ，subagent-driven方式
