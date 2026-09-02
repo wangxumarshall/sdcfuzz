@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""hw_scan.py — 真机 SDC 扫描驱动 (E3/E4 核心)。
+
+对设备(本机/远程)跑 orchestrator 扫描 corpus, 拉回日志, 用与
+scripts/collect_results.py 完全一致的解析规则分类:
+  真SDC = outcome 2/3/4; 噪声 = outcome 5/6 + SIGSEGV-outside-snap + SIGTERM。
+
+orchestrator flag 组合与 scripts/distributed_scan.py 已验证行为一致:
+  {orch} --duration={dur}s --max_cpus={N} --runner={runner}
+          --shard_list_file={list} --corpus_metadata_file={meta}
+(shard_list: 每行一个语料绝对路径; metadata: 'version: "local_corpus"')
+外加 --enable_v1_compat_logging: orchestrator 默认级别健康时完全静默(实测
+2026/09/02 本机 10s/2cpu rc=0 → 日志 0 行), 打开 v1-compat 才有周期性
+'Silifuzz Checker Result:{...play_count...}' 汇总行, 提供扫描确实在跑的
+iter 证据; timeout {dur_s} 外壳防挂死 (与 distributed_scan 相同)。
+"""
+import argparse
+import json
+import os
+import re
+import sys
+import time
+
+_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, _REPO)
+
+
+def parse_log(text: str) -> dict:
+    """与 scripts/collect_results.py::parse_log 逐字符一致的解析 (移植)。
+
+    runner RunSnapOutcome 枚举 (common/snapshot_enums.h):
+      0=kAsExpected 1=kPlatformMismatch 2=kMemoryMismatch
+      3=kRegisterStateMismatch 4=kEndpointMismatch
+      5=kExecutionRunaway 6=kExecutionMisbehave
+    真 SDC = outcome 2/3/4 (计算结果与预期不符, 静默数据损坏);
+    outcome 5 (满负载调度延迟超时) / 6 (信号) = 噪声;
+    SIGSEGV-outside-snap (fork/mmap 资源耗尽击中 snap 外路径) / SIGTERM = 噪声。
+    """
+    sigsegv_outside = len(re.findall(r'SIGSEGV while outside of snap', text))
+    sigterm = len(re.findall(r'SIGTERM', text))
+    all_failed = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = (\d+)', text)
+    sdc_outcomes = [o for o in all_failed if o in ('2', '3', '4')]
+    runaway = sum(1 for o in all_failed if o == '5')
+    misbehave = sum(1 for o in all_failed if o == '6')
+    sdc_details = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = [234]', text)[:10]
+    return {"sigsegv_noise": sigsegv_outside, "sigterm": sigterm,
+            "runaway_noise": runaway, "misbehave_noise": misbehave,
+            "sdc_hits": len(sdc_outcomes), "sdc_details": sdc_details,
+            "total_failed": len(all_failed)}
+
+
+def parse_v1_summary(text: str):
+    """解析 orchestrator --enable_v1_compat_logging 的终态汇总行 (最后一条)。
+
+    实测形态 (2026/09/02, /tmp/orch_probe/v1c.log):
+      Silifuzz Checker Result:{issues_detected = 0, ..., play_count = 10,
+        ..., runaway_count = 0, ...}
+    issues_detected = ResultCollector.num_failed_snapshots (含 runaway, 除非
+    --report_runaways_as_errors=false 时不计入 — 默认 false); play_count =
+    runner 进程完成数。健康无日志时返回 None。
+    """
+    pat = re.compile(
+        r"issues_detected = (\d+).*?play_count = (\d+).*?runaway_count = (\d+)")
+    last = None
+    for m in pat.finditer(text):
+        last = {"issues_detected": int(m.group(1)),
+                "play_count": int(m.group(2)),
+                "runaway_count": int(m.group(3))}
+    return last
+
+
+def _scan_cmd(orch, runner, shard_list, metadata, duration_s, max_cpus):
+    """orchestrator 命令行 (flag 组合自 distributed_scan.py, 加 v1-compat)。"""
+    return (f"timeout {duration_s + 60} {orch} --duration={duration_s}s "
+            f"--max_cpus={max_cpus} --runner={runner} "
+            f"--shard_list_file={shard_list} --corpus_metadata_file={metadata} "
+            f"--enable_v1_compat_logging")
+
+
+def hw_scan(device, corpus_remote: str, duration_s: int, max_cpus: int,
+            stress: bool = False) -> dict:
+    """在 device 上跑 orchestrator 扫描, 返回解析结果。
+
+    corpus_remote: 设备本地的语料文件或目录。目录 → 列出其中语料分片;
+    文件 → 单行 shard_list。shard_list + metadata 写到设备工作目录。
+    """
+    orch = device.tool_path("silifuzz_orchestrator_main")
+    runner = device.tool_path("reading_runner_main_nolibc")
+    work = f"/tmp/sdc_scan_{int(time.time())}"
+    device.run(f"mkdir -p {work}")
+
+    # shard_list: 目录 → 每行一个分片绝对路径; 文件 → 单行
+    rc_t, _ = device.run(f"test -d {corpus_remote}", timeout=30)
+    if rc_t == 0:
+        rc_w, _ = device.run(f"for f in {corpus_remote}/*; do "
+                             f"[ -f \"$f\" ] && readlink -f \"$f\"; done > {work}/shard_list",
+                             timeout=60)
+    else:
+        rc_w, _ = device.run(f"echo {corpus_remote} > {work}/shard_list", timeout=60)
+    if rc_w != 0:
+        return {"error": f"shard_list 写入失败 rc={rc_w}", "corpus": corpus_remote}
+    device.run(f"echo 'version: \"local_corpus\"' > {work}/corpus_metadata", timeout=60)
+
+    cmd = (_scan_cmd(orch, runner, f"{work}/shard_list",
+                     f"{work}/corpus_metadata", duration_s, max_cpus)
+           + f" > {work}/scan.log 2>&1; echo ORCH_RC=$?")
+    if stress:
+        device.run("command -v stress-ng >/dev/null && "
+                   f"(stress-ng --cpu {max_cpus} --timeout {duration_s}s "
+                   f"> {work}/stress.log 2>&1 &) || true", timeout=30)
+
+    scan_start = int(time.time())
+    rc, out = device.run(cmd, timeout=duration_s + 600)
+    scan_wall_s = int(time.time()) - scan_start
+    orch_rc = None
+    m = re.search(r"ORCH_RC=(\d+)\s*$", out.strip())
+    if m:
+        orch_rc = int(m.group(1))
+
+    # 拉日志 + 解析
+    rc2, log = device.run(f"cat {work}/scan.log", timeout=120)
+    if rc2 != 0:
+        return {"error": f"scan.log 读取失败 rc={rc2} (orch_rc={orch_rc})",
+                "scan_work_dir": work, "device": device.name,
+                "orch_cmd_rc": rc}
+    parsed = parse_log(log)
+    v1 = parse_v1_summary(log)
+    parsed.update({
+        "scan_work_dir": work, "device": device.name,
+        "max_cpus": max_cpus, "duration_s": duration_s,
+        "corpus": corpus_remote, "orch_rc": orch_rc,
+        "scan_wall_s": scan_wall_s,
+        "v1_summary": v1,   # issues_detected/play_count/runaway_count (无则 None)
+    })
+    # 拉回日志存档 (local: 直接拷; remote: scp)
+    os.makedirs("output/experiments/hw_scan_logs", exist_ok=True)
+    local_log = (f"output/experiments/hw_scan_logs/"
+                 f"{device.name}_{scan_start}.scan.log")
+    device.get(f"{work}/scan.log", local_log)
+    parsed["archived_log"] = local_log
+    return parsed
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--device", required=True, help="local | remote:NAME")
+    ap.add_argument("--corpus", required=True, help="设备上的语料文件或目录")
+    ap.add_argument("--duration", type=int, default=1800)
+    ap.add_argument("--max-cpus", type=int, default=8)
+    ap.add_argument("--stress", action="store_true")
+    ap.add_argument("--exp", default="exp03")
+    a = ap.parse_args()
+    from tools.sdc_experiment.experiment_config import default_config, MAX_CPUS_HARD_LIMIT
+    from tools.sdc_experiment.devices.device_pool import DevicePool
+    from tools.sdc_experiment.devices.local_device import LocalDevice
+    cfg = default_config(a.exp)
+    if a.max_cpus > MAX_CPUS_HARD_LIMIT:
+        raise SystemExit(f"max_cpus={a.max_cpus} 超出 MCE 红线 {MAX_CPUS_HARD_LIMIT}")
+    dev = (LocalDevice() if a.device == "local"
+           else DevicePool().load().get(a.device.split(":", 1)[1]))
+    res = hw_scan(dev, a.corpus, a.duration, a.max_cpus, a.stress)
+    os.makedirs(cfg.out_dir, exist_ok=True)
+    out = cfg.out_dir / f"hw_{dev.name}.json"
+    with open(out, "w") as f:
+        json.dump(res, f, indent=2, ensure_ascii=False)
+    print(json.dumps(res, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()

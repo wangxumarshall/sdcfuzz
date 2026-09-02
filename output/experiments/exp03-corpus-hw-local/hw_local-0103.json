@@ -1,0 +1,22 @@
+{
+  "sigsegv_noise": 0,
+  "sigterm": 0,
+  "runaway_noise": 0,
+  "misbehave_noise": 0,
+  "sdc_hits": 0,
+  "sdc_details": [],
+  "total_failed": 0,
+  "scan_work_dir": "/tmp/sdc_scan_1788354603",
+  "device": "local-0103",
+  "max_cpus": 8,
+  "duration_s": 1800,
+  "corpus": "output/experiments/exp03-corpus-hw-local/corpus",
+  "orch_rc": 0,
+  "scan_wall_s": 1800,
+  "v1_summary": {
+    "issues_detected": 0,
+    "play_count": 3840,
+    "runaway_count": 0
+  },
+  "archived_log": "output/experiments/hw_scan_logs/local-0103_1788354603.scan.log"
+}
