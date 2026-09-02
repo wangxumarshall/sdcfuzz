@@ -82,6 +82,16 @@ class RemoteDevice(Device):
 
     def put(self, local: str, remote: str) -> bool:
         # ssh_lib.scp 无 port 参数 → 直接组装 _run; scp 端口用 -P (上传, 远端在 dst 位)
+        # 目录上传: scp -r。OpenSSH≥9 默认 SFTP 模式下远端目录不存在时行为是
+        # "把 src 内容放进 remote" 而非 "remote/<basename>" → 先 mkdir -p 再传, 保证
+        # 远端始终落在 remote/<basename>/ (与 LocalDevice.put 目录语义一致)
+        if os.path.isdir(local):
+            self._ssh(f"mkdir -p {remote}", timeout=15)
+            _run(["scp"] + SSH_OPTS + ["-P", str(self.port), "-r", local,
+                 f"{self.user}@{self.host}:{remote}"],
+                 self._password, timeout=600, is_scp=True)
+            rc, _ = self._ssh(f"test -d {remote}/{os.path.basename(local.rstrip('/'))}", timeout=15)
+            return rc == 0
         _run(["scp"] + SSH_OPTS + ["-P", str(self.port), local,
              f"{self.user}@{self.host}:{remote}"],
              self._password, timeout=300, is_scp=True)

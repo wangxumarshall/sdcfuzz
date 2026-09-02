@@ -102,8 +102,51 @@ def test_device_pool_roundtrip():
     assert probes["fake-board"]["reachable"] is False
     print("PASS test_device_pool_roundtrip")
 
+def test_local_device_tools_dir_and_dir_put():
+    """tools_dir 参数 + 目录级 put (scp -r 语义: 远端落在 remote/<basename>)。"""
+    import shutil, tempfile
+    with tempfile.TemporaryDirectory() as td:
+        d = LocalDevice(work_dir=td, tools_dir=os.path.join(td, "tools"))
+        assert d.tool_path("snap_tool") == os.path.join(td, "tools", "snap_tool")
+        # 目录 put
+        src_dir = os.path.join(td, "corpus_src")
+        os.makedirs(src_dir)
+        with open(os.path.join(src_dir, "shard.bin"), "w") as f:
+            f.write("BIN")
+        dst_root = os.path.join(td, "corpus_dst")
+        assert d.put(src_dir, dst_root) is True
+        assert os.path.isfile(os.path.join(dst_root, "corpus_src", "shard.bin")), \
+            "目录 put 应落在 remote/<basename>/ 下"
+    print("PASS test_local_device_tools_dir_and_dir_put")
+
+def test_deploy_local():
+    """deploy() 冒烟: 5 工具部署到临时 tools_dir, 可执行, 幂等 (二次 skip)。"""
+    import tempfile
+    from tools.sdc_experiment.deploy import deploy, TOOLS
+    for t in TOOLS:  # 前置: 本机源工具须存在
+        src = f"/usr/local/bin/{t}"
+        if not os.path.exists(src):
+            print(f"SKIP test_deploy_local: 本机缺少源工具 {src}")
+            return
+    with tempfile.TemporaryDirectory() as td:
+        d = LocalDevice(work_dir=td, tools_dir=os.path.join(td, "tools"))
+        r1 = deploy(d)
+        for t in TOOLS:
+            assert r1["tools"][t] == "deployed", f"首次部署应 deployed: {t}={r1['tools'][t]}"
+            p = d.tool_path(t)
+            assert os.path.isfile(p), f"{p} 不存在"
+            assert os.access(p, os.X_OK), f"{p} 应可执行"
+        r2 = deploy(d)   # 幂等: md5 一致 → skip
+        for t in TOOLS:
+            assert r2["tools"][t] == "skip(md5 match)", \
+                f"二次部署应 skip: {t}={r2['tools'][t]}"
+        assert r1["corpus"] is None and r2["corpus"] is None
+    print("PASS test_deploy_local: 5 tools deployed + executable + idempotent-skip")
+
 if __name__ == "__main__":
     test_local_probe(); test_local_run(); test_local_put_get(); test_local_tool_path()
+    test_local_device_tools_dir_and_dir_put()
     test_remote_device_skip_if_unreachable()
     test_device_pool_roundtrip()
+    test_deploy_local()
     print("ALL PASS")

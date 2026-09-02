@@ -9,9 +9,11 @@ LOCAL_TOOLS = ["snap_tool", "simple_fix_tool_main", "reading_runner_main_nolibc"
                "silifuzz_orchestrator_main", "silifuzz_platform_id"]
 
 class LocalDevice(Device):
-    def __init__(self, work_dir: str = "/tmp/sdc_experiment", name: str = "local-0103"):
+    def __init__(self, work_dir: str = "/tmp/sdc_experiment", name: str = "local-0103",
+                 tools_dir: str = LOCAL_TOOLS_DIR):
         self._name = name
         self.work_dir = work_dir
+        self.tools_dir = tools_dir   # 部署目标目录 (默认 /usr/local/bin 已装; deploy 冒烟传临时目录)
         os.makedirs(work_dir, exist_ok=True)
 
     @property
@@ -48,8 +50,17 @@ class LocalDevice(Device):
 
     def put(self, local: str, remote: str) -> bool:
         try:
-            os.makedirs(os.path.dirname(remote) or "/", exist_ok=True)
-            shutil.copy(local, remote)
+            if os.path.isdir(local):
+                # 目录上传 (scp -r 语义): 远端落在 remote/<basename>
+                os.makedirs(remote, exist_ok=True)
+                shutil.copytree(local, os.path.join(remote, os.path.basename(local.rstrip("/"))),
+                                dirs_exist_ok=True)
+            else:
+                os.makedirs(os.path.dirname(remote) or "/", exist_ok=True)
+                # 目标已存在且只读 (如 chmod +x 后的 0555 工具) → 先删再拷, 模拟 scp 覆盖
+                if os.path.exists(remote):
+                    os.unlink(remote)
+                shutil.copy(local, remote)
             return True
         except OSError:
             return False
@@ -63,4 +74,4 @@ class LocalDevice(Device):
             return False
 
     def tool_path(self, name: str) -> str:
-        return os.path.join(LOCAL_TOOLS_DIR, name)
+        return os.path.join(self.tools_dir, name)
