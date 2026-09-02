@@ -1,6 +1,6 @@
 # sdcfuzz 方案完备实验验证方案（本机物理验证 + 可扩展远程 SSH 设备）
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 为 `docs/scheme.md` 的 sdcfuzz 四层架构建立一套**完备、严密、可复现**的实验验证体系：先在本机（0103, Kunpeng 920, 128 核）真实物理环境逐层验证，再把验证基础设施扩展到网络上的远程设备（用户提供 IP/端口/用户名/密码，SSH 连接→测试→验证→反馈→迭代优化测试用例生成），形成"生成→仿真故障验证→真机验证→反馈迭代"的闭环实验平台。
 
@@ -98,7 +98,7 @@
 - Consumes: 无（纯新增）
 - Produces: `ExperimentConfig` dataclass（字段：`experiment_id: str`, `out_dir: Path`, `gem5_opt: Path`, `gem5_script: Path`, `max_cpus: int`, `sweep_runs: int`, `roi: tuple[float,float]`, `wilson_z: float`）；函数 `load_config(path: str) -> ExperimentConfig`；`default_config(experiment_id: str) -> ExperimentConfig`（写死本机路径默认值，可被 YAML 覆盖）
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 ```python
 # tools/sdc_experiment/test_experiment_config.py
@@ -139,12 +139,12 @@ if __name__ == "__main__":
     print("ALL PASS")
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 Run: `python3 tools/sdc_experiment/test_experiment_config.py`
 Expected: FAIL — `ModuleNotFoundError: No module named 'tools.sdc_experiment'`
 
-- [ ] **Step 3: 实现最小配置系统**
+- [x] **Step 3: 实现最小配置系统**
 
 ```python
 # tools/sdc_experiment/experiment_config.py
@@ -224,12 +224,12 @@ def load_config(path: str) -> ExperimentConfig:
 output/devices/
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 Run: `python3 tools/sdc_experiment/test_experiment_config.py`
 Expected: `PASS test_default_config` / `PASS test_load_config_yaml` / `PASS test_config_serializable` / `ALL PASS`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git checkout -b feat/sdc-experiment-verification
@@ -253,7 +253,7 @@ git push -u origin feat/sdc-experiment-verification
 - Consumes: 无
 - Produces: 抽象基类 `Device`（方法：`name -> str`、`probe() -> dict`（返回 `{"reachable": bool, "arch": str, "cores": int, "mem_gb": int, "os": str, "specs_ok": bool, "errors": list[str]}`）、`run(cmd: str, timeout: int = 60) -> tuple[int, str]`、`put(local: str, remote: str) -> bool`、`get(remote: str, local: str) -> bool`、`tool_path(name: str) -> str`（返回该设备上 silifuzz 工具的绝对路径））；`LocalDevice(work_dir: str = "/tmp/sdc_experiment")`
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 ```python
 # tools/sdc_experiment/test_device_pool.py（本任务先写 local 部分）
@@ -304,12 +304,12 @@ if __name__ == "__main__":
     print("ALL PASS")
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `python3 tools/sdc_experiment/test_device_pool.py`
 Expected: FAIL — `ModuleNotFoundError`
 
-- [ ] **Step 3: 实现 Device 基类 + LocalDevice**
+- [x] **Step 3: 实现 Device 基类 + LocalDevice**
 
 ```python
 # tools/sdc_experiment/devices/device.py
@@ -419,12 +419,12 @@ class LocalDevice(Device):
 
 `devices/__init__.py` 为空文件。
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 Run: `python3 tools/sdc_experiment/test_device_pool.py`
 Expected: 4 个 PASS + `ALL PASS`（probe 输出应显示 `cores: 128, mem_gb: 29, arch: aarch64`）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tools/sdc_experiment/devices/ tools/sdc_experiment/test_device_pool.py
@@ -444,7 +444,7 @@ git push
 - Consumes: `scripts/ssh_lib.py` 的 `ssh()/scp()`（`sys.path` 注入 `scripts/` 后 import）
 - Produces: `RemoteDevice(host: str, port: int = 22, user: str = "root", password: str | None = None, name: str | None = None, tools_dir: str = "/sdc_tools")`；密码缺省取 `os.environ["SDC_PASSWORD"]`。远端工具路径约定 `tools_dir` 下（部署后 chmod +x）。`probe()` 额外返回 `"gem5": bool`（远端是否有 `~/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt`）。
 
-- [ ] **Step 1: 写失败测试（连不通时 SKIP）**
+- [x] **Step 1: 写失败测试（连不通时 SKIP）**
 
 在 `test_device_pool.py` 追加：
 
@@ -480,12 +480,12 @@ if __name__ == "__main__":
     print("ALL PASS")
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `python3 tools/sdc_experiment/test_device_pool.py`
 Expected: FAIL — `ModuleNotFoundError: ... remote_device`（local 部分仍 PASS，remote import 报错）
 
-- [ ] **Step 3: 实现 RemoteDevice**
+- [x] **Step 3: 实现 RemoteDevice**
 
 ```python
 # tools/sdc_experiment/devices/remote_device.py
@@ -578,12 +578,12 @@ class RemoteDevice:
 
 > **注意 `get()` 的方向**（已核对 `scripts/ssh_lib.py` 源码）：`ssh_lib.scp(src, dst, host)` 的 dst 形如 `host:path`，**总是向远端上传**，没有下载函数。`get()` 的正确实现是直接调 `ssh_lib._run` 组装 `["scp"] + SSH_OPTS + [f"{user}@{host}:{remote}", local]`（把远端路径放 src 位）。验收标准：有真实设备时 `test_remote_device` 的 put/get 真测通过；无设备时以 0101 冒烟（Task 3 Step 5）覆盖。
 
-- [ ] **Step 4: 运行测试**
+- [x] **Step 4: 运行测试**
 
 Run: `python3 tools/sdc_experiment/test_device_pool.py`
 Expected: 4 个 local PASS + `SKIP test_remote_device`（无清单时）或 `PASS test_remote_device`（有清单时）+ `ALL PASS`
 
-- [ ] **Step 5: 用真实板卡 0101 冒烟验证（一次性，人工确认）**
+- [x] **Step 5: 用真实板卡 0101 冒烟验证（一次性，人工确认）**
 
 ```bash
 mkdir -p output/devices
@@ -598,7 +598,7 @@ python3 tools/sdc_experiment/test_device_pool.py
 ```
 Expected: `PASS test_remote_device: 0101 probe={... 'cores': 126 ...}`（F6/F7 基础上应可达；若 SKIP/FAIL 则记录原因，不阻塞——0101 仅是冒烟对象，正式远程设备由用户提供）
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tools/sdc_experiment/devices/remote_device.py tools/sdc_experiment/test_device_pool.py
@@ -619,7 +619,7 @@ git push
 - Consumes: `LocalDevice`, `RemoteDevice`
 - Produces: `DevicePool`（`add_local(name)`, `add_remote(host, port, user, password, name, tools_dir)`, `load(path) -> DevicePool`（读 devices.json）, `save(path)`（**抹除密码后**写公开清单 `devices.public.json`）, `probe_all() -> dict[name, probe]`, `get(name) -> Device`, `devices -> list[Device]`, `healthy -> list[Device]`）；CLI `register_device.py --name NAME --host IP --port 22 --user root [--password-env SDC_PASSWORD] [--tools-dir /sdc_tools] [--gem5]`（追加式注册到 `output/devices/devices.json`，密码建议从环境变量读，也接受 `--password` 但会警告）
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 追加到 `test_device_pool.py`：
 
@@ -653,12 +653,12 @@ if __name__ == "__main__":
     print("ALL PASS")
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `python3 tools/sdc_experiment/test_device_pool.py`
 Expected: FAIL — `ImportError: device_pool`
 
-- [ ] **Step 3: 实现 DevicePool + 注册 CLI**
+- [x] **Step 3: 实现 DevicePool + 注册 CLI**
 
 ```python
 # tools/sdc_experiment/devices/device_pool.py
@@ -790,12 +790,12 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 Run: `python3 tools/sdc_experiment/test_device_pool.py`
 Expected: 全部 PASS/预期 SKIP + `ALL PASS`（`test_device_pool_roundtrip` 中 fake-board 不可达探活约需 10-15s 超时）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tools/sdc_experiment/devices/device_pool.py scripts/register_device.py \
@@ -824,7 +824,7 @@ git push
 
 **工作负载组表（单一事实来源）**：从 F3/F4 与 `gem5_sweep_abcd.py`/`d13_sweep.py` 提取硬编码，集中为模块级 `GROUPS` 字典，路径指向 `gem5_config/` 下入仓的 workload。每 run 输出目录在本机 `output/experiments/{exp}/runs/{group}_{mode}_{i:03d}/`，解析 `simout.txt` 中 `SUM=` 行与 golden 比对（判定逻辑与 `gem5_sweep_abcd.py` 完全一致：无输出=no_output；==golden=masked；含 "Exiting"=exit_diverge；否则=clean_diverge）。
 
-- [ ] **Step 0: 固化本机 gem5 注入环境（配置+workload 入仓）**
+- [x] **Step 0: 固化本机 gem5 注入环境（配置+workload 入仓）**
 
 ```bash
 # 从 0101 拉取注入配置三件套 + 全部 sdc_probe workload (源码+二进制)
@@ -870,7 +870,7 @@ grep "SUM=" v1/simout.txt
 # Expected: SUM=10721424292087689827 CRC=6728fc4a (F7 golden, 与 0101 逐字节一致)
 ```
 
-- [ ] **Step 0b: 实现 gem5_env.py（本机 gem5 环境封装）**
+- [x] **Step 0b: 实现 gem5_env.py（本机 gem5 环境封装）**
 
 ```python
 # tools/sdc_experiment/gem5_env.py
@@ -929,7 +929,7 @@ def check_env() -> dict:
     return {"ok": not problems, "problems": problems}
 ```
 
-- [ ] **Step 1: 写失败测试（本地可测的纯函数）**
+- [x] **Step 1: 写失败测试（本地可测的纯函数）**
 
 ```python
 # tools/sdc_experiment/test_sim_sweep.py
@@ -972,12 +972,12 @@ if __name__ == "__main__":
     print("ALL PASS")
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `python3 tools/sdc_experiment/test_sim_sweep.py`
 Expected: FAIL — `ImportError: sim_sweep`
 
-- [ ] **Step 3: 实现 sim_sweep**
+- [x] **Step 3: 实现 sim_sweep**
 
 ```python
 # tools/sdc_experiment/sim_sweep.py
@@ -1102,19 +1102,19 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: 运行纯函数测试确认通过**
+- [x] **Step 4: 运行纯函数测试确认通过**
 
 Run: `python3 tools/sdc_experiment/test_sim_sweep.py`
 Expected: 3 个 PASS + `ALL PASS`
 
-- [ ] **Step 5: 冒烟验证（3 次 run 真跑本机 gem5）**
+- [x] **Step 5: 冒烟验证（3 次 run 真跑本机 gem5）**
 
 ```bash
 python3 tools/sdc_experiment/sim_sweep.py --group B --mode bit --runs 3 --seed 99 --exp exp00-smoke
 ```
 Expected: 输出 JSON `n=3`，四类计数之和为 3，无异常退出（约 3×2min；F7 已实测本机注入链路产出全部三类结局）
 
-- [ ] **Step 6: E1 实验脚本**
+- [x] **Step 6: E1 实验脚本**
 
 ```bash
 #!/bin/bash
@@ -1147,7 +1147,7 @@ print(json.dumps(summary, ensure_ascii=False, indent=2))
 EOF
 ```
 
-- [ ] **Step 7: E2 实验脚本**
+- [x] **Step 7: E2 实验脚本**
 
 ```bash
 #!/bin/bash
@@ -1185,17 +1185,17 @@ EOF
 
 > 预算评估（本机串行）：E1 = 200 run × ~1min ≈ 3.5h；E2 = 800 run ≈ 14h。`nohup bash scripts/experiments/exp0X.sh > output/experiments/exp0X.log 2>&1 &` 后台跑。可加 `--jobs 2` 并行（本机 128 核，gem5 单 run 单核，2-4 路并行安全；实现时在 sim_sweep 加简单进程池即可，默认串行最稳）。若时长不可接受，降为 `--runs 100`，判定阈值不变。
 
-- [ ] **Step 8: 运行 E1（真跑）并保存输出**
+- [x] **Step 8: 运行 E1（真跑）并保存输出**
 
 Run: `nohup bash scripts/experiments/exp01_baseline_repro.sh > output/experiments/exp01.log 2>&1 &` 然后轮询 `tail output/experiments/exp01.log`
 Expected: `summary.json` 生成，`verdict` 为 `REPRODUCED`（若 NOT_REPRODUCED 则诚实记录并诊断——先核对本机 gem5-opt/gem5-deps/gem5_config 是否完好，再对照 F3 排查 ROI/seed 差异）
 
-- [ ] **Step 9: 运行 E2（真跑）并保存输出**
+- [x] **Step 9: 运行 E2（真跑）并保存输出**
 
 Run: `nohup bash scripts/experiments/exp02_d13_vs_random.sh > output/experiments/exp02.log 2>&1 &`
 Expected: `summary.json` 生成；bit 与 struct 各有 verdict（BEAT/MARGINAL/NOT_BEAT 皆可接受，**如实记录**）
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add gem5_config/ tools/sdc_experiment/gem5_env.py tools/sdc_experiment/sim_sweep.py \
@@ -1225,7 +1225,7 @@ git push
 ```
 幂等：已存在且 `md5sum` 一致则跳过（除非 force）。
 
-- [ ] **Step 1: 实现 deploy.py**
+- [x] **Step 1: 实现 deploy.py**
 
 ```python
 # tools/sdc_experiment/deploy.py
@@ -1290,17 +1290,17 @@ if __name__ == "__main__":
 
 > 注意：`RemoteDevice.put` 目前基于 `ssh_lib.scp`（单文件）。目录级上传需要 `ssh_lib.scp_dir`——在 `remote_device.py` 的 `put` 里检测 `os.path.isdir(local)` 时改调 `scp_dir`，或 `deploy` 对 corpus 目录逐文件部署。实现时二选一并保持 `put()` 语义一致（含测试）。
 
-- [ ] **Step 2: 本机 local 冒烟**
+- [x] **Step 2: 本机 local 冒烟**
 
 Run: `python3 tools/sdc_experiment/deploy.py --device local`
 Expected: `{'device': 'local-0103', 'tools': {4 个 'skip(md5 match)' 或 'deployed'}, 'corpus': None}`（local 时 tools_dir 建议用 `/tmp/sdc_experiment/tools` 副本而非写 /usr/local/bin——`LocalDevice.__init__` 增加 `tools_dir` 参数，默认 `/usr/local/bin`，deploy local 时传临时目录，验证拷贝+chmod+执行链路）
 
-- [ ] **Step 3: 0101 真机部署验证**
+- [x] **Step 3: 0101 真机部署验证**
 
 Run: `python3 tools/sdc_experiment/deploy.py --device remote:0101`
 Expected: 4 个工具 deployed，`--help` 探活成功（0101 已有 `/sdc_tools` 历史部署，md5 一致时应 skip）
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tools/sdc_experiment/deploy.py tools/sdc_experiment/devices/
@@ -1924,7 +1924,7 @@ git push
 4. `replay-confirm`：把该 snapshot 单独喂 runner 复跑 ≥3 次确认可复现（不可复现 → 标 `transient`，不计入 SDC 结论）；
 5. 确认的命中回灌 `seeds/evolved/` 高权重，调用 `run_guided_mutation.sh` 局部变异放大 → 重新部署扫描（迭代闭环）。
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 ```python
 # tools/sdc_experiment/test_feedback.py
@@ -1963,12 +1963,12 @@ if __name__ == "__main__":
     print("ALL PASS")
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `python3 tools/sdc_experiment/test_feedback.py`
 Expected: FAIL — `ImportError: feedback`
 
-- [ ] **Step 3: 实现 feedback.py**
+- [x] **Step 3: 实现 feedback.py**
 
 ```python
 # tools/sdc_experiment/feedback.py
@@ -2039,12 +2039,12 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 Run: `python3 tools/sdc_experiment/test_feedback.py`
 Expected: 2 个 PASS + `ALL PASS`
 
-- [ ] **Step 5: 编排脚本 feedback_loop.sh**
+- [x] **Step 5: 编排脚本 feedback_loop.sh**
 
 ```bash
 #!/bin/bash
@@ -2073,12 +2073,12 @@ else
 fi
 ```
 
-- [ ] **Step 6: 用 E3 输出空转验证（预期无命中）**
+- [x] **Step 6: 用 E3 输出空转验证（预期无命中）**
 
 Run: `bash scripts/experiments/feedback_loop.sh output/experiments/exp03-corpus-hw-local output/experiments/exp03-corpus-hw-local/corpus`
 Expected: `无 SDC 命中 (健康硅片预期) — 反馈闭环空转`（若 E3 真有命中，则走 replay-confirm 分支并输出复跑结果）
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add tools/sdc_experiment/feedback.py tools/sdc_experiment/test_feedback.py \
@@ -2098,7 +2098,7 @@ git push
 - Consumes: `output/experiments/*/summary.json` 与 `sim_*.json`/`hw_*.json`
 - Produces: `python3 tools/sdc_experiment/report.py > docs/experiments/2026-09-02-sdcfuzz-verification-report.md`——单一 Markdown 报告，逐实验列：命令、原始数据、统计检验、verdict、诚实标注（gem5≠RTL / 代理指标 / 样本不足），末尾对照 scheme.md 声明逐条给"已验证/部分验证/未验证"结论表。
 
-- [ ] **Step 1: 实现 report.py**
+- [x] **Step 1: 实现 report.py**
 
 ```python
 # tools/sdc_experiment/report.py
@@ -2150,12 +2150,12 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 2: 生成报告并入库**
+- [x] **Step 2: 生成报告并入库**
 
 Run: `python3 tools/sdc_experiment/report.py > docs/experiments/2026-09-02-sdcfuzz-verification-report.md`
 Expected: 报告含 E1–E5 全部 summary JSON + 声明对照表
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add tools/sdc_experiment/report.py docs/experiments/2026-09-02-sdcfuzz-verification-report.md
@@ -2175,7 +2175,7 @@ git push
 - Consumes: 全部前置任务
 - Produces: 全链路验证过一遍的完整证据链 + 最终报告
 
-- [ ] **Step 1: 设备池总演练（local + 0101 + 用户设备）**
+- [x] **Step 1: 设备池总演练（local + 0101 + 用户设备）**
 
 ```bash
 python3 tools/sdc_experiment/test_device_pool.py      # 全 PASS/SKIP
@@ -2186,17 +2186,17 @@ python3 tools/sdc_experiment/test_feedback.py         # ALL PASS
 ```
 Expected: 5 个测试文件全部通过（SKIP 仅允许出现在"无远程设备/无历史日志"场景）
 
-- [ ] **Step 2: 回归检查（证明无附带破坏）**
+- [x] **Step 2: 回归检查（证明无附带破坏）**
 
 Run: `python3 tools/sdc_mutator/test_evolution_engine.py`
 Expected: PASS（既有进化引擎测试不受影响——本计划未改动它，回归证明框架无侵入）
 
-- [ ] **Step 3: 报告终版生成**
+- [x] **Step 3: 报告终版生成**
 
 Run: `python3 tools/sdc_experiment/report.py > docs/experiments/2026-09-02-sdcfuzz-verification-report.md`
 Expected: 报告含全部实验真实数据
 
-- [ ] **Step 4: 勾掉计划全部 checkbox 并 Commit**
+- [x] **Step 4: 勾掉计划全部 checkbox 并 Commit**
 
 ```bash
 git add docs/superpowers/plans/2026-09-02-sdcfuzz-verification.md docs/experiments/
