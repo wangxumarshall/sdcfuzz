@@ -4,7 +4,17 @@
 from abc import ABC, abstractmethod
 
 class Device(ABC):
-    """一台可执行 sdcfuzz 验证的机器 (本机或远程 SSH 板卡)。"""
+    """一台可执行 sdcfuzz 验证的机器 (本机或远程 SSH 板卡)。
+
+    契约: 子类必须在 __init__ 中设置实例属性 `self.tools_dir: str` —
+    该设备上 silifuzz 工具的部署目标目录 (deploy.py 部署到 tools_dir/,
+    tool_path() 返回 tools_dir/<name>, probe() 检查工具存在性)。
+    LocalDevice/RemoteDevice 均以普通实例属性实现 (无 property, 不加
+    abstractmethod — 文档级契约, 不引入运行时行为)。
+    """
+
+    # 文档级契约注记 (见类 docstring): 子类在 __init__ 赋值 self.tools_dir
+    tools_dir: str
 
     @property
     @abstractmethod

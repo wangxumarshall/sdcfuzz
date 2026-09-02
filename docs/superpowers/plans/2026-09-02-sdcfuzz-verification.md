@@ -30,7 +30,7 @@
 | F3 | gem5-CHAOS bit-flip：A(朴素)=3.9%, B(随机)=8.0%, C(CSP)=3.7%；结构故障：A=2.0%, B=8.4%, C=2.8% | `docs/superpowers/plans/2026-08-20-sdc/paper2-bestpaper-program.md` §二（commit 3e69aa8） |
 | F4 | D13 directed-on-random：bit-flip 41/500=8.2%, ratio 3.00×；structural 7.79× | memory `paper2-bbit-honest-recount` + scheme.md §3.1 |
 | F5 | 进化引擎原型 T 8→70（8.8×） | `tools/sdc_mutator/evolution_engine.py` + paper2 program §二#7 |
-| F6 | 0101/0102 可零依赖密码 SSH（root/SDC@2026）；静态链接 runner/orchestrator 拷贝即运行 | `scripts/ssh_lib.py` + memory `sdc-distributed-scan-boards` |
+| F6 | 0101/0102 可零依赖密码 SSH（root/`$SDC_PASSWORD`，密码见 `output/devices/devices.json`）；静态链接 runner/orchestrator 拷贝即运行 | `scripts/ssh_lib.py` + memory `sdc-distributed-scan-boards` |
 | F7 | **本机 gem5 注入全链路可用（2026/09/02 实测）**：`~/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt`（v25.1.0.1）需 `source ~/gem5-deps/env.sh` 后运行；从 0101 拉取 `two_level_taishan.py`/`caches.py`/`fu_pool.py` + workload `sdc_probe_workload_random` 后：baseline golden `SUM=10721424292087689827 CRC=6728fc4a` **与 0101 逐字节一致**；注入冒烟 5-seed 观测到全部三类结局（clean diverge seed=11 / masked seed=12-15 / abort→no_output seed=7——abort 为 gem5 `panic: Page table fault`，高位翻转让 PC 跑飞所致，既有 sweep 脚本将其归入 no_output 类） | 本次实测（/tmp/g5probe/） |
 | F8 | 满负载 SIGSEGV-outside-snap 为资源耗尽噪声，orchestrator 容错继续 | memory `sdc-distributed-scan-boards` |
 | F9 | 0101 gem5 环境完整（`/root/gem5-fi/...`），作为本机环境损坏时的**备份**注入环境（本机 gem5.opt md5 `78a1b92c...` ≠ 0101 `0714a0ca...`——两机二进制不同但 golden 逐字节一致，注入行为等价性以 golden+分类一致为准） | 2026/09/02 SSH 实测 |
@@ -590,7 +590,7 @@ mkdir -p output/devices
 cat > output/devices/devices.json <<'EOF'
 {
   "devices": [
-    {"name": "0101", "host": "172.168.177.97", "port": 22, "user": "root", "password": "SDC@2026", "tools_dir": "/sdc_tools"}
+    {"name": "0101", "host": "172.168.177.97", "port": 22, "user": "root", "password": "$SDC_PASSWORD", "tools_dir": "/sdc_tools"}
   ]
 }
 EOF
@@ -838,14 +838,14 @@ HOST = "172.168.177.97"
 for f in ["two_level_taishan.py", "caches.py", "fu_pool.py"]:
     ssh_lib._run(["scp"] + ssh_lib.SSH_OPTS +
                  [f"root@{HOST}:/root/gem5-fi/smoke_test/configs/{f}",
-                  f"gem5_config/configs/{f}"], "SDC@2026", timeout=60, is_scp=True)
+                  f"gem5_config/configs/{f}"], os.environ["SDC_PASSWORD"], timeout=60, is_scp=True)
 # workload 二进制 + 源码 (A/B/D13 必需; 其余 D 组一并拉全备用)
 out = ssh_lib.ssh(HOST, "ls /root/gem5-fi/smoke_test/sdc_probe/ | grep -v '\\.c$'")
 files = [l.strip() for l in out.splitlines() if l.strip() and "module" not in l]
 for f in files:
     ssh_lib._run(["scp"] + ssh_lib.SSH_OPTS +
                  [f"root@{HOST}:/root/gem5-fi/smoke_test/sdc_probe/{f}",
-                  f"gem5_config/workloads/{f}"], "SDC@2026", timeout=60, is_scp=True)
+                  f"gem5_config/workloads/{f}"], os.environ["SDC_PASSWORD"], timeout=60, is_scp=True)
 # 源码也拉 (可读性 + 复现凭证)
 out2 = ssh_lib.ssh(HOST, "ls /root/gem5-fi/smoke_test/sdc_probe/*.c")
 for line in out2.splitlines():
@@ -853,7 +853,7 @@ for line in out2.splitlines():
     if f:
         ssh_lib._run(["scp"] + ssh_lib.SSH_OPTS +
                      [f"root@{HOST}:/root/gem5-fi/smoke_test/sdc_probe/{f}",
-                      f"gem5_config/workloads/{f}"], "SDC@2026", timeout=60, is_scp=True)
+                      f"gem5_config/workloads/{f}"], os.environ["SDC_PASSWORD"], timeout=60, is_scp=True)
 print("pulled:", sorted(os.listdir("gem5_config/workloads")))
 EOF
 chmod +x gem5_config/workloads/sdc_probe_workload*
@@ -1624,7 +1624,7 @@ EOF
 
 - [x] **Step 2: 用 0101 做全链路演练（作为"用户设备"替身）**
 
-Run: `SDC_PASSWORD=SDC@2026 bash scripts/experiments/exp04_remote_device.sh --name 0101 --host 172.168.177.97 --duration 600 --max-cpus 8`
+Run: `SDC_PASSWORD='<密码见 output/devices/devices.json>' bash scripts/experiments/exp04_remote_device.sh --name 0101 --host 172.168.177.97 --duration 600 --max-cpus 8`
 Expected: `verdict: REMOTE_CHAIN_OK`（10 分钟短扫描验证全链路；正式用户设备由用户提供凭据后同一脚本运行）
 
 实际 (2026/09/02, commit 749b885): verdict=REMOTE_CHAIN_OK — probe specs_ok (126核/29GB/aarch64), 5工具 skip(md5 match), E3语料 md5 往返一致+回放 code:1, orch_rc=0, play_count=1281, sdc=0, v1交叉校验 match。密码从 output/devices/devices.json 读入环境变量 (凭据红线: 不落命令行历史以外的日志)。勘误: 语料须传远端文件 /sdc_corpus/corpus 而非目录 /sdc_corpus (0101 上有历史语料, 目录分支会全部扫入)。

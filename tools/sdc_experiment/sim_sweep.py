@@ -39,15 +39,25 @@ def _log_comb(n, k):
 def fisher_exact(a: int, b: int, c: int, d: int):
     """2x2 Fisher 精确检验 (双侧, 超几何), 无 scipy。返回 (odds_ratio, p)。
     表: [[a,b],[c,d]] = [[diverge_D, total_D-diverge_D],
-                          [diverge_B, total_B-diverge_B]]"""
+                          [diverge_B, total_B-diverge_B]]
+
+    容差用相对比较 (终审修复): p_obs 极小时 (如 5.6e-20), 绝对容差 +1e-12 会
+    把整条尾部都计入 → p 虚高几个数量级 (E2-struct 曾因此记 0.0/1.6e-12)。
+    逐 k 在 log 空间比较 (prob_log(k) <= log(p_obs) + log1p(1e-9)), 避免
+    exp 下溢到 0 误入求和集; p_two 用 log-sum-exp 聚合, 极端尾部不丢精度。"""
     n = a + b + c + d
     row1, col1 = a + b, a + c
-    def prob(k):
-        return math.exp(_log_comb(col1, k) + _log_comb(n - col1, row1 - k)
-                        - _log_comb(n, row1))
-    p_obs = prob(a)
+    def prob_log(k):
+        return _log_comb(col1, k) + _log_comb(n - col1, row1 - k) \
+               - _log_comb(n, row1)
+    log_eps = math.log1p(1e-9)   # 相对容差 1e-9 (log 空间加法)
+    p_obs_log = prob_log(a)
     lo, hi = max(0, row1 - (n - col1)), min(row1, col1)
-    p_two = sum(prob(k) for k in range(lo, hi + 1) if prob(k) <= p_obs + 1e-12)
+    logs = [prob_log(k) for k in range(lo, hi + 1)
+            if prob_log(k) <= p_obs_log + log_eps]
+    # log-sum-exp: m + log(sum(exp(x-m))), m = max 防 overflow/underflow
+    m = max(logs)
+    p_two = math.exp(m + math.log(sum(math.exp(x - m) for x in logs)))
     odds = (a * d) / (b * c) if b and c else float("inf")
     return (odds, min(1.0, p_two))
 

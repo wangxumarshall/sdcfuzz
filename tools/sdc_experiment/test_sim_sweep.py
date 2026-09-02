@@ -22,7 +22,14 @@ def test_fisher_exact():
     # 极端: 50/100 vs 0/100 → 显著
     orr2, p2 = fisher_exact(50, 50, 0, 100)
     assert p2 < 0.01, f"p2={p2} 应显著"
-    print(f"PASS test_fisher_exact: p={p:.4f}, p2={p2:.2e}")
+    # 极端尾部精度 (终审修复回归): 绝对容差 +1e-12 曾把该 case 算成 ~1.6e-12
+    # (虚高 7 个数量级); 相对容差后精确值 ≈ 5.63e-20 (E2-struct 真实计数)
+    _, p3 = fisher_exact(64, 36, 5, 95)
+    assert 1e-21 < p3 < 1e-19, f"p3={p3} 应≈5.63e-20, 绝对容差会得 ~1.6e-12"
+    # 中等尾部不受影响 (E2-bit 真实计数, 提交值 0.00429)
+    _, p4 = fisher_exact(22, 78, 7, 93)
+    assert abs(p4 - 0.0042878) < 1e-6, f"p4={p4} 应≈0.0042878"
+    print(f"PASS test_fisher_exact: p={p:.4f}, p2={p2:.2e}, p3={p3:.2e}, p4={p4:.5f}")
 
 def test_classify():
     g = "SUM=123 CRC=abc"

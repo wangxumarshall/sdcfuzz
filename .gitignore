@@ -1,5 +1,6 @@
 *.orig
 *.swp
+__pycache__/
 /bazel-*
 output/
 output/devices/

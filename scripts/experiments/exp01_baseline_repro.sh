@@ -21,8 +21,10 @@ ratio = B["diverge_rate"] / A["diverge_rate"] if A["diverge_rate"] else float("i
 _, p = fisher_exact(B["clean_diverge"], B["n"] - B["clean_diverge"],
                     A["clean_diverge"], A["n"] - A["clean_diverge"])
 verdict = "REPRODUCED" if ratio >= 1.5 else "NOT_REPRODUCED(诚实记录)"
+# fisher_p 全精度保留 (终审修复: round(p,5) 会把极端尾部 p 压成 0.0,
+# 如 E2-struct 5.63e-20 — Fisher 相对容差修复后的真实精度必须可见)
 summary = {"A": A, "B": B, "B_over_A_ratio": round(ratio, 3),
-           "fisher_p": round(p, 5), "verdict": verdict,
+           "fisher_p": p, "verdict": verdict,
            "note": "gem5 O3 model, not TSV110 RTL; 对照 F3: A=3.9%, B=8.0%"}
 json.dump(summary, open(f"output/experiments/{exp}/summary.json", "w"),
           indent=2, ensure_ascii=False)

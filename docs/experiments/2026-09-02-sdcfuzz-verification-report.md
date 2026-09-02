@@ -94,7 +94,7 @@
     "gem5_note": "gem5 O3 model, not TSV110 RTL"
   },
   "B_over_A_ratio": 1.4,
-  "fisher_p": 0.76734,
+  "fisher_p": 0.7673444346426933,
   "verdict": "NOT_REPRODUCED(诚实记录)",
   "note": "gem5 O3 model, not TSV110 RTL; 对照 F3: A=3.9%, B=8.0%"
 }
@@ -181,7 +181,7 @@
       "gem5_note": "gem5 O3 model, not TSV110 RTL"
     },
     "D_over_B": 3.143,
-    "fisher_p": 0.00429,
+    "fisher_p": 0.004287767127721262,
     "verdict": "BEAT"
   },
   "struct": {
@@ -218,7 +218,7 @@
       "gem5_note": "gem5 O3 model, not TSV110 RTL"
     },
     "D_over_B": 12.8,
-    "fisher_p": 0.0,
+    "fisher_p": 5.633888033371357e-20,
     "verdict": "BEAT"
   }
 }
@@ -595,7 +595,9 @@
       "hw_sdc": 0,
       "play_count": 480,
       "hw_failure_count": 35,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 37,
+      "v1_discrepancy": "v1 runaway_count=37 != 文本解析 34 (interleaved-log 欠计数, rank-insensitive; hw_runaway_rate 维持文本解析值)"
     },
     {
       "group": "c3_l3_128b",
@@ -605,7 +607,8 @@
       "hw_sdc": 0,
       "play_count": 1224,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "e1_carry_chain",
@@ -615,7 +618,8 @@
       "hw_sdc": 0,
       "play_count": 1963,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "e2_mul_extreme",
@@ -625,7 +629,8 @@
       "hw_sdc": 0,
       "play_count": 1968,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "e3_toggle_rate",
@@ -635,7 +640,8 @@
       "hw_sdc": 0,
       "play_count": 1956,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "f1_subnormal_nan",
@@ -645,7 +651,8 @@
       "hw_sdc": 0,
       "play_count": 1959,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "i1_icache_boundary",
@@ -655,7 +662,8 @@
       "hw_sdc": 0,
       "play_count": 1938,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "i2_branch_dense",
@@ -665,7 +673,8 @@
       "hw_sdc": 0,
       "play_count": 1831,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "l1_disambig",
@@ -675,7 +684,8 @@
       "hw_sdc": 0,
       "play_count": 1356,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "l2_dualagu_split",
@@ -685,7 +695,8 @@
       "hw_sdc": 0,
       "play_count": 1309,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "m1_tlb_thrash",
@@ -695,7 +706,8 @@
       "hw_sdc": 0,
       "play_count": 632,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     },
     {
       "group": "m3_cross_page",
@@ -705,7 +717,8 @@
       "hw_sdc": 0,
       "play_count": 976,
       "hw_failure_count": 0,
-      "orch_rc": 0
+      "orch_rc": 0,
+      "v1_runaway_count": 0
     }
   ],
   "analysis": {
@@ -732,7 +745,9 @@
     "hw_sdc": 0,
     "play_count": 480,
     "hw_failure_count": 35,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 37,
+    "v1_discrepancy": "v1 runaway_count=37 != 文本解析 34 (interleaved-log 欠计数, rank-insensitive; hw_runaway_rate 维持文本解析值)"
   },
   {
     "group": "c3_l3_128b",
@@ -742,7 +757,8 @@
     "hw_sdc": 0,
     "play_count": 1224,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "e1_carry_chain",
@@ -752,7 +768,8 @@
     "hw_sdc": 0,
     "play_count": 1963,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "e2_mul_extreme",
@@ -762,7 +779,8 @@
     "hw_sdc": 0,
     "play_count": 1968,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "e3_toggle_rate",
@@ -772,7 +790,8 @@
     "hw_sdc": 0,
     "play_count": 1956,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "f1_subnormal_nan",
@@ -782,7 +801,8 @@
     "hw_sdc": 0,
     "play_count": 1959,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "i1_icache_boundary",
@@ -792,7 +812,8 @@
     "hw_sdc": 0,
     "play_count": 1938,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "i2_branch_dense",
@@ -802,7 +823,8 @@
     "hw_sdc": 0,
     "play_count": 1831,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "l1_disambig",
@@ -812,7 +834,8 @@
     "hw_sdc": 0,
     "play_count": 1356,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "l2_dualagu_split",
@@ -822,7 +845,8 @@
     "hw_sdc": 0,
     "play_count": 1309,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "m1_tlb_thrash",
@@ -832,7 +856,8 @@
     "hw_sdc": 0,
     "play_count": 632,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "m3_cross_page",
@@ -842,7 +867,8 @@
     "hw_sdc": 0,
     "play_count": 976,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   }
 ]
 ```
@@ -944,12 +970,13 @@
 
 ## scheme.md 声明对照表
 
-| scheme.md 声明 | 验证实验 | 状态 |
-|---|---|---|
-| §3.1 D13 bit-flip 3.00× | E2 bit D13/B | 见上方 E2 verdict |
-| §3.1 D13 structural 7.79× | E2 struct D13/B | 见上方 E2 verdict |
-| §4.2 真机执行能力 (Snapshot/Runner/Orchestrator) | E3 | 见上方 E3 verdict |
-| §4.3 L3 多板分布式 + 噪声分类 | E4 | 见上方 E4 verdict |
-| §4.4 Sim→HW 统计关联 | E5 (弱化: 组粒度健康度关联) | 见上方 E5 verdict |
-| §4.2 进化引擎 (T 8.8×) | F5 已有 + E5 Unicorn 代理 | 见上方 F5 verdict |
+| scheme.md 声明 | 验证实验 | 状态 | 依据 |
+|---|---|---|---|
+| §3.1 A/B 基线数据可复现 (B/A ≥ 1.5×) | E1 (A/B bit-flip 各100次) | 未验证 | B/A=1.4 < 1.5× 预注册阈值 → NOT_REPRODUCED(诚实记录); 方向与 F3 (B=8.0% > A=3.9%) 一致, 100-run 样本 CI 宽 |
+| §3.1 D13 bit-flip 3.00× | E2 bit (D13/B 各100次) | 部分验证 | BEAT: 3.143× (p=0.00429), 方向与 F4 (3.00×) 一致; 100-run 样本 (F4 为 500-run), 幅度未达 F4 精度 |
+| §3.1 D13 structural 7.79× | E2 struct (D13/B 各100次) | 部分验证 | BEAT: 12.8× (p=5.6e-20), 方向与 F4 (7.79×) 一致; 100-run 样本 (F4 为 500-run), 幅度未达 F4 精度 |
+| §4.2 真机执行能力 (Snapshot/Runner/Orchestrator) | E3 (本机 0103 真跑) | 已验证 | HW_SCAN_OK: 20 模板管线, 30min 扫描, SDC=0, play_count=3840, 噪声全分类 (segv/runaway/misbehave=0), v1 交叉校验 match |
+| §4.3 L3 多板分布式 + 噪声分类 | E4 (0101 远程全链路演练) | 部分验证 | REMOTE_CHAIN_OK: 单远程板 (0101) 全链路 (注册→部署→扫描→回收) 通过; 多板并行未验证 (用户设备待凭据, Step 3 待用户) |
+| §4.4 Sim→HW 统计关联 | E5 (12 组组粒度关联) | 未验证 | NOT_SIGNIFICANT: ρ=-0.2219, p=0.74733 → 诚实弱化版 (组粒度健康度 关联) 也未获支持; sim 面为 Unicorn T 代理指标混用, 非 gem5 diverge 率 |
+| §4.2 进化引擎 (T 8→70, 8.8×) | F5 历史数据 (E5 用其 Unicorn 代理) | 已验证(引用) | F5 (T 8→70, 8.8×) 为本分支之前的历史证据 (tools/sdc_mutator/evolution_engine.py + paper2 program), 本次未重跑 → 引用而非复验; E5 中仅用其 Unicorn T 值作 sim 代理指标 |
 

@@ -7,7 +7,9 @@
     "hw_sdc": 0,
     "play_count": 480,
     "hw_failure_count": 35,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 37,
+    "v1_discrepancy": "v1 runaway_count=37 != 文本解析 34 (interleaved-log 欠计数, rank-insensitive; hw_runaway_rate 维持文本解析值)"
   },
   {
     "group": "c3_l3_128b",
@@ -17,7 +19,8 @@
     "hw_sdc": 0,
     "play_count": 1224,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "e1_carry_chain",
@@ -27,7 +30,8 @@
     "hw_sdc": 0,
     "play_count": 1963,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "e2_mul_extreme",
@@ -37,7 +41,8 @@
     "hw_sdc": 0,
     "play_count": 1968,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "e3_toggle_rate",
@@ -47,7 +52,8 @@
     "hw_sdc": 0,
     "play_count": 1956,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "f1_subnormal_nan",
@@ -57,7 +63,8 @@
     "hw_sdc": 0,
     "play_count": 1959,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "i1_icache_boundary",
@@ -67,7 +74,8 @@
     "hw_sdc": 0,
     "play_count": 1938,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "i2_branch_dense",
@@ -77,7 +85,8 @@
     "hw_sdc": 0,
     "play_count": 1831,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "l1_disambig",
@@ -87,7 +96,8 @@
     "hw_sdc": 0,
     "play_count": 1356,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "l2_dualagu_split",
@@ -97,7 +107,8 @@
     "hw_sdc": 0,
     "play_count": 1309,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "m1_tlb_thrash",
@@ -107,7 +118,8 @@
     "hw_sdc": 0,
     "play_count": 632,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   },
   {
     "group": "m3_cross_page",
@@ -117,6 +129,7 @@
     "hw_sdc": 0,
     "play_count": 976,
     "hw_failure_count": 0,
-    "orch_rc": 0
+    "orch_rc": 0,
+    "v1_runaway_count": 0
   }
 ]

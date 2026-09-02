@@ -32,7 +32,7 @@
     "gem5_note": "gem5 O3 model, not TSV110 RTL"
   },
   "B_over_A_ratio": 1.4,
-  "fisher_p": 0.76734,
+  "fisher_p": 0.7673444346426933,
   "verdict": "NOT_REPRODUCED(诚实记录)",
   "note": "gem5 O3 model, not TSV110 RTL; 对照 F3: A=3.9%, B=8.0%"
 }

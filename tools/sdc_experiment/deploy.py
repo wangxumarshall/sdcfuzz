@@ -30,6 +30,8 @@ def _probe_help(device, dst: str, timeout: int = 30) -> tuple:
     return (rc in (0, 1) and out.strip() != ""), head2
 
 def deploy(device, corpus_local_dir: str = None, force: bool = False) -> dict:
+    # 依赖契约: device.tools_dir (Device ABC 文档级契约, 见 device.py —
+    # LocalDevice/RemoteDevice 均在 __init__ 设置)
     res = {"device": device.name, "tools": {}, "probe_output": {}, "corpus": None}
     device.run(f"mkdir -p {device.tools_dir}")
     for t in TOOLS:

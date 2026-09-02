@@ -23,6 +23,11 @@ EXP=exp05-crosslayer
 # 重新解析并与真跑记录逐项断言一致 (runaway/misbehave/sdc/failed/play_count);
 # 分析块 n/sim_key/hw_key/spearman_rho/permutation_p/verdict 必须与真跑逐项
 # 相同, 任一漂移立即失败退出 — 更名只改字段名, 不改任何统计语义。
+# v1 差异注记 (终审修复): 另解析各组 v1 终态 runaway_count, 与文本解析计数
+# 并排记录 (v1_runaway_count + v1_discrepancy)。差异为交错日志 (interleaved
+# log) 下正则漏配的已知欠计数, 不影响秩 (rank-insensitive, 控制器裁决:
+# verdict 中性) → hw_runaway_rate 维持文本解析值, v1 值仅作注记, 不改任何
+# 分析输入。
 if [ "${1:-}" = "--rederive" ]; then
 python3 - "$EXP" <<'EOF'
 import glob, json, sys
@@ -72,16 +77,23 @@ for r in old_rows:
     old_failed = r.get("hw_failure_count", r.get("total_failed"))
     assert p["total_failed"] == old_failed, f'{r["group"]} failure count 不符'
     assert v1["play_count"] == r["play_count"], f'{r["group"]} play_count 不符'
-    new_rows.append({"group": r["group"],
-                     "hw_throughput_per_s": round(r["play_count"] / DUR, 4),
-                     "hw_runaway_rate": p["runaway_noise"] / DUR,
-                     "hw_misbehave_rate": p["misbehave_noise"] / DUR,
-                     "hw_sdc": p["sdc_hits"],
-                     "play_count": v1["play_count"],
-                     "hw_failure_count": p["total_failed"],
-                     # orch_rc 由 timeout 外壳 echo ORCH_RC, 不落 scan.log →
-                     # 沿用真跑记录; log 含完整 v1 终态汇总行即扫描完整结束旁证
-                     "orch_rc": r["orch_rc"]})
+    # v1 差异注记: v1 终态 runaway_count 与文本解析并排记录, 不改分析输入
+    row = {"group": r["group"],
+           "hw_throughput_per_s": round(r["play_count"] / DUR, 4),
+           "hw_runaway_rate": p["runaway_noise"] / DUR,
+           "hw_misbehave_rate": p["misbehave_noise"] / DUR,
+           "hw_sdc": p["sdc_hits"],
+           "play_count": v1["play_count"],
+           "hw_failure_count": p["total_failed"],
+           # orch_rc 由 timeout 外壳 echo ORCH_RC, 不落 scan.log →
+           # 沿用真跑记录; log 含完整 v1 终态汇总行即扫描完整结束旁证
+           "orch_rc": r["orch_rc"],
+           "v1_runaway_count": v1["runaway_count"]}
+    if v1["runaway_count"] != p["runaway_noise"]:
+        row["v1_discrepancy"] = (
+            f'v1 runaway_count={v1["runaway_count"]} != 文本解析 {p["runaway_noise"]} '
+            f'(interleaved-log 欠计数, rank-insensitive; hw_runaway_rate 维持文本解析值)')
+    new_rows.append(row)
 
 res = analyze(sim_rows, new_rows)
 res["note"] = ("12 组 sim 值为 Unicorn T 代理指标(T/200, 计划指定), 非 gem5 diverge 率; "
@@ -96,6 +108,9 @@ json.dump({"sim_rows": sim_rows, "hw_rows": new_rows, "analysis": res},
 print("rederive OK: analysis unchanged:", json.dumps(
     {k: res[k] for k in ("n", "spearman_rho", "permutation_p", "verdict")},
     ensure_ascii=False))
+disc = [(r["group"], r["hw_failure_count"], r["v1_runaway_count"])
+        for r in new_rows if "v1_discrepancy" in r]
+print("v1 discrepancy annotations:", json.dumps(disc, ensure_ascii=False))
 EOF
 exit 0
 fi

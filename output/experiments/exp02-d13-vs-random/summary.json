@@ -33,7 +33,7 @@
       "gem5_note": "gem5 O3 model, not TSV110 RTL"
     },
     "D_over_B": 3.143,
-    "fisher_p": 0.00429,
+    "fisher_p": 0.004287767127721262,
     "verdict": "BEAT"
   },
   "struct": {
@@ -70,7 +70,7 @@
       "gem5_note": "gem5 O3 model, not TSV110 RTL"
     },
     "D_over_B": 12.8,
-    "fisher_p": 0.0,
+    "fisher_p": 5.633888033371357e-20,
     "verdict": "BEAT"
   }
 }

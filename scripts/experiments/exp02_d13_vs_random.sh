@@ -24,7 +24,9 @@ for mode in ["bit", "struct"]:
     ratio = D["diverge_rate"] / B["diverge_rate"] if B["diverge_rate"] else float("inf")
     _, p = fisher_exact(D["clean_diverge"], D["n"] - D["clean_diverge"],
                         B["clean_diverge"], B["n"] - B["clean_diverge"])
-    out[mode] = {"B": B, "D13": D, "D_over_B": round(ratio, 3), "fisher_p": round(p, 5),
+    out[mode] = {"B": B, "D13": D, "D_over_B": round(ratio, 3),
+                 # 全精度 p (终审修复: round(...,5) 把 5.63e-20 压成 0.0)
+                 "fisher_p": p,
                  "verdict": "BEAT" if ratio >= 1.5 and p < 0.05 else
                             ("MARGINAL" if ratio >= 1.5 else "NOT_BEAT(诚实记录)")}
 json.dump(out, open(f"output/experiments/{exp}/summary.json", "w"),
