@@ -1,0 +1,59 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1GWB3V030P0Y6XRYN48GJ35",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-experiment-verification",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "gem5_config/configs/caches.py",
+    "gem5_config/configs/fu_pool.py",
+    "gem5_config/configs/two_level_taishan.py",
+    "gem5_config/workloads/sdc_probe_workload",
+    "gem5_config/workloads/sdc_probe_workload.c",
+    "gem5_config/workloads/sdc_probe_workload_csp",
+    "gem5_config/workloads/sdc_probe_workload_csp.c",
+    "gem5_config/workloads/sdc_probe_workload_d10",
+    "gem5_config/workloads/sdc_probe_workload_d10.c",
+    "gem5_config/workloads/sdc_probe_workload_d11",
+    "gem5_config/workloads/sdc_probe_workload_d11.c",
+    "gem5_config/workloads/sdc_probe_workload_d12",
+    "gem5_config/workloads/sdc_probe_workload_d12.c",
+    "gem5_config/workloads/sdc_probe_workload_d13",
+    "gem5_config/workloads/sdc_probe_workload_d13.c",
+    "gem5_config/workloads/sdc_probe_workload_d5",
+    "gem5_config/workloads/sdc_probe_workload_d5.c",
+    "gem5_config/workloads/sdc_probe_workload_d6",
+    "gem5_config/workloads/sdc_probe_workload_d6.c",
+    "gem5_config/workloads/sdc_probe_workload_d7",
+    "gem5_config/workloads/sdc_probe_workload_d7.c",
+    "gem5_config/workloads/sdc_probe_workload_d8",
+    "gem5_config/workloads/sdc_probe_workload_d8.c",
+    "gem5_config/workloads/sdc_probe_workload_d9",
+    "gem5_config/workloads/sdc_probe_workload_d9.c",
+    "gem5_config/workloads/sdc_probe_workload_evolved",
+    "gem5_config/workloads/sdc_probe_workload_evolved.c",
+    "gem5_config/workloads/sdc_probe_workload_random",
+    "gem5_config/workloads/sdc_probe_workload_random.c",
+    "scripts/experiments/exp01_baseline_repro.sh",
+    "scripts/experiments/exp02_d13_vs_random.sh",
+    "tools/sdc_experiment/gem5_env.py",
+    "tools/sdc_experiment/sim_sweep.py",
+    "tools/sdc_experiment/test_sim_sweep.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2538097,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 14933,
+    "api_call_count": 31
+  }
+}
