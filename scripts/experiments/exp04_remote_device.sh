@@ -3,9 +3,10 @@
 # 用法: bash exp04_remote_device.sh --name board-X --host <IP> --port 22 \
 #         --user root --password-env SDC_PASSWORD --duration 1800 --max-cpus 8
 # 全链路: 注册→probe→deploy(工具+E3语料)→远程语料回放冒烟→hw_scan→结果回收→summary
-# 判定: REMOTE_CHAIN_OK = 链路全通 + orch_rc=0 + SDC=0 + 噪声全分类 + v1交叉校验一致
-#       (与 E3 判定同构, commit afc7819 先例); SDC>0 → REMOTE_SDC_N_RECHECK (如实报告,
-#       需逐 hash 复查); 扫描未完成 → CHAIN_BROKEN; 分类自相矛盾 → CLASSIFICATION_INCOMPLETE。
+# 判定 (链路完整性优先, gate 与 E3/afc7819 同构): 先验 error/orch_rc=0/噪声全分类/
+#       v1交叉校验, 任一不过 → REMOTE_CHAIN_BROKEN(reason) 退出 1 —— SDC 命中不掩盖
+#       断链 (如 timeout 击杀 orch_rc=124 前已 log 出的 SDC 行); 链路完好才分:
+#       SDC=0 → REMOTE_CHAIN_OK; SDC>0 → REMOTE_SDC_N_RECHECK (退出 0, 真发现需复查)。
 # 凭据红线: 密码只经 --password-env 指名的环境变量或设备清单 (gitignored), 绝不落本文件。
 # MCE 红线: --max-cpus 默认 8 (hw_scan 侧另有 MAX_CPUS_HARD_LIMIT=64 硬限兜底)。
 set -euo pipefail
@@ -37,10 +38,17 @@ mkdir -p "$OUT"
 # 0. 前置: E3 语料必须存在 (链路最早的失败要最早报)
 [[ -e "$CORPUS_LOCAL" ]] || { echo "FAIL: E3 语料不存在: $CORPUS_LOCAL (先跑 exp03)"; exit 1; }
 
-# 1. 注册 (幂等: 已注册会报错退出 → 忽略继续; 密码读 $PWENV 环境变量)
+# 1. 注册 (幂等: 仅容忍"已注册"这一重复注册情形; 其他注册错误如实断链。
+#    密码读 $PWENV 环境变量)
 echo "[1/5] register $NAME -> $HOST:$PORT (幂等, 已注册则跳过)"
-python3 scripts/register_device.py --name "$NAME" --host "$HOST" --port "$PORT" \
-    --user "$USER" --password-env "$PWENV" || true
+if ! python3 scripts/register_device.py --name "$NAME" --host "$HOST" --port "$PORT" \
+    --user "$USER" --password-env "$PWENV" 2>"$OUT/register.err"; then
+  if grep -q "已注册" "$OUT/register.err"; then
+    echo "  已注册 (幂等跳过)"
+  else
+    echo "FAIL: 注册失败 (非重复注册):"; cat "$OUT/register.err"; exit 1
+  fi
+fi
 
 # 2. probe → probe.json (结构化留档; 不可达即断链)
 echo "[2/5] probe $NAME"
@@ -142,12 +150,19 @@ if v1.get("issues_detected") is not None:
              v1.get("runaway_count") == r["runaway_noise"])
 classified = (r["sdc_hits"] + r["runaway_noise"] + r["misbehave_noise"]) == r["total_failed"]
 
-if r["sdc_hits"] > 0:
+# 链路完整性优先: SDC 分支不得绕过 orch_rc/分类/v1 校验 ——
+# orch 挂死被 timeout 击杀 (orch_rc=124) 前已 log 出的 SDC 行, 若先判 sdc_hits
+# 会误报 RECHECK(退出0) 并断言"链路通"; 必须先判链路, 断链时如实带上原因。
+if r.get("error"):
+    verdict = f"REMOTE_CHAIN_BROKEN(hw_scan error: {r['error']})"
+elif r.get("orch_rc") != 0:
+    verdict = f"REMOTE_CHAIN_BROKEN(orch_rc={r.get('orch_rc')})"
+elif not classified:
+    verdict = "CLASSIFICATION_INCOMPLETE(noise not fully classified)"
+elif cross is False:
+    verdict = "CLASSIFICATION_INCOMPLETE(v1 cross-check mismatch)"
+elif r["sdc_hits"] > 0:
     verdict = f"REMOTE_SDC_{r['sdc_hits']}_RECHECK"
-elif r.get("error") or r.get("orch_rc") != 0:
-    verdict = "CHAIN_BROKEN"
-elif cross is False or not classified:
-    verdict = "CLASSIFICATION_INCOMPLETE"
 else:
     verdict = "REMOTE_CHAIN_OK"
 
@@ -169,5 +184,5 @@ print(json.dumps({"verdict": verdict, "sdc_hits": r["sdc_hits"],
                  ensure_ascii=False, indent=2))
 # 链路验证失败 (扫描未完成/分类矛盾) → 非零退出;
 # SDC 命中 = 链路通 + 真发现 (RECHECK), 不算链路失败。
-sys.exit(0 if verdict == "REMOTE_CHAIN_OK" or verdict.startswith("REMOTE_SDC_") else 1)
+sys.exit(0 if verdict in ("REMOTE_CHAIN_OK",) or verdict.startswith("REMOTE_SDC_") else 1)
 EOF
