@@ -1,0 +1,6 @@
+{
+  "total_hits": 0,
+  "items": [],
+  "corpus_dir": "output/experiments/exp03-corpus-hw-local/corpus",
+  "next_step": "确认命中→回灌seeds/evolved/→run_guided_mutation.sh→再扫描"
+}
