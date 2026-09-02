@@ -1,0 +1,1683 @@
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPUIII while outside of snap. Exiting<DATE> <PID> <DATE> <PID> <DATE> <PID> 
+runner.ccrunner.ccrunner.cc:::250250250] ] ] Received signal Received signal Received signal SIGXCPUSIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting while outside of snap. Exiting
+
+
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 10s, user_time = 1m19s, system_time = 0, batch_count = ?, play_count = 1, snapshot_execution_errors = 0, runaway_count = 0, max_rss_kb = 0, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:I250] <DATE> <PID> Received signal runner.ccSIGXCPU: while outside of snap. Exiting250
+] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 20s, user_time = 1m29s, system_time = 0, batch_count = ?, play_count = 9, snapshot_execution_errors = 0, runaway_count = 0, max_rss_kb = 212, had_checker_misconfigurations = false}
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xcab526b50e32b42f
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0xe32b42e
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x17250638f4e56d3a
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb5a0
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002654c
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 33949 iteration #4828504
+E<DATE> <PID> runner.cc:903] CPU id = 95
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:55:32.175535 3539904 silifuzz_orchestrator.cc:111] T0 cpu: 95 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 30s, user_time = 2m49s, system_time = 0, batch_count = ?, play_count = 17, snapshot_execution_errors = 0, runaway_count = 1, max_rss_kb = 212, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+EE<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::687687] ] Snapshot [Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = ] failed, outcome = 55
+
+EE<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::688688] ] Corpus   [Corpus   [c1_l2_eviction.corpusc1_l2_eviction.corpus]]
+
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::711711] ] Execution was a run-awayExecution was a run-away
+
+II<DATE> <PID> <DATE> <PID> endspot.ccendspot.cc::2525] ] Signal: Signal: 2424
+
+II<DATE> <PID> <DATE> <PID> endspot.ccendspot.cc::2626] ] sig_code: sig_code: 128128
+
+II<DATE> <PID> <DATE> <PID> endspot.ccendspot.cc::2727] ] sig_address: sig_address: 0x00x0
+
+II<DATE> <PID> <DATE> <PID> endspot.ccendspot.cc::3131] ] CPU registers (non-0 only):CPU registers (non-0 only):
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[0] = x[0] = 0x4567000726a00x456700070130
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[1] = x[1] = 0xffffffffebc80x5555555555555555
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[2] = x[6] = 0xfffffff5cdd00x700000000
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[6] = x[7] = 0xffffffffffffffcf0x10000
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[7] = x[8] = 0xffffffffffffffd20x700010000
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[8] = x[9] = 0x220x700020000
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[9] = x[10] = 0x10x700030000
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[10] = x[11] = 0x2000x700040000
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[11] = x[13] = 0x7000410100xffffffffffffffff
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[13] = x[14] = 0x55555555555555550x5555555555555555
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[14] = x[24] = 0xffffffffffffffff0x456700070330
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[15] = x[30] = 0x8f55abb22e50b2dd0x456700030038
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[16] = sp = 0x2e50b2dc0x45670008ffc0
+
+II<DATE> <PID> <DATE> <PID> logging_util.cclogging_util.cc::2626] ]     x[17] = pc = 0x46d7cafed56e1a040x45670002690c
+
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x456700072860
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026908
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 3277 iteration #4871136
+E<DATE> <PID> runner.cc:903] CPU id = 32
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+E<DATE> <PID> runner.cc:902] Seed = 46767 iteration #4887502
+E<DATE> <PID> runner.cc:903] CPU id = 34I
+<DATE> <PID> Erunner.cc<DATE> <PID> :runner.cc909:] 904Snap checksums verified] 
+Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:55:42.255187 3539915 silifuzz_orchestrator.cc:111] T7 cpu: 32 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+E0902 23:55:42.255199 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 34 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 40s, user_time = 4m9s, system_time = 0, batch_count = ?, play_count = 25, snapshot_execution_errors = 0, runaway_count = 3, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] I] Received signal <DATE> <PID> Received signal SIGXCPU while outside of snap. Exitingrunner.cc:SIGXCPU
+250 while outside of snap. Exiting] 
+Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUISIGXCPU while outside of snap. Exiting<DATE> <PID>  while outside of snap. Exiting
+runner.cc
+:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0x43de6cf39431a9cb
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x1431a9ca
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0xdc32b5694f194ee5
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026560
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 98511 iteration #4948160
+E<DATE> <PID> runner.cc:903] CPU id = 0
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E0902 23:56:02.341828 3539905 silifuzz_orchestrator.cc:111] T1 cpu: 0 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 1m, user_time = 6m49s, system_time = 0, batch_count = ?, play_count = 41, snapshot_execution_errors = 0, runaway_count = 4, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xa8d492ddc02740e
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x5c02740e
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x5ee79778e78fd2d9
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026560
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 94654 iteration #4824677
+E<DATE> <PID> runner.cc:903] CPU id = 82
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:56:12.395169 3539908 silifuzz_orchestrator.cc:111] T3 cpu: 82 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. ExitingI
+<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x4567000701b0
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030038
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffc0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x4567000268f4
+E<DATE> <PID> runner.cc:902] Seed = 55261 iteration #4847229
+E<DATE> <PID> runner.cc:903] CPU id = 2
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:56:32.406999 3539905 silifuzz_orchestrator.cc:111] T1 cpu: 2 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0x746058e8718cf7d
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x718cf7c
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x47a934f7cadd8fda
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb520
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026544
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 19137 iteration #4829511
+E<DATE> <PID> runner.cc:903] CPU id = 89
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:56:32.435282 3539910 silifuzz_orchestrator.cc:111] T4 cpu: 89 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x66
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xbe356a435e8b3e26
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x5e8b3e26
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x9b6875bf5fb3bd4c
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x4567000729b0
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026964
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 69680 iteration #4825260
+E<DATE> <PID> runner.cc:903] CPU id = 102
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:56:32.507059 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 102 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 1m40s, user_time = 12m10s, system_time = 0, batch_count = ?, play_count = 73, snapshot_execution_errors = 0, runaway_count = 8, max_rss_kb = 332, had_checker_misconfigurations = false}
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xf145fd9c7117b648
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x7117b648
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x3c617ecf59cc1977
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026560
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 102596 iteration #4831021
+E<DATE> <PID> runner.cc:903] CPU id = 50
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:56:52.499044 3539911 silifuzz_orchestrator.cc:111] T5 cpu: 50 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x7401e074
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x7401e000
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0x7401e074
+I<DATE> <PID> logging_util.cc:26]   x[3] = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0x45670008ffe0
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030044
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffe0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026254
+E<DATE> <PID> runner.cc:902] Seed = 100208 iteration #4833649
+E<DATE> <PID> runner.cc:903] CPU id = 35
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:57:22.579032 3539904 silifuzz_orchestrator.cc:111] T0 cpu: 35 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.cc:runner.cc250:] 250Received signal ] SIGXCPUReceived signal  while outside of snap. ExitingSIGXCPU
+ while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 2m40s, user_time = 20m10s, system_time = 0, batch_count = ?, play_count = 121, snapshot_execution_errors = 0, runaway_count = 10, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> Irunner.cc<DATE> <PID> :runner.cc250:] 250Received signal ] SIGXCPUReceived signal  while outside of snap. ExitingSIGXCPU
+ while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc:250:] 250Received signal ] SIGXCPUReceived signal  while outside of snap. ExitingSIGXCPU
+ while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xecac84c363eb1968
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x63eb1968
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0xce14cc644a9e4ad2
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb640
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026564
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 71915 iteration #4849955
+E<DATE> <PID> runner.cc:903] CPU id = 34
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:58:22.791012 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 34 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+EI<DATE> <PID> <DATE> <PID> runner.cc:runner.cc:687711] ] Execution was a run-away
+Snapshot [I<DATE> <PID> f8de42599c686f788fb8a7cb3605bb157de81821endspot.cc:] failed, outcome = 525] 
+E<DATE> <PID> Signal: 24runner.cc:
+I688] <DATE> <PID> endspot.ccCorpus   [:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffffff5cd30
+c1_l2_eviction.corpusI<DATE> <PID> ]
+logging_util.cc:I26] <DATE> <PID> runner.cc  x[1] = :711] 0xffffffffebc8
+Execution was a run-away
+I<DATE> <PID> I<DATE> <PID> endspot.cclogging_util.cc::2526] ]   x[2] = Signal: 24
+0xfffffff5cdd0
+I<DATE> <PID> endspot.ccI<DATE> <PID> :26logging_util.cc:] sig_code: 26] 128
+  x[6] = I<DATE> <PID> 0xffffffffffffffcf
+endspot.cc:I<DATE> <PID> 27] logging_util.cc:sig_address: 0x0
+26] I<DATE> <PID>   x[7] = endspot.cc:0xffffffffffffffd2
+31] I<DATE> <PID> CPU registers (non-0 only):
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[8] = 26] 0x20
+  x[2] = I<DATE> <PID> 0xfffffff5cdd0
+logging_util.cc:I26] <DATE> <PID> logging_util.cc  x[9] = :260x1
+]   I<DATE> <PID> x[6] = 0xffffffffffffffcf
+logging_util.cc:I<DATE> <PID> 26]   logging_util.cc:x[10] = 0x20026] 
+  x[7] = 0xffffffffffffffd2I<DATE> <PID> 
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:26]   x[11] =   x[8] = 0x10x700041010
+
+I<DATE> <PID> I<DATE> <PID> logging_util.cclogging_util.cc::26] 26]   x[9] = 0x1  x[13] = 
+0x5555555555555555
+I<DATE> <PID> logging_util.ccI<DATE> <PID> :26] logging_util.cc:26  x[10] = 0x200]   
+x[15] = 0xc1f53fcf29289c14I<DATE> <PID> 
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[11] = 0x70004101026] 
+  x[16] = I<DATE> <PID> 0x29289c14
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[13] = 26] 0x5555555555555555
+  x[17] = I<DATE> <PID> 0xcca4d33192e0f7e5
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[15] = 26]   0x70eee176535c45ea
+x[18] = 0xffffffe5c466I<DATE> <PID> 
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[16] = 26] 0x535c45ea
+  x[19] = 0xfffffff5cdd0I<DATE> <PID> 
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[17] = 26] 0x2e6eb6d5d6225282
+  x[20] = I<DATE> <PID> 0xfffff7ffb058
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[18] = 26] 0xffffffe5c466
+  x[21] = 0xffffffffebc8I<DATE> <PID> 
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[19] = 26]   0xfffffff5cdd0
+x[22] = 0x456700072000I<DATE> <PID> 
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[20] = 26] 0xfffff7ffb058
+  x[23] = I<DATE> <PID> 0x456700072000
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:  x[21] = 0xffffffffebc826] 
+  x[24] = 0x4567000729b0I<DATE> <PID> 
+logging_util.cc:I<DATE> <PID> 26] logging_util.cc:26]     x[22] = x[25] = 0xfffff7ffb1a8
+0x456700072000
+I<DATE> <PID> I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]   x[26] =   x[23] = 0xfffff7ffb170
+0x456700072000
+I<DATE> <PID> I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]   x[27] =   x[24] = 0xfffffff5ce18
+0xfffff7ffb630
+I<DATE> <PID> I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]   x[28] =   x[25] = 0xa
+0xfffff7ffb630
+I<DATE> <PID> I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]   x[29] =   x[26] = 0xfffffff5cd30
+0xfffff7ffb170
+I<DATE> <PID> I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]   x[30] =   x[27] = 0x4567000263b4
+0xfffffff5ce18
+I<DATE> <PID> I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]     x[28] = sp = 0xfffffff5cd100xa
+
+I<DATE> <PID> I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]   x[29] =   0xfffffff5cd30
+pc = 0x456700026964I<DATE> <PID> 
+I<DATE> <PID> logging_util.cc:logging_util.cc:26] 26]   x[30] =   pstate = 0x456700026534
+0x60000000
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002655c
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 88027 iteration #4847115
+E<DATE> <PID> runner.cc:903] CPU id = 32
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E<DATE> <PID> runner.cc:902] Seed = 79971 iteration #4897799
+E<DATE> <PID> runner.cc:903] CPU id = 17
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:58:22.828084 3539915 silifuzz_orchestrator.cc:111] T7 cpu: 32 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+E0902 23:58:22.828211 3539908 silifuzz_orchestrator.cc:111] T3 cpu: 17 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x100700000000
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb6c0
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026588
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 101611 iteration #4836231
+E<DATE> <PID> runner.cc:903] CPU id = 44
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:58:32.818991 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 44 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 3m40s, user_time = 28m10s, system_time = 0, batch_count = ?, play_count = 169, snapshot_execution_errors = 0, runaway_count = 14, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x100700000000
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x7401e000
+I<DATE> <PID> logging_util.cc:26]   sp = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   pc = 0x4567000265d0
+E<DATE> <PID> runner.cc:902] Seed = 92833 iteration #4837664
+E<DATE> <PID> runner.cc:903] CPU id = 37
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0902 23:59:12.970911 3539908 silifuzz_orchestrator.cc:111] T3 cpu: 37 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 4m40s, user_time = 36m10s, system_time = 0, batch_count = ?, play_count = 217, snapshot_execution_errors = 0, runaway_count = 15, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x456700070450
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030038
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffc0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002696c
+E<DATE> <PID> runner.cc:902] Seed = 89202 iteration #4873087
+E<DATE> <PID> runner.cc:903] CPU id = 117
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E0903 00:00:03.133944 3539905 silifuzz_orchestrator.cc:111] T1 cpu: 117 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x100700000000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x7401e000
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x4567000265c0
+E<DATE> <PID> runner.cc:902] Seed = 31979 iteration #4833096
+E<DATE> <PID> runner.cc:903] CPU id = 40
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:00:03.230887 3539908 silifuzz_orchestrator.cc:111] T3 cpu: 40 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.cc:runner.cc250:] 250Received signal ] SIGXCPUReceived signal  while outside of snap. ExitingSIGXCPU
+ while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 5m41s, user_time = 44m10s, system_time = 0, batch_count = ?, play_count = 265, snapshot_execution_errors = 0, runaway_count = 17, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x4567000726a0
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x2c
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xef3e1904002b1be8
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x2b1be8
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x6a213db09f5ef4c1
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb190
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x4567000268e4
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 29192 iteration #4841659
+E<DATE> <PID> runner.cc:903] CPU id = 44
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:01:13.311050 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 44 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x4567000726a0
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x6e
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0x88103418ecb8a0bc
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x6cb8a0bc
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x48958b1f361eb6cf
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x4567000727a0
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x4567000268fc
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 72855 iteration #4834766
+E<DATE> <PID> runner.cc:903] CPU id = 110
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:01:23.343118 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 110 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x456700070460
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0x456700070460
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030044
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffd0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700030060
+E<DATE> <PID> runner.cc:902] Seed = 29391 iteration #4824169
+E<DATE> <PID> runner.cc:903] CPU id = 68
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:01:33.335111 3539907 silifuzz_orchestrator.cc:111] T2 cpu: 68 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] IReceived signal <DATE> <PID> SIGXCPUrunner.cc while outside of snap. Exiting:
+250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 6m41s, user_time = 52m10s, system_time = 0, batch_count = ?, play_count = 313, snapshot_execution_errors = 0, runaway_count = 20, max_rss_kb = 332, had_checker_misconfigurations = false}
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x4567000726a0
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x19
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xa1b5ff72900e363a
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x100e363a
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0xffe85bd96b14c68e
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x4567000727a0
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x4567000268fc
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 100966 iteration #4826172
+E<DATE> <PID> runner.cc:903] CPU id = 25
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:01:53.395194 3539907 silifuzz_orchestrator.cc:111] T2 cpu: 25 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x7401e074
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x7401e000
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0x7401e074
+I<DATE> <PID> logging_util.cc:26]   x[3] = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0x45670008ffe0
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030044
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffe0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026254
+E<DATE> <PID> runner.cc:902] Seed = 99218 iteration #4881736
+E<DATE> <PID> runner.cc:903] CPU id = 89
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:01:53.443085 3539910 silifuzz_orchestrator.cc:111] T4 cpu: 89 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x456700070340
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030038
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffc0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002691c
+E<DATE> <PID> runner.cc:902] Seed = 69757 iteration #4858938
+E<DATE> <PID> runner.cc:903] CPU id = 11
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:02:23.507056 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 11 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x456700070330
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030038
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffc0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002690c
+E<DATE> <PID> runner.cc:902] Seed = 56071 iteration #4846391
+E<DATE> <PID> runner.cc:903] CPU id = 29
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:02:33.474983 3539904 silifuzz_orchestrator.cc:111] T0 cpu: 29 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x7401e000
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0x7401e074
+I<DATE> <PID> logging_util.cc:26]   x[3] = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0x45670008ffe0
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030044
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffe0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002624c
+E<DATE> <PID> runner.cc:902] Seed = 66559 iteration #4937879
+E<DATE> <PID> runner.cc:903] CPU id = 45
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:02:43.606952 3539910 silifuzz_orchestrator.cc:111] T4 cpu: 45 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x4567000726a0
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x28
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xa3f0b60cbeffca07
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x3effca06
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x14ddc54956f292ee
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x456700072760
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x4567000268f8
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 69513 iteration #4846920
+E<DATE> <PID> runner.cc:903] CPU id = 40
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:02:43.731106 3539908 silifuzz_orchestrator.cc:111] T3 cpu: 40 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 7m41s, user_time = 1h10s, system_time = 0, batch_count = ?, play_count = 361, snapshot_execution_errors = 0, runaway_count = 26, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0x5583f5fcce5ec994
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x4e5ec994
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0xa1b6c710052d0ac
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb460
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026538
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 31182 iteration #4830671
+E<DATE> <PID> runner.cc:903] CPU id = 92
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:03.771131 3539908 silifuzz_orchestrator.cc:111] T3 cpu: 92 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0xd
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0x83ea4b0089d28583
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x9d28582
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x25bb81d61ce70d20
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x4567000729b0
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026964
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 15851 iteration #4835641
+E<DATE> <PID> runner.cc:903] CPU id = 13
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:13.646976 3539911 silifuzz_orchestrator.cc:111] T5 cpu: 13 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xa770d82a90d8f3
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x2a90d8f2
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0xd0b959c2c8645bea
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb5a0
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002654c
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 51158 iteration #4833858
+E<DATE> <PID> runner.cc:903] CPU id = 58
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:23.595026 3539904 silifuzz_orchestrator.cc:111] T0 cpu: 58 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x456700070330
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030038
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffc0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002690c
+E<DATE> <PID> runner.cc:902] Seed = 67947 iteration #4833052
+E<DATE> <PID> runner.cc:903] CPU id = 59
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:23.742911 3539915 silifuzz_orchestrator.cc:111] T7 cpu: 59 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x4567000702f0
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030038
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffc0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026908
+E<DATE> <PID> runner.cc:902] Seed = 86932 iteration #4864947
+E<DATE> <PID> runner.cc:903] CPU id = 28
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:33.679128 3539914 silifuzz_orchestrator.cc:111] T6 cpu: 28 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x4567000726a0
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x11
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0x33183521ffa00a6e
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x7fa00a6e
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0x642dbc6cd8792291
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x456700072910
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb1a8
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x4567000263b4
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026934
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 54024 iteration #4948557
+E<DATE> <PID> runner.cc:903] CPU id = 17
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:43.907042 3539908 silifuzz_orchestrator.cc:111] T3 cpu: 17 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0xffffffffffffffcf
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0xffffffffffffffd2
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x1
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x200
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700041010
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[15] = 0xe1b0e688d30898c0
+I<DATE> <PID> logging_util.cc:26]   x[16] = 0x530898c0
+I<DATE> <PID> logging_util.cc:26]   x[17] = 0xb260f628ee0875e2
+I<DATE> <PID> logging_util.cc:26]   x[18] = 0xffffffe5c466
+I<DATE> <PID> logging_util.cc:26]   x[19] = 0xfffffff5cdd0
+I<DATE> <PID> logging_util.cc:26]   x[20] = 0xfffff7ffb058
+I<DATE> <PID> logging_util.cc:26]   x[21] = 0xffffffffebc8
+I<DATE> <PID> logging_util.cc:26]   x[22] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[23] = 0x456700072000
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0xfffff7ffb630
+I<DATE> <PID> logging_util.cc:26]   x[25] = 0xfffff7ffb520
+I<DATE> <PID> logging_util.cc:26]   x[26] = 0xfffff7ffb170
+I<DATE> <PID> logging_util.cc:26]   x[27] = 0xfffffff5ce18
+I<DATE> <PID> logging_util.cc:26]   x[28] = 0xa
+I<DATE> <PID> logging_util.cc:26]   x[29] = 0xfffffff5cd30
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700026534
+I<DATE> <PID> logging_util.cc:26]   sp = 0xfffffff5cd10
+I<DATE> <PID> logging_util.cc:26]   pc = 0x456700026544
+I<DATE> <PID> logging_util.cc:26]   pstate = 0x60000000
+E<DATE> <PID> runner.cc:902] Seed = 81668 iteration #4904883
+E<DATE> <PID> runner.cc:903] CPU id = 107
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:53.695066 3539904 silifuzz_orchestrator.cc:111] T0 cpu: 107 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 8m41s, user_time = 1h8m20s, system_time = 0, batch_count = ?, play_count = 410, snapshot_execution_errors = 0, runaway_count = 33, max_rss_kb = 332, had_checker_misconfigurations = false}
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x7401e000
+I<DATE> <PID> logging_util.cc:26]   sp = 0x2001000
+I<DATE> <PID> logging_util.cc:26]   pc = 0x7401e030
+E<DATE> <PID> runner.cc:902] Seed = 58850 iteration #4830201
+E<DATE> <PID> runner.cc:903] CPU id = 42
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:03:53.766796 3539911 silifuzz_orchestrator.cc:111] T5 cpu: 42 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x7401e000
+I<DATE> <PID> logging_util.cc:26]   x[2] = 0x7401e074
+EI<DATE> <PID> <DATE> <PID> runner.cc:687logging_util.cc] :Snapshot [26f8de42599c686f788fb8a7cb3605bb157de81821] ] failed, outcome = 5  
+x[3] = E0x2001000<DATE> <PID> runner.cc:688] 
+Corpus   [I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> c1_l2_eviction.corpus]logging_util.cc
+:I26<DATE> <PID> runner.cc:711] ] Execution was a run-away  
+x[10] = I<DATE> <PID> endspot.cc:25] 0x700030000Signal: 24
+
+II<DATE> <PID> endspot.cc:26] sig_code: <DATE> <PID> 128
+Ilogging_util.cc<DATE> <PID> endspot.cc:27] sig_address: 0x0
+:I<DATE> <PID> endspot.cc:31] 26CPU registers (non-0 only):
+] I<DATE> <PID> logging_util.cc:26]     x[11] = x[0] = 0x7000400000x45670008ffe0
+
+I<DATE> <PID> logging_util.cc:26] I  x[1] = <DATE> <PID> 0x5555555555555555
+logging_util.ccI<DATE> <PID> :logging_util.cc:2626]   ] x[6] =   0x700000000
+x[13] = I<DATE> <PID> logging_util.cc:0xffffffffffffffff26] 
+  x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:I26] <DATE> <PID>   x[8] = logging_util.cc0x700010000
+:I<DATE> <PID> 26logging_util.cc:] 26]   x[9] = 0x700020000  
+x[14] = I<DATE> <PID> 0x5555555555555555logging_util.cc:
+26] I  <DATE> <PID> x[10] = 0x700030000logging_util.cc
+:I<DATE> <PID> 26logging_util.cc:] 26]     x[11] = x[19] = 0x700040000
+0x2001000I<DATE> <PID> 
+logging_util.cc:I26] <DATE> <PID>   x[13] = 0xfffffffffffffffflogging_util.cc
+:I<DATE> <PID> 26logging_util.cc:26]   x[14] = 0x5555555555555555] 
+  I<DATE> <PID> x[20] = logging_util.cc:26] 0x456700070130  x[24] = 
+0x456700070440
+II<DATE> <PID> logging_util.cc:<DATE> <PID> 26]   x[30] = 0x456700030038
+logging_util.ccI<DATE> <PID> logging_util.cc::26]   26sp = 0x45670008ffc0] 
+  I<DATE> <PID> x[29] = logging_util.cc:0x45670008ffe026]   
+pc = 0x456700026964
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030044
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffe0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002624c
+E<DATE> <PID> runner.cc:902] Seed = 30213 iteration #4820149
+E<DATE> <PID> runner.cc:903] CPU id = 68
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E<DATE> <PID> runner.cc:902] Seed = 45450 iteration #4831742
+E<DATE> <PID> runner.cc:903] CPU id = 33
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:04:13.871450 3539907 silifuzz_orchestrator.cc:111] T2 cpu: 68 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+E0903 00:04:13.871507 3539915 silifuzz_orchestrator.cc:111] T7 cpu: 33 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 9m41s, user_time = 1h16m10s, system_time = 0, batch_count = ?, play_count = 457, snapshot_execution_errors = 0, runaway_count = 36, max_rss_kb = 332, had_checker_misconfigurations = false}
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+II<DATE> <PID> <DATE> <PID> runner.ccrunner.cc::250250] ] Received signal Received signal SIGXCPUSIGXCPU while outside of snap. Exiting while outside of snap. Exiting
+
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+I<DATE> <PID> runner.cc:250] Received signal SIGXCPU while outside of snap. Exiting
+E<DATE> <PID> runner.cc:687] Snapshot [f8de42599c686f788fb8a7cb3605bb157de81821] failed, outcome = 5
+E<DATE> <PID> runner.cc:688] Corpus   [c1_l2_eviction.corpus]
+I<DATE> <PID> runner.cc:711] Execution was a run-away
+I<DATE> <PID> endspot.cc:25] Signal: 24
+I<DATE> <PID> endspot.cc:26] sig_code: 128
+I<DATE> <PID> endspot.cc:27] sig_address: 0x0
+I<DATE> <PID> endspot.cc:31] CPU registers (non-0 only):
+I<DATE> <PID> logging_util.cc:26]   x[0] = 0x456700070130
+I<DATE> <PID> logging_util.cc:26]   x[1] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[6] = 0x700000000
+I<DATE> <PID> logging_util.cc:26]   x[7] = 0x10000
+I<DATE> <PID> logging_util.cc:26]   x[8] = 0x700010000
+I<DATE> <PID> logging_util.cc:26]   x[9] = 0x700020000
+I<DATE> <PID> logging_util.cc:26]   x[10] = 0x700030000
+I<DATE> <PID> logging_util.cc:26]   x[11] = 0x700040000
+I<DATE> <PID> logging_util.cc:26]   x[13] = 0xffffffffffffffff
+I<DATE> <PID> logging_util.cc:26]   x[14] = 0x5555555555555555
+I<DATE> <PID> logging_util.cc:26]   x[24] = 0x4567000703c0
+I<DATE> <PID> logging_util.cc:26]   x[30] = 0x456700030038
+I<DATE> <PID> logging_util.cc:26]   sp = 0x45670008ffc0
+I<DATE> <PID> logging_util.cc:26]   pc = 0x45670002693c
+E<DATE> <PID> runner.cc:902] Seed = 38751 iteration #4832890
+E<DATE> <PID> runner.cc:903] CPU id = 109
+E<DATE> <PID> runner.cc:904] Previous snapshot [f8de42599c686f788fb8a7cb3605bb157de81821]
+I<DATE> <PID> runner.cc:909] Snap checksums verified
+E0903 00:05:04.259005 3539905 silifuzz_orchestrator.cc:111] T1 cpu: 109 corpus: c1_l2_eviction.corpus time: 10 exit_status: snap_fail ExecutionResult {code:6 error:}
+Silifuzz Checker Result:{issues_detected = 0, num_cores = 128, elapsed_time = 10m, user_time = 1h19m44s, system_time = 0, batch_count = ?, play_count = 480, snapshot_execution_errors = 0, runaway_count = 37, max_rss_kb = 332, had_checker_misconfigurations = false}

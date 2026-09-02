@@ -1,0 +1,89 @@
+[
+  {
+    "group": "A",
+    "sim_diverge_rate": 0.0333,
+    "sim_masked_rate": 0.8333
+  },
+  {
+    "group": "B",
+    "sim_diverge_rate": 0.0,
+    "sim_masked_rate": 0.9333
+  },
+  {
+    "group": "D13",
+    "sim_diverge_rate": 0.3,
+    "sim_masked_rate": 0.6667
+  },
+  {
+    "group": "c1_l2_eviction",
+    "sim_diverge_rate": 0.32,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "c3_l3_128b",
+    "sim_diverge_rate": 0.61,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "e1_carry_chain",
+    "sim_diverge_rate": 0.76,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "e2_mul_extreme",
+    "sim_diverge_rate": 0.755,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "e3_toggle_rate",
+    "sim_diverge_rate": 0.64,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "f1_subnormal_nan",
+    "sim_diverge_rate": 0.76,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "i1_icache_boundary",
+    "sim_diverge_rate": 0.17,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "i2_branch_dense",
+    "sim_diverge_rate": 0.32,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "l1_disambig",
+    "sim_diverge_rate": 0.32,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "l2_dualagu_split",
+    "sim_diverge_rate": 0.61,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "m1_tlb_thrash",
+    "sim_diverge_rate": 0.0,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  },
+  {
+    "group": "m3_cross_page",
+    "sim_diverge_rate": 0.61,
+    "sim_masked_rate": 0.0,
+    "proxy": "unicorn_T"
+  }
+]

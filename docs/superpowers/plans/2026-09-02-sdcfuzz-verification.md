@@ -1668,7 +1668,7 @@ git push
 - HW 侧因变量：每组语料真机 runnable 率（1 − 失败率）、runaway 率、misbehave 率（E3 语料级 + 需要按组扫描——hw_scan 按组各跑一次短扫描 10min/组，orchestrator `--corpus_path` 指向单组语料目录）。
 - 检验：Spearman ρ + 置换检验 p<0.05 判"显著相关"；样本 <10 组时诚实输出"样本不足"。
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 ```python
 # tools/sdc_experiment/test_correlation.py
@@ -1719,12 +1719,12 @@ if __name__ == "__main__":
     print("ALL PASS")
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `python3 tools/sdc_experiment/test_correlation.py`
 Expected: FAIL — `ImportError: correlation`
 
-- [ ] **Step 3: 实现 correlation.py**
+- [x] **Step 3: 实现 correlation.py**
 
 ```python
 # tools/sdc_experiment/correlation.py
@@ -1807,12 +1807,12 @@ def analyze(sim_rows, hw_rows, sim_key="sim_diverge_rate", hw_key="hw_runaway_ra
             "note": "组粒度执行健康度关联; gem5 O3 ≠ TSV110 RTL; 真SDC关联需检出样本后再做"}
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 Run: `python3 tools/sdc_experiment/test_correlation.py`
 Expected: 4 个 PASS + `ALL PASS`
 
-- [ ] **Step 5: E5 实验脚本（按组双面扫描）**
+- [x] **Step 5: E5 实验脚本（按组双面扫描）**
 
 ```bash
 #!/bin/bash
@@ -1891,12 +1891,12 @@ EOF
 
 > **诚实边界（写入报告）**：Sim 面的 19 模板指标是 **Unicorn T(di/dt) 代理**（gem5 跑不了裸指令 bin），A/B/D13 是真 gem5 diverge 率；HW 面只有模板组（A/B/D13 是 gem5 ELF workload，不是 snapshot 语料）。因此 E5 的关联是"Unicorn 代理指标 + 部分 gem5 真指标 → 真机健康度"的**混合关联**，结论措辞必须反映这一点。若分析判定 INSUFFICIENT_SAMPLES 或 NOT_SIGNIFICANT，如实记录。
 
-- [ ] **Step 6: 运行 E5（真跑，12 组 × 10min ≈ 2.5h + sim sweep 90 run ≈ 1.5h，全本机）**
+- [x] **Step 6: 运行 E5（真跑，12 组 × 10min ≈ 2.5h + sim sweep 90 run ≈ 1.5h，全本机）**
 
 Run: `nohup bash scripts/experiments/exp05_crosslayer.sh > output/experiments/exp05.log 2>&1 &`
 Expected: `summary.json` 生成，`analysis.verdict` ∈ {SIGNIFICANT, NOT_SIGNIFICANT, INSUFFICIENT_SAMPLES}，如实记录
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add tools/sdc_experiment/correlation.py tools/sdc_experiment/test_correlation.py \

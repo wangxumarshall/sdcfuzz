@@ -1,0 +1,222 @@
+{
+  "sim_rows": [
+    {
+      "group": "A",
+      "sim_diverge_rate": 0.0333,
+      "sim_masked_rate": 0.8333
+    },
+    {
+      "group": "B",
+      "sim_diverge_rate": 0.0,
+      "sim_masked_rate": 0.9333
+    },
+    {
+      "group": "D13",
+      "sim_diverge_rate": 0.3,
+      "sim_masked_rate": 0.6667
+    },
+    {
+      "group": "c1_l2_eviction",
+      "sim_diverge_rate": 0.32,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "c3_l3_128b",
+      "sim_diverge_rate": 0.61,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "e1_carry_chain",
+      "sim_diverge_rate": 0.76,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "e2_mul_extreme",
+      "sim_diverge_rate": 0.755,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "e3_toggle_rate",
+      "sim_diverge_rate": 0.64,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "f1_subnormal_nan",
+      "sim_diverge_rate": 0.76,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "i1_icache_boundary",
+      "sim_diverge_rate": 0.17,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "i2_branch_dense",
+      "sim_diverge_rate": 0.32,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "l1_disambig",
+      "sim_diverge_rate": 0.32,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "l2_dualagu_split",
+      "sim_diverge_rate": 0.61,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "m1_tlb_thrash",
+      "sim_diverge_rate": 0.0,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    },
+    {
+      "group": "m3_cross_page",
+      "sim_diverge_rate": 0.61,
+      "sim_masked_rate": 0.0,
+      "proxy": "unicorn_T"
+    }
+  ],
+  "hw_rows": [
+    {
+      "group": "c1_l2_eviction",
+      "hw_runnable_rate": 0.8,
+      "hw_runaway_rate": 0.056666666666666664,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 480,
+      "orch_rc": 0,
+      "total_failed": 35
+    },
+    {
+      "group": "c3_l3_128b",
+      "hw_runnable_rate": 2.04,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1224,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "e1_carry_chain",
+      "hw_runnable_rate": 3.2717,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1963,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "e2_mul_extreme",
+      "hw_runnable_rate": 3.28,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1968,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "e3_toggle_rate",
+      "hw_runnable_rate": 3.26,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1956,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "f1_subnormal_nan",
+      "hw_runnable_rate": 3.265,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1959,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "i1_icache_boundary",
+      "hw_runnable_rate": 3.23,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1938,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "i2_branch_dense",
+      "hw_runnable_rate": 3.0517,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1831,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "l1_disambig",
+      "hw_runnable_rate": 2.26,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1356,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "l2_dualagu_split",
+      "hw_runnable_rate": 2.1817,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 1309,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "m1_tlb_thrash",
+      "hw_runnable_rate": 1.0533,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 632,
+      "orch_rc": 0,
+      "total_failed": 0
+    },
+    {
+      "group": "m3_cross_page",
+      "hw_runnable_rate": 1.6267,
+      "hw_runaway_rate": 0.0,
+      "hw_misbehave_rate": 0.0,
+      "hw_sdc": 0,
+      "play_count": 976,
+      "orch_rc": 0,
+      "total_failed": 0
+    }
+  ],
+  "analysis": {
+    "n": 12,
+    "sim_key": "sim_diverge_rate",
+    "hw_key": "hw_runaway_rate",
+    "spearman_rho": -0.2219,
+    "permutation_p": 0.74733,
+    "verdict": "NOT_SIGNIFICANT(诚实记录)",
+    "note": "组粒度执行健康度关联; gem5 O3 ≠ TSV110 RTL; 真SDC关联需检出样本后再做"
+  }
+}
