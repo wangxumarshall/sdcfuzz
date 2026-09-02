@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1HWPW95A145FMCA37E272K3",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-experiment-verification",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".gitignore",
+    "docs/experiments/2026-09-02-sdcfuzz-verification-report.md",
+    "docs/superpowers/plans/2026-09-02-sdcfuzz-verification.md",
+    "output/experiments/exp01-baseline-repro/summary.json",
+    "output/experiments/exp02-d13-vs-random/summary.json",
+    "output/experiments/exp05-crosslayer/hw_rows.json",
+    "output/experiments/exp05-crosslayer/summary.json",
+    "scripts/experiments/exp01_baseline_repro.sh",
+    "scripts/experiments/exp02_d13_vs_random.sh",
+    "scripts/experiments/exp05_crosslayer.sh",
+    "tools/sdc_experiment/deploy.py",
+    "tools/sdc_experiment/devices/device.py",
+    "tools/sdc_experiment/report.py",
+    "tools/sdc_experiment/sim_sweep.py",
+    "tools/sdc_experiment/test_sim_sweep.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 15339117,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 48279,
+    "api_call_count": 120
+  }
+}
