@@ -120,8 +120,8 @@ def test_local_device_tools_dir_and_dir_put():
     print("PASS test_local_device_tools_dir_and_dir_put")
 
 def test_deploy_local():
-    """deploy() 冒烟: 5 工具部署到临时 tools_dir, 可执行, 幂等 (二次 skip)。"""
-    import tempfile
+    """deploy() 冒烟: 5 工具部署到临时 tools_dir, 可执行, 幂等 (二次 skip), 探活输出可见。"""
+    import stat, tempfile
     from tools.sdc_experiment.deploy import deploy, TOOLS
     for t in TOOLS:  # 前置: 本机源工具须存在
         src = f"/usr/local/bin/{t}"
@@ -136,12 +136,30 @@ def test_deploy_local():
             p = d.tool_path(t)
             assert os.path.isfile(p), f"{p} 不存在"
             assert os.access(p, os.X_OK), f"{p} 应可执行"
-        r2 = deploy(d)   # 幂等: md5 一致 → skip
+            assert r1["probe_output"].get(t, "").strip(), f"探活输出应为非空: {t}"
+        r2 = deploy(d)   # 幂等: md5 一致 → skip, 但探活仍要跑且留痕
         for t in TOOLS:
             assert r2["tools"][t] == "skip(md5 match)", \
                 f"二次部署应 skip: {t}={r2['tools'][t]}"
+            assert r2["probe_output"].get(t, "").strip(), f"skip 路径探活输出应为非空: {t}"
+        # 负控: noexec 目标 (md5 不变) → skip 路径探活必须报 BAD, 不能谎报 skip
+        victim = d.tool_path(TOOLS[0])
+        os.chmod(victim, stat.S_IRUSR)   # 去掉执行位, md5 不变
+        r3 = deploy(d)
+        assert r3["tools"][TOOLS[0]] == "BAD(probe after skip)", \
+            f"noexec 应被 skip 路径探活抓到: {r3['tools'][TOOLS[0]]}"
+        assert "Permission denied" in r3["probe_output"][TOOLS[0]]
+        # 源缺失容错: FAILED(no source), 不抛异常
+        import tools.sdc_experiment.deploy as dep
+        orig_src = dep.LOCAL_TOOL_SRC
+        dep.LOCAL_TOOL_SRC = os.path.join(td, "no_such_src")
+        try:
+            r4 = deploy(d)
+            assert set(r4["tools"].values()) == {"FAILED(no source)"}, r4["tools"]
+        finally:
+            dep.LOCAL_TOOL_SRC = orig_src
         assert r1["corpus"] is None and r2["corpus"] is None
-    print("PASS test_deploy_local: 5 tools deployed + executable + idempotent-skip")
+    print("PASS test_deploy_local: deployed+executable+probe-output, idempotent-skip+probe, noexec/源缺失负控")
 
 if __name__ == "__main__":
     test_local_probe(); test_local_run(); test_local_put_get(); test_local_tool_path()
