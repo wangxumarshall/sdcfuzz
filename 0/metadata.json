@@ -1,0 +1,74 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1GSH446TZYP7DJ1W7BQ35RR",
+  "session_id": "46a71dc5-0d51-4835-877d-ef392ec79529",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-02T10:09:45.01380439Z",
+  "branch": "feat/sdc-experiment-verification",
+  "checkpoints_count": 1,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "GLM-5.3[1m]",
+  "turn_id": "e2ed1f54cfd3",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 569257,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 3780,
+    "api_call_count": 9
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-call_fe1217a064fa40dba43b6df9",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:subagent-driven-development"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "e2ed1f54cfd3",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 17,
+        "end": 18,
+        "entry_ids": [
+          "4bc77791-21f9-4398-a929-1670e597032f"
+        ],
+        "tool_use_id": "call_fe1217a064fa40dba43b6df9"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_fe1217a064fa40dba43b6df9"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:subagent-driven-development",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 4920,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "docs/superpowers/plans/2026-09-02-sdcfuzz-verification.md": 2224,
+        "http.log": 3,
+        "patch.py": 23,
+        "seeds/gem5/sdc_probe_workload_d6.c": 118,
+        "test.log": 859
+      }
+    }
+  ]
+}
