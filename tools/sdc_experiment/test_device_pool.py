@@ -56,14 +56,29 @@ def test_remote_device_skip_if_unreachable():
     d0 = devs[0]
     d = RemoteDevice(host=d0["host"], port=d0.get("port", 22),
                      user=d0.get("user", "root"), password=d0.get("password"),
-                     name=d0.get("name"))
+                     name=d0.get("name"), tools_dir=d0.get("tools_dir", "/sdc_tools"))
     p = d.probe()
     if not p["reachable"]:
         print(f"SKIP test_remote_device: {d.name} 不可达, probe={p}")
         return
     rc, out = d.run("echo remote-ok")
-    assert rc == 0 and "remote-ok" in out
-    print(f"PASS test_remote_device: {d.name} probe={p}")
+    assert rc == 0 and "remote-ok" in out, f"run 失败: rc={rc}, out={out!r}"
+    # put/get 真测: 上传临时文件再取回, 校验内容一致 (远端放 /tmp, 不依赖 tools_dir 可写)
+    payload = f"remote-putget-{os.getpid()}"
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
+        f.write(payload); src = f.name
+    remote_tmp = f"/tmp/sdc_putget_{os.getpid()}.txt"
+    back = tempfile.mktemp(suffix=".txt")
+    try:
+        assert d.put(src, remote_tmp) is True, "put 失败 (上传后远端 test -f 不通过)"
+        assert d.get(remote_tmp, back) is True, "get 失败 (本地文件未出现)"
+        assert open(back).read() == payload, "put/get 往返内容不一致"
+    finally:
+        os.unlink(src)
+        if os.path.exists(back):
+            os.unlink(back)
+        d.run(f"rm -f {remote_tmp}")
+    print(f"PASS test_remote_device: {d.name} probe={p} put/get=roundtrip-ok")
 
 if __name__ == "__main__":
     test_local_probe(); test_local_run(); test_local_put_get(); test_local_tool_path()
