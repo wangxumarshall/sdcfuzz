@@ -1,0 +1,128 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1GQYNW3DD0TEFF9KJJGFFNN",
+  "session_id": "294ba88c-872b-4fed-98f3-684613e891fc",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-02T09:42:11.87020143Z",
+  "branch": "feat/sdc-experiment-verification",
+  "checkpoints_count": 2,
+  "save_step_count": 2,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "GLM-5.3[1m]",
+  "turn_id": "29d7575b89de",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 6723199,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 71508,
+    "api_call_count": 82
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-call_5cad62d01afa42fa82500322",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:writing-plans"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "29d7575b89de",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 17,
+        "end": 18,
+        "entry_ids": [
+          "420a8e96-10d3-4801-a21d-dba40c7d0c3d"
+        ],
+        "tool_use_id": "call_5cad62d01afa42fa82500322"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_5cad62d01afa42fa82500322"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:writing-plans",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-call_2771e36643534ffda1e05f99",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:subagent-driven-development"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "29d7575b89de",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 382,
+        "end": 383,
+        "entry_ids": [
+          "75d63951-908e-4080-b40e-ccffbdb5096c"
+        ],
+        "tool_use_id": "call_2771e36643534ffda1e05f99"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_2771e36643534ffda1e05f99"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:subagent-driven-development",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2696,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "http.log": 3,
+        "patch.py": 23,
+        "seeds/gem5/sdc_probe_workload_d6.c": 118,
+        "test.log": 859
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 3,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4817,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 3,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4917,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3
+      }
+    }
+  ]
+}
