@@ -13,7 +13,8 @@ orchestrator flag 组合与 scripts/distributed_scan.py 已验证行为一致:
 外加 --enable_v1_compat_logging: orchestrator 默认级别健康时完全静默(实测
 2026/09/02 本机 10s/2cpu rc=0 → 日志 0 行), 打开 v1-compat 才有周期性
 'Silifuzz Checker Result:{...play_count...}' 汇总行, 提供扫描确实在跑的
-iter 证据; timeout {dur_s} 外壳防挂死 (与 distributed_scan 相同)。
+iter 证据; 外壳 timeout {dur_s+60} (比 distributed_scan 的裸 dur_s 多 60s
+余量, 覆盖收尾/日志落盘), 防 orchestrator 挂死。
 """
 import argparse
 import json
@@ -78,6 +79,23 @@ def _scan_cmd(orch, runner, shard_list, metadata, duration_s, max_cpus):
             f"--enable_v1_compat_logging")
 
 
+def _ERR_RESULT(device, corpus_remote: str) -> dict:
+    """错误路径的标准键集 (与正常 parse_log 结果同构, 值为零/None)。
+
+    上游 summary 判定 (exp03 step 4) 直接按 sdc_hits/total_failed/... 取键;
+    缺键会 KeyError 且被 set -e 杀掉 → 错误场景必须能落一个
+    CLASSIFICATION_INCOMPLETE 的 summary, 而不是崩溃。
+    """
+    return {"sigsegv_noise": 0, "sigterm": 0, "runaway_noise": 0,
+            "misbehave_noise": 0, "sdc_hits": 0, "sdc_details": [],
+            "total_failed": 0,
+            "scan_work_dir": None, "device": device.name,
+            "max_cpus": None, "duration_s": None,
+            "corpus": corpus_remote, "orch_rc": None,
+            "scan_wall_s": None, "v1_summary": None,
+            "archived_log": None}
+
+
 def hw_scan(device, corpus_remote: str, duration_s: int, max_cpus: int,
             stress: bool = False) -> dict:
     """在 device 上跑 orchestrator 扫描, 返回解析结果。
@@ -90,16 +108,25 @@ def hw_scan(device, corpus_remote: str, duration_s: int, max_cpus: int,
     work = f"/tmp/sdc_scan_{int(time.time())}"
     device.run(f"mkdir -p {work}")
 
-    # shard_list: 目录 → 每行一个分片绝对路径; 文件 → 单行
+    # shard_list: 目录 → 每行一个分片绝对路径; 文件 → 单行。
+    # for 循环 rc 只反映最后一个 glob 项 (末项非普通文件时 rc=1) → 不看 rc,
+    # 改验产物: shard_list 非空行数即分片数, 0 行才视为失败。
     rc_t, _ = device.run(f"test -d {corpus_remote}", timeout=30)
     if rc_t == 0:
-        rc_w, _ = device.run(f"for f in {corpus_remote}/*; do "
-                             f"[ -f \"$f\" ] && readlink -f \"$f\"; done > {work}/shard_list",
-                             timeout=60)
+        device.run(f"for f in {corpus_remote}/*; do "
+                   f"[ -f \"$f\" ] && readlink -f \"$f\"; done > {work}/shard_list || true",
+                   timeout=60)
+        rc_n, n_out = device.run(f"grep -c . {work}/shard_list", timeout=30)
+        shards = int(n_out.strip().splitlines()[-1]) if rc_n == 0 and n_out.strip() else 0
+        if shards < 1:
+            return dict(_ERR_RESULT(device, corpus_remote),
+                        error=f"shard_list 为空 (目录 {corpus_remote} 无普通文件分片)")
     else:
+        rc_f, _ = device.run(f"test -f {corpus_remote}", timeout=30)
         rc_w, _ = device.run(f"echo {corpus_remote} > {work}/shard_list", timeout=60)
-    if rc_w != 0:
-        return {"error": f"shard_list 写入失败 rc={rc_w}", "corpus": corpus_remote}
+        if rc_w != 0 or rc_f != 0:
+            return dict(_ERR_RESULT(device, corpus_remote),
+                        error=f"语料不可读/写入失败 (test -f rc={rc_f}, write rc={rc_w})")
     device.run(f"echo 'version: \"local_corpus\"' > {work}/corpus_metadata", timeout=60)
 
     cmd = (_scan_cmd(orch, runner, f"{work}/shard_list",
@@ -121,9 +148,11 @@ def hw_scan(device, corpus_remote: str, duration_s: int, max_cpus: int,
     # 拉日志 + 解析
     rc2, log = device.run(f"cat {work}/scan.log", timeout=120)
     if rc2 != 0:
-        return {"error": f"scan.log 读取失败 rc={rc2} (orch_rc={orch_rc})",
-                "scan_work_dir": work, "device": device.name,
-                "orch_cmd_rc": rc}
+        return dict(_ERR_RESULT(device, corpus_remote),
+                    error=f"scan.log 读取失败 rc={rc2} (orch_rc={orch_rc})",
+                    scan_work_dir=work, max_cpus=max_cpus,
+                    duration_s=duration_s, orch_rc=orch_rc,
+                    scan_wall_s=scan_wall_s, orch_cmd_rc=rc)
     parsed = parse_log(log)
     v1 = parse_v1_summary(log)
     parsed.update({

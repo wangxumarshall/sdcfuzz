@@ -1,9 +1,11 @@
 #!/bin/bash
-# scripts/experiments/exp03_corpus_hw_local.sh — E3: 19模板语料在本机(0103)真机验证
+# scripts/experiments/exp03_corpus_hw_local.sh — E3: 模板语料(seeds/bin/*.bin 全量,
+#       数量动态, 实测 20)在本机(0103)真机验证
 # 前置: seeds/bin/*.bin 存在 (生成步骤内联, 管线依据 memory
 #       sdc-snapshot-from-raw-insns-pipeline + scripts/build_sdc_corpus.sh 实测 flag)
 # 判定: 扫描完成无 crash (orch_rc=0); SDC=0(健康硅片预期) 或 SDC 命中有 hash 证据;
-#       噪声全分类 (sdc+runaway+misbehave == total_failed, v1 交叉校验一致)
+#       噪声全分类 (sdc+runaway+misbehave == total_failed) 且 v1 交叉校验 match
+#       (match=false → CLASSIFICATION_INCOMPLETE, 不容自相矛盾)
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 EXP=exp03-corpus-hw-local
@@ -13,7 +15,7 @@ DUR="${DUR:-1800}"
 MAXCPUS="${MAXCPUS:-8}"
 mkdir -p output/experiments/$EXP/pb
 
-# 1. 19 模板 .bin → snapshot .pb (真实命令, 实测 flag: --raw --runner= --out=)
+# 1. 全部模板 .bin → snapshot .pb (数量动态 $N, 实测 flag: --raw --runner= --out=)
 N=0
 for BIN in seeds/bin/*.bin; do
   NAME=$(basename "$BIN" .bin)
@@ -59,6 +61,9 @@ v1_runaway = v1.get("runaway_count")
 cross_ok = None
 if v1_side is not None:
     cross_ok = (v1_side == parse_failed_minus_runaway and v1_runaway == r["runaway_noise"])
+# v1 交叉校验 gate verdict: match=false (两来源矛盾, 如满负载交织损坏 parse 计数)
+#   → 判 CLASSIFICATION_INCOMPLETE; match=true 或 v1 不可得 (None, 无汇总行) 不否决。
+ok = ok and (cross_ok is not False)
 ok = ok and (r["sdc_hits"] + r["runaway_noise"] + r["misbehave_noise"] + r["sigsegv_noise"]) == r["total_failed"] + r["sigsegv_noise"]
 summary = {
     "result": r,
