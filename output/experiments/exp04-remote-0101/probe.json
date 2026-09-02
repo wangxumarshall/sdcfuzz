@@ -1,0 +1,10 @@
+{
+  "reachable": true,
+  "arch": "aarch64",
+  "cores": 126,
+  "mem_gb": 29,
+  "os": "NAME=\"openEuler\"",
+  "specs_ok": true,
+  "errors": [],
+  "gem5": true
+}

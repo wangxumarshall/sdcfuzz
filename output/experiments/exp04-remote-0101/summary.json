@@ -1,0 +1,64 @@
+{
+  "result": {
+    "sigsegv_noise": 0,
+    "sigterm": 0,
+    "runaway_noise": 0,
+    "misbehave_noise": 0,
+    "sdc_hits": 0,
+    "sdc_details": [],
+    "total_failed": 0,
+    "scan_work_dir": "/tmp/sdc_scan_1788360829",
+    "device": "0101",
+    "max_cpus": 8,
+    "duration_s": 600,
+    "corpus": "/sdc_corpus/corpus",
+    "orch_rc": 0,
+    "scan_wall_s": 601,
+    "v1_summary": {
+      "issues_detected": 0,
+      "play_count": 1281,
+      "runaway_count": 0
+    },
+    "archived_log": "output/experiments/hw_scan_logs/0101_1788360830.scan.log"
+  },
+  "verdict": "REMOTE_CHAIN_OK",
+  "noise_fully_classified": true,
+  "v1_cross_check": {
+    "parse_failed_minus_runaway": 0,
+    "v1_issues_detected": 0,
+    "parse_runaway": 0,
+    "v1_runaway_count": 0,
+    "match": true
+  },
+  "probe": {
+    "reachable": true,
+    "arch": "aarch64",
+    "cores": 126,
+    "mem_gb": 29,
+    "os": "NAME=\"openEuler\"",
+    "specs_ok": true,
+    "errors": [],
+    "gem5": true
+  },
+  "deploy": {
+    "device": "0101",
+    "tools": {
+      "snap_tool": "skip(md5 match)",
+      "simple_fix_tool_main": "skip(md5 match)",
+      "reading_runner_main_nolibc": "skip(md5 match)",
+      "silifuzz_orchestrator_main": "skip(md5 match)",
+      "silifuzz_platform_id": "skip(md5 match)"
+    },
+    "probe_output": {
+      "snap_tool": "/etc/profile.d/mpich-aarch64.sh: 行 1: module: 未找到命令\nsnap_tool: Warning: SetProgramUsageMessage() never called",
+      "simple_fix_tool_main": "/etc/profile.d/mpich-aarch64.sh: 行 1: module: 未找到命令\nsimple_fix_tool_main: Warning: SetProgramUsageMessage() never called",
+      "reading_runner_main_nolibc": "/etc/profile.d/mpich-aarch64.sh: 行 1: module: 未找到命令\nI<DATE> <PID> runner_flags.cc:47] Usage: /sdc_tools/reading_runner_main_nolibc <flags>... [corpus file]",
+      "silifuzz_orchestrator_main": "/etc/profile.d/mpich-aarch64.sh: 行 1: module: 未找到命令\nsilifuzz_orchestrator_main: Warning: SetProgramUsageMessage() never called",
+      "silifuzz_platform_id": "/etc/profile.d/mpich-aarch64.sh: 行 1: module: 未找到命令\nsilifuzz_platform_id: Warning: SetProgramUsageMessage() never called"
+    },
+    "corpus": {
+      "remote": "/sdc_corpus",
+      "ok": false
+    }
+  }
+}
