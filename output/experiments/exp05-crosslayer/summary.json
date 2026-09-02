@@ -91,123 +91,123 @@
   "hw_rows": [
     {
       "group": "c1_l2_eviction",
-      "hw_runnable_rate": 0.8,
+      "hw_throughput_per_s": 0.8,
       "hw_runaway_rate": 0.056666666666666664,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 480,
-      "orch_rc": 0,
-      "total_failed": 35
+      "hw_failure_count": 35,
+      "orch_rc": 0
     },
     {
       "group": "c3_l3_128b",
-      "hw_runnable_rate": 2.04,
+      "hw_throughput_per_s": 2.04,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1224,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "e1_carry_chain",
-      "hw_runnable_rate": 3.2717,
+      "hw_throughput_per_s": 3.2717,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1963,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "e2_mul_extreme",
-      "hw_runnable_rate": 3.28,
+      "hw_throughput_per_s": 3.28,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1968,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "e3_toggle_rate",
-      "hw_runnable_rate": 3.26,
+      "hw_throughput_per_s": 3.26,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1956,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "f1_subnormal_nan",
-      "hw_runnable_rate": 3.265,
+      "hw_throughput_per_s": 3.265,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1959,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "i1_icache_boundary",
-      "hw_runnable_rate": 3.23,
+      "hw_throughput_per_s": 3.23,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1938,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "i2_branch_dense",
-      "hw_runnable_rate": 3.0517,
+      "hw_throughput_per_s": 3.0517,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1831,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "l1_disambig",
-      "hw_runnable_rate": 2.26,
+      "hw_throughput_per_s": 2.26,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1356,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "l2_dualagu_split",
-      "hw_runnable_rate": 2.1817,
+      "hw_throughput_per_s": 2.1817,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 1309,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "m1_tlb_thrash",
-      "hw_runnable_rate": 1.0533,
+      "hw_throughput_per_s": 1.0533,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 632,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     },
     {
       "group": "m3_cross_page",
-      "hw_runnable_rate": 1.6267,
+      "hw_throughput_per_s": 1.6267,
       "hw_runaway_rate": 0.0,
       "hw_misbehave_rate": 0.0,
       "hw_sdc": 0,
       "play_count": 976,
-      "orch_rc": 0,
-      "total_failed": 0
+      "hw_failure_count": 0,
+      "orch_rc": 0
     }
   ],
   "analysis": {
@@ -217,6 +217,6 @@
     "spearman_rho": -0.2219,
     "permutation_p": 0.74733,
     "verdict": "NOT_SIGNIFICANT(诚实记录)",
-    "note": "组粒度执行健康度关联; gem5 O3 ≠ TSV110 RTL; 真SDC关联需检出样本后再做"
+    "note": "12 组 sim 值为 Unicorn T 代理指标(T/200, 计划指定), 非 gem5 diverge 率; 组粒度执行健康度关联; gem5 O3 ≠ TSV110 RTL; 真SDC关联需检出样本后再做"
   }
 }
