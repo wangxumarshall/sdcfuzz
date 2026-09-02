@@ -1,0 +1,76 @@
+{
+  "bit": {
+    "B": {
+      "group": "B",
+      "mode": "bit",
+      "n": 100,
+      "clean_diverge": 7,
+      "masked": 89,
+      "exit_diverge": 0,
+      "no_output": 4,
+      "diverge_rate": 0.07,
+      "wilson_low": 0.0343,
+      "wilson_high": 0.1375,
+      "seed": 42,
+      "jobs": 3,
+      "host": "local-0103-gem5",
+      "gem5_note": "gem5 O3 model, not TSV110 RTL"
+    },
+    "D13": {
+      "group": "D13",
+      "mode": "bit",
+      "n": 100,
+      "clean_diverge": 22,
+      "masked": 72,
+      "exit_diverge": 0,
+      "no_output": 6,
+      "diverge_rate": 0.22,
+      "wilson_low": 0.15,
+      "wilson_high": 0.3107,
+      "seed": 42,
+      "jobs": 3,
+      "host": "local-0103-gem5",
+      "gem5_note": "gem5 O3 model, not TSV110 RTL"
+    },
+    "D_over_B": 3.143,
+    "fisher_p": 0.00429,
+    "verdict": "BEAT"
+  },
+  "struct": {
+    "B": {
+      "group": "B",
+      "mode": "struct",
+      "n": 100,
+      "clean_diverge": 5,
+      "masked": 79,
+      "exit_diverge": 0,
+      "no_output": 16,
+      "diverge_rate": 0.05,
+      "wilson_low": 0.0215,
+      "wilson_high": 0.1118,
+      "seed": 42,
+      "jobs": 3,
+      "host": "local-0103-gem5",
+      "gem5_note": "gem5 O3 model, not TSV110 RTL"
+    },
+    "D13": {
+      "group": "D13",
+      "mode": "struct",
+      "n": 100,
+      "clean_diverge": 64,
+      "masked": 32,
+      "exit_diverge": 0,
+      "no_output": 4,
+      "diverge_rate": 0.64,
+      "wilson_low": 0.5424,
+      "wilson_high": 0.7273,
+      "seed": 42,
+      "jobs": 3,
+      "host": "local-0103-gem5",
+      "gem5_note": "gem5 O3 model, not TSV110 RTL"
+    },
+    "D_over_B": 12.8,
+    "fisher_p": 0.0,
+    "verdict": "BEAT"
+  }
+}

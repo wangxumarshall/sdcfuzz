@@ -1,0 +1,16 @@
+{
+  "group": "B",
+  "mode": "bit",
+  "n": 100,
+  "clean_diverge": 7,
+  "masked": 89,
+  "exit_diverge": 0,
+  "no_output": 4,
+  "diverge_rate": 0.07,
+  "wilson_low": 0.0343,
+  "wilson_high": 0.1375,
+  "seed": 42,
+  "jobs": 3,
+  "host": "local-0103-gem5",
+  "gem5_note": "gem5 O3 model, not TSV110 RTL"
+}

@@ -1,0 +1,51 @@
+warn: No dot file generated. Please install pydot to generate the dot file and pdf.
+src/mem/dram_interface.cc:690: warn: DRAM device capacity (8192 Mbytes) does not match the address range assigned (512 Mbytes)
+src/base/statistics.hh:279: warn: One of the stats is a legacy stat. Legacy stat is a stat that does not belong to any statistics::Group. Legacy stat is deprecated.
+src/base/stats/storage.hh:278: warn: Bucket size (4) does not divide range [1:32] into equal-sized buckets. Rounding up.
+src/base/stats/storage.hh:278: warn: Bucket size (4) does not divide range [1:8] into equal-sized buckets. Rounding up.
+src/base/remote_gdb.cc:418: warn: Sockets disabled, not accepting gdb connections
+src/sim/syscall_emul.cc:86: warn: ignoring syscall set_robust_list(...)
+src/sim/syscall_emul.cc:97: warn: ignoring syscall rseq(...)
+      (further warnings will be suppressed)
+src/sim/mem_state.cc:443: info: Increasing stack size by one page.
+src/sim/syscall_emul.hh:1127: warn: readlink() called on '/proc/self/exe' may yield unexpected results in various settings.
+      Returning '/home/sdc/wangxu/silifuzz/gem5_config/workloads/sdc_probe_workload_random'
+src/sim/faults.cc:103: panic: panic condition !handled && !tc->getSystemPtr()->trapToGdb(GDBSignal::SEGV, tc->contextId()) occurred: Page table fault when accessing virtual address 0x497dd00000000000
+Memory Usage: 701368 KBytes
+Program aborted at tick 9749740
+--- BEGIN LIBC BACKTRACE ---
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem515print_backtraceEv+0x18)[0x17664f8]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem512abortHandlerEi+0x48)[0x178974c]
+linux-vdso.so.1(__kernel_rt_sigreturn+0x0)[0xffffb70387e0]
+/usr/lib64/libc.so.6(+0x812c0)[0xffffb5c512c0]
+/usr/lib64/libc.so.6(raise+0x1c)[0xffffb5c09f2c]
+/usr/lib64/libc.so.6(abort+0xf0)[0xffffb5bf703c]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt[0xf3a168]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem521GenericPageTableFault6invokeEPNS_13ThreadContextERKNS_14RefCountingPtrINS_10StaticInstEEE+0xdc)[0x17f55fc]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem52o36Commit10commitHeadERKNS_14RefCountingPtrINS0_7DynInstEEEj+0x490)[0x1972e40]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem52o36Commit11commitInstsEv+0x258)[0x19739c8]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem52o36Commit6commitEv+0x6b4)[0x1974c88]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem52o36Commit4tickEv+0xa4)[0x1975078]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem52o33CPU4tickEv+0x140)[0x197c7f0]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem510EventQueue10serviceOneEv+0xbc)[0x17790f0]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem59doSimLoopEPNS_10EventQueueE+0x78)[0x17a8488]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(_ZN4gem58simulateEm+0x220)[0x17a8b90]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt[0x2ee6884]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt[0xf15704]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(+0x17c6a4)[0xffffb6c3c6a4]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(_PyObject_Call+0x7c)[0xffffb6c52e60]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(_PyEval_EvalFrameDefault+0x48f4)[0xffffb6c27c24]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(+0x15e214)[0xffffb6c1e214]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(PyEval_EvalCode+0x9c)[0xffffb6cc094c]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(+0x220cec)[0xffffb6ce0cec]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(+0x1738d0)[0xffffb6c338d0]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(PyObject_Vectorcall+0x48)[0xffffb6c33838]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(_PyEval_EvalFrameDefault+0x754)[0xffffb6c23a84]
+/home/sdc/gem5-deps/py/usr/lib64/libpython3.11.so.1.0(+0x15e214)[0xffffb6c1e214]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt[0x178e404]
+/home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt(main+0x16c)[0xe81dbc]
+/usr/lib64/libc.so.6(+0x276c4)[0xffffb5bf76c4]
+/usr/lib64/libc.so.6(__libc_start_main+0x98)[0xffffb5bf77a8]
+--- END LIBC BACKTRACE ---
+For more info on how to address this issue, please visit https://www.gem5.org/documentation/general_docs/common-errors/ 
+

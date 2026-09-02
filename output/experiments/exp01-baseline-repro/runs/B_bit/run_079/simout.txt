@@ -1,0 +1,14 @@
+Global frequency set at 1000000000000 ticks per second
+gem5 Simulator System.  https://www.gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 version 25.1.0.1
+gem5 compiled Aug 29 2026 14:55:48
+gem5 started Sep  2 2026 19:32:49
+gem5 executing on localhost.localdomain, pid 3461211
+command line: /home/sdc/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt -r -e --silent-redirect -d output/experiments/exp01-baseline-repro/runs/B_bit/run_079 /home/sdc/wangxu/silifuzz/gem5_config/configs/two_level_taishan.py --binary /home/sdc/wangxu/silifuzz/gem5_config/workloads/sdc_probe_workload_random --mode inject --first-clock 25458 --max-faults 1 --probability 1.0 --rng-seed 121
+
+info: Standard input is not a terminal, disabling listeners.
+Beginning simulation! mode=inject binary=/home/sdc/wangxu/silifuzz/gem5_config/workloads/sdc_probe_workload_random
+SUM=10721424292087689827 CRC=6728fc4a
+Exiting @ tick 27427015 because exiting with last active thread context
