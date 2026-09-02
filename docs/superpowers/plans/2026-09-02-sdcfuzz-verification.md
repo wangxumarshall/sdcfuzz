@@ -1552,7 +1552,7 @@ git push
 - Consumes: Task 4 的 `register_device.py`、Task 6 的 `deploy.py`、Task 7 的 `hw_scan.py`
 - Produces: `exp04_remote_device.sh`——参数化的远程设备验证模板（`--host --port --user --password-env --name --duration --max-cpus`），执行：注册→探活→部署→推语料→远程扫描→回收结果→汇总。
 
-- [ ] **Step 1: 写 E4 脚本**
+- [x] **Step 1: 写 E4 脚本**
 
 ```bash
 #!/bin/bash
@@ -1622,12 +1622,14 @@ print(json.dumps({"verdict": verdict, "sdc_details": r.get("sdc_details", [])},
 EOF
 ```
 
-- [ ] **Step 2: 用 0101 做全链路演练（作为"用户设备"替身）**
+- [x] **Step 2: 用 0101 做全链路演练（作为"用户设备"替身）**
 
 Run: `SDC_PASSWORD=SDC@2026 bash scripts/experiments/exp04_remote_device.sh --name 0101 --host 172.168.177.97 --duration 600 --max-cpus 8`
 Expected: `verdict: REMOTE_CHAIN_OK`（10 分钟短扫描验证全链路；正式用户设备由用户提供凭据后同一脚本运行）
 
-- [ ] **Step 3: 用户设备正式运行（需用户先提供凭据）**
+实际 (2026/09/02, commit 749b885): verdict=REMOTE_CHAIN_OK — probe specs_ok (126核/29GB/aarch64), 5工具 skip(md5 match), E3语料 md5 往返一致+回放 code:1, orch_rc=0, play_count=1281, sdc=0, v1交叉校验 match。密码从 output/devices/devices.json 读入环境变量 (凭据红线: 不落命令行历史以外的日志)。勘误: 语料须传远端文件 /sdc_corpus/corpus 而非目录 /sdc_corpus (0101 上有历史语料, 目录分支会全部扫入)。
+
+- [ ] **Step 3: 用户设备正式运行（需用户先提供凭据）** *(待用户提供凭据 — 脚本已参数化就绪)*
 
 向用户请求：设备 IP、SSH 端口、用户名、密码（或密码环境变量名）。然后：
 ```bash
@@ -1637,13 +1639,15 @@ bash scripts/experiments/exp04_remote_device.sh --name <用户设备名> --host 
 ```
 Expected: `REMOTE_CHAIN_OK`；任何环节失败则按 probe/deploy/scan 分层排障后重试
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add scripts/experiments/exp04_remote_device.sh output/experiments/exp04-*/
 git commit -m "feat(experiment): E4远程设备全链路——注册→部署→扫描→回收→汇总, 参数化用户凭据"
 git push
 ```
+
+实际: commit 749b885 (脚本 + exp04-remote-0101 五件证据 force-add, devices.json 不入库), 已 push 到 feat/sdc-experiment-verification。
 
 ---
 
