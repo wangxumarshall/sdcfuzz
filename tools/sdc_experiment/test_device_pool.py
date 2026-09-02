@@ -40,6 +40,32 @@ def test_local_tool_path():
     assert os.path.exists(p), f"snap_tool 应存在于 {p}"
     print(f"PASS test_local_tool_path: {p}")
 
+def test_remote_device_skip_if_unreachable():
+    """RemoteDevice 单元测试: 无设备清单时 SKIP (不 FAIL)。
+    有清单时 (output/devices/devices.json) 对第一台真测。"""
+    import json
+    from tools.sdc_experiment.devices.remote_device import RemoteDevice
+    cfg_path = "output/devices/devices.json"
+    if not os.path.exists(cfg_path):
+        print("SKIP test_remote_device: 无设备清单 output/devices/devices.json (用户尚未注册远程设备)")
+        return
+    devs = json.load(open(cfg_path)).get("devices", [])
+    if not devs:
+        print("SKIP test_remote_device: 设备清单为空")
+        return
+    d0 = devs[0]
+    d = RemoteDevice(host=d0["host"], port=d0.get("port", 22),
+                     user=d0.get("user", "root"), password=d0.get("password"),
+                     name=d0.get("name"))
+    p = d.probe()
+    if not p["reachable"]:
+        print(f"SKIP test_remote_device: {d.name} 不可达, probe={p}")
+        return
+    rc, out = d.run("echo remote-ok")
+    assert rc == 0 and "remote-ok" in out
+    print(f"PASS test_remote_device: {d.name} probe={p}")
+
 if __name__ == "__main__":
     test_local_probe(); test_local_run(); test_local_put_get(); test_local_tool_path()
+    test_remote_device_skip_if_unreachable()
     print("ALL PASS")
