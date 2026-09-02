@@ -80,7 +80,30 @@ def test_remote_device_skip_if_unreachable():
         d.run(f"rm -f {remote_tmp}")
     print(f"PASS test_remote_device: {d.name} probe={p} put/get=roundtrip-ok")
 
+def test_device_pool_roundtrip():
+    import json, tempfile
+    from tools.sdc_experiment.devices.device_pool import DevicePool
+    pool = DevicePool()
+    pool.add_local("local-0103")
+    pool.add_remote("192.0.2.1", port=2222, user="test", password="pw",
+                    name="fake-board", tools_dir="/tmp/sdc_tools")
+    assert len(pool.devices) == 2
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        path = f.name
+    pool.save(path)   # 公开版: 抹密码
+    data = json.load(open(path))
+    assert "password" not in json.dumps(data), "公开清单不得含密码"
+    assert data["devices"][1]["host"] == "192.0.2.1"
+    assert data["devices"][1]["port"] == 2222
+    os.unlink(path)
+    # probe_all: local 真测, fake-board 不可达但不应抛异常
+    probes = pool.probe_all(timeout=15)
+    assert probes["local-0103"]["specs_ok"] is True
+    assert probes["fake-board"]["reachable"] is False
+    print("PASS test_device_pool_roundtrip")
+
 if __name__ == "__main__":
     test_local_probe(); test_local_run(); test_local_put_get(); test_local_tool_path()
     test_remote_device_skip_if_unreachable()
+    test_device_pool_roundtrip()
     print("ALL PASS")
