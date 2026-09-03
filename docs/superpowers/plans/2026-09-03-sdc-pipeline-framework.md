@@ -206,10 +206,10 @@ def test_compile_asm_produces_aarch64():
 - Consumes: /home/sdc/wangxu/mcpat/mcpat + configs/tsv110.xml（后台 agent 安装中；未就绪则本 Task 顺延，不阻塞 Task 1-7）
 - Produces: `McPATEvaluator.evaluate(cand) -> {"power_mcpat": W, "power_peak_proxy": ...}`——把候选指令序列的翻转率/指令构成映射为 tsv110.xml 的活动因子（McPAT -xml 输入的 activity/duty cycle 参数），跑 mcpat 取总功耗与分解； Unicorn toggle 代理作交叉校验列。
 
-- [ ] **Step 1: 检查 McPAT 安装状态**（后台 agent 的 docs/experiments/2026-09-03-mcpat-setup.md）；未就绪 → 本 Task 标记 blocked，记录到 plan，跳到 Task 9
-- [ ] **Step 2: 失败测试 + 实现**（活动因子映射：候选的每类指令占比 → 对应单元 duty cycle，其余参数 tsv110.xml 固定）
-- [ ] **Step 3: smoke**：e1 模板 vs 高功耗变体的 McPAT 总功耗差异（真实输出）
-- [ ] **Step 4: Commit** — `feat(sdc_pipeline): McPAT功耗Evaluator插件——tsv110活动因子映射`
+- [x] **Step 1: 检查 McPAT 安装状态** — 后台 agent 完成 (~/wangxu/mcpat + tsv110.xml, Peak 4.42W 基线可复现), 继续实施
+- [x] **Step 2: 失败测试 + 实现**（活动因子映射：候选的每类指令占比 → 对应单元 duty cycle，其余参数 tsv110.xml 固定）
+- [x] **Step 3: smoke**：e1 模板 vs 高功耗变体的 McPAT 总功耗差异（真实输出）
+- [x] **Step 4: Commit** — `feat(sdc_pipeline): McPAT功耗Evaluator插件——tsv110活动因子映射`
 
 ### Task 9: 框架文档 + scheme.md 修订收尾
 
@@ -217,10 +217,10 @@ def test_compile_asm_produces_aarch64():
 - Create: `tools/sdc_pipeline/README.md`
 - Modify: `docs/scheme.md`（4 处过时陈述，引用合规评估报告）
 
-- [ ] **Step 1: README**：架构图（五阶段+插件接口）、用法、演进路线（AutoµSens 第二版接 gem5 结构统计 / RL policy 替换口 / McPAT 即插即用 / 多bit·时序故障扩展口）
-- [ ] **Step 2: scheme.md 修订**（20模板/8模块、mutator 清单、多bit已有、3板；Sim→HW 改"已建待阳性"）
-- [ ] **Step 3: 汇报**：已实现/未实现/演进路线三段
-- [ ] **Step 4: Commit** — `docs(sdc_pipeline): 框架README+scheme.md过时陈述修订`
+- [x] **Step 1: README**：架构图（五阶段+插件接口）、用法、演进路线（AutoµSens 第二版接 gem5 结构统计 / RL policy 替换口 / McPAT 即插即用 / 多bit·时序故障扩展口）
+- [x] **Step 2: scheme.md 修订**（20模板/8模块、mutator 清单、多bit已有、3板；Sim→HW 改"已建待阳性"）
+- [x] **Step 3: 汇报**：已实现/未实现/演进路线三段
+- [x] **Step 4: Commit** — `docs(sdc_pipeline): 框架README+scheme.md过时陈述修订`
 
 ## Self-Review 结论
 
