@@ -84,7 +84,10 @@ class Pipeline:
         return Assessment(ident=cand.ident, metrics=metrics,
                           evaluator="+".join(ev.name for ev in self.evaluators))
 
-    def run(self, generations: int, per_gen_mutations: int, top_k: int) -> PipelineReport:
+    def run(self, generations: int, per_gen_mutations: int, top_k: int,
+            validate_top_k: int = 0, inject_runs: int = 10) -> PipelineReport:
+        """validate_top_k>0 且 self.validator 存在时, 每代 Filter 后的
+        top-K 进 gem5+CHAOS 检出率验证 (重层), 结果写 Assessment.validated。"""
         report = PipelineReport()
         pool = list(self.seeds)  # 当前代种子池
         for gen in range(1, generations + 1):
@@ -103,6 +106,24 @@ class Pipeline:
             assessed = [(c, self._assess(c)) for c in children]
             for _, a in assessed:
                 self.vault.put_assessment(a)
+            # Filter: top-k 进入下代
+            if assessed:
+                pool = self.filt.select(assessed, top_k)
+            # Validate (重层, 可选): top-K gem5+CHAOS 检出率
+            if self.validator is not None and validate_top_k > 0 and assessed:
+                for c in pool[:validate_top_k]:
+                    g = self.validator.register_golden(c)
+                    if g is None:
+                        continue  # gem5 不兼容, 如实跳过
+                    bit = self.validator.validate_detection(
+                        c, n_runs=inject_runs, mode="bit", seed=self.rng.randrange(1 << 30))
+                    struct = self.validator.validate_detection(
+                        c, n_runs=max(1, inject_runs // 2), mode="struct",
+                        seed=self.rng.randrange(1 << 30))
+                    # 写回 Vault (validated 字段)
+                    for rec in [x for x in self.vault._assess.values()
+                                if x["ident"] == c.ident]:
+                        rec["validated"] = {"bit": bit, "struct": struct}
             # Feedback: policy 观察 (mutator 分组均值 vs 基线)
             all_scores = [self.filt.score(a) for _, a in assessed]
             baseline = sum(all_scores) / len(all_scores) if all_scores else 0.0
@@ -113,9 +134,6 @@ class Pipeline:
                 if kids_of_m:
                     mut_scores[m.name] = sum(self.filt.score(a) for a in kids_of_m) / len(kids_of_m)
             self.policy.observe(gen, mut_scores, baseline)
-            # Filter: top-k 进入下代
-            if assessed:
-                pool = self.filt.select(assessed, top_k)
             # 报告
             metrics_mean = {}
             for _, a in assessed:

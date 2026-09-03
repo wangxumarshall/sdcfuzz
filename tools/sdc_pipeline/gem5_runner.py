@@ -53,6 +53,10 @@ def build_workload_files(cand, workdir: str) -> tuple[str, str]:
     for i in range(nregs):
         L.append("    ldr x2, [sp, #208]")
         L.append(f"    ldr x{i}, [x2, #{i*8}]")
+    # 关键修复: x2 是装载循环的 temp, 循环结束时 x2 = in 指针而非 in[2]。
+    # 候选指令执行前必须重装 x2 (gdb 实证: 否则候选读到的 x2 是地址值)。
+    L.append("    ldr x2, [sp, #208]")
+    L.append("    ldr x2, [x2, #16]")
     for w in insns:
         L.append(f"    .long 0x{w:08x}")
     for i in range(nregs):
