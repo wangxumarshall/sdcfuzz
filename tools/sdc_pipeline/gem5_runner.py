@@ -72,6 +72,10 @@ def build_workload_files(cand, workdir: str) -> tuple[str, str]:
 
     init_lines = "\n".join(f"    g_in[{r}] = 0x{v:x}ULL;"
                            for r, v in sorted(cand.regs_init.items()))
+    # E7 实证教训: 每次迭代覆盖 g_out (非累积) → 只有最后一次迭代的故障
+    # 能传播到 SUM, 等效 ACE 窗口被稀释 ITERS 倍 (0/60 全 masked)。
+    # 修复: acc 累积每次迭代的 g_out 和 (sdc_probe_workload 系列语义),
+    # 使任意迭代的寄存器故障都能传播到最终 SUM。
     c_src = f"""/* auto-generated from Candidate {cand.ident} (origin={cand.origin}) */
 #include <stdio.h>
 #include <stdint.h>
@@ -80,10 +84,11 @@ extern void payload(uint64_t *in, uint64_t *out);
 static uint64_t g_in[31] = {{0}}, g_out[31] = {{0}};
 int main(void) {{
 {init_lines}
-    for (int i = 0; i < ITERS; i++)
-        payload(g_in, g_out);
     uint64_t acc = 0;
-    for (int i = 0; i < 29; i++) acc += g_out[i];
+    for (int i = 0; i < ITERS; i++) {{
+        payload(g_in, g_out);
+        for (int j = 0; j < 29; j++) acc += g_out[j];
+    }}
     uint32_t crc = (uint32_t)(acc ^ (acc >> 32));
     printf("SUM=%llu CRC=%08x\\n", (unsigned long long)acc, crc);
     return 0;
@@ -125,18 +130,28 @@ def _run_gem5_capture(binary, script, args: list, outdir: str) -> str:
 
 def parse_golden(simout: str):
     """从 golden simout 提取 (SUM=.. CRC=.. 行, nc)。
-    nc = 'Exiting @ tick N' 的 N (注入 ROI 基准)。"""
+
+    **关键尺度 (E7 调试实证)**: CHAOS 的 --first-clock 单位是 **CPU cycles**
+    (CHAOSReg.cc: first_clock(Cycles(p.firstClock)), cpu->clockEdge 调度),
+    不是 gem5 tick! 'Exiting @ tick N' 的 N 是 tick (1ps)。
+    2.6GHz → 1 cycle = 385 ticks → nc = exiting_tick / 385。
+    此前直接用 tick 当 nc → first-clock 超出程序总周期 → 注入永不触发
+    → 全部 masked (E7 第一轮 0/60 的根因, fault_injections.log 为空为证)。
+    """
     golden = None
-    nc = None
+    exit_tick = None
     for line in simout.splitlines():
         if "SUM=" in line and golden is None:
             golden = line.strip()
         if "Exiting @" in line and "tick" in line:
             try:
-                nc = int(line.split("tick")[1].strip().split()[0])
+                exit_tick = int(line.split("tick")[1].strip().split()[0])
             except (ValueError, IndexError):
                 pass
-    if golden is None or nc is None:
+    if golden is None or exit_tick is None:
+        return None
+    nc = exit_tick // 385  # 2.6GHz: 1 CPU cycle = 385 ps = 385 ticks
+    if nc <= 0:
         return None
     return {"golden": golden, "nc": nc}
 

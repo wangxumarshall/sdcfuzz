@@ -16,7 +16,7 @@ from tools.sdc_pipeline.gem5_runner import (
 SIMOUT_GOLDEN = """Starting simulation...
 SUM=118831515424667458 CRC=dbc8bf2a
 Exiting @ tick 443784000
-"""
+"""  # nc = 443784000/385 = 1152685 cycles (CHAOS first-clock 是 CPU cycle 尺度)
 SIMOUT_EMPTY = "Starting simulation...\n"
 
 CAND_ASM = """    .include "asm_common.S.inc"
@@ -50,7 +50,7 @@ def test_build_workload_files_structure():
 def test_parse_golden():
     g = parse_golden(SIMOUT_GOLDEN)
     assert g["golden"] == "SUM=118831515424667458 CRC=dbc8bf2a"
-    assert g["nc"] == 443784000, "nc = Exiting tick (注入 ROI 依据)"
+    assert g["nc"] == 443784000 // 385, "nc = Exiting tick / 385 (CPU cycle 尺度, 2.6GHz)"
     assert parse_golden(SIMOUT_EMPTY) is None, "无 SUM 行 → golden 失败"
 
 
