@@ -58,12 +58,25 @@ class MutatorBase:
 
 
 class OperandBitFlipMutator(MutatorBase):
-    """操作数位翻: 随机选寄存器翻 1-4 bit (toggle_hill_climb 的候选生成泛化)。"""
+    """操作数位翻: 随机选寄存器翻 1-4 bit (toggle_hill_climb 的候选生成泛化)。
+
+    readset_aware=True 时只变异 live_readset 内的寄存器 (M2 实证的
+    逻辑掩蔽防线: 变异被"写前不读"覆写的寄存器是纯浪费)。
+    """
     name = "operand_bitflip"
 
-    def __init__(self, n_children=4, max_bits=4):
+    def __init__(self, n_children=4, max_bits=4, readset_aware=True):
         self.n_children = n_children
         self.max_bits = max_bits
+        self.readset_aware = readset_aware
+
+    def _pick_reg(self, cand, rng):
+        if self.readset_aware:
+            from tools.sdc_pipeline.readset import live_first_read
+            live = sorted(live_first_read(cand))
+            if live:
+                return rng.choice(live)
+        return rng.choice(sorted(cand.regs_init))
 
     def mutate(self, cand, rng):
         kids = []
@@ -71,7 +84,7 @@ class OperandBitFlipMutator(MutatorBase):
             if not cand.regs_init:
                 break
             regs = dict(cand.regs_init)
-            reg = rng.choice(sorted(regs))
+            reg = self._pick_reg(cand, rng)
             for _ in range(rng.randint(1, self.max_bits)):
                 regs[reg] ^= 1 << rng.randrange(64)
             kids.append(self._child(cand, cand.source_asm, regs, ""))
@@ -79,11 +92,15 @@ class OperandBitFlipMutator(MutatorBase):
 
 
 class OperandDictMutator(MutatorBase):
-    """操作数字典替换: 用 DICT_VALUES 的极端值族替换操作数 (体系打通)。"""
+    """操作数字典替换: 用 DICT_VALUES 的极端值族替换操作数 (体系打通)。
+
+    readset_aware=True 时只替换 live_readset 内的寄存器 (同上, 反掩蔽)。
+    """
     name = "operand_dict"
 
-    def __init__(self, n_children=4):
+    def __init__(self, n_children=4, readset_aware=True):
         self.n_children = n_children
+        self.readset_aware = readset_aware
 
     def mutate(self, cand, rng):
         if not cand.regs_init:
@@ -92,7 +109,12 @@ class OperandDictMutator(MutatorBase):
         kids = []
         for _ in range(self.n_children):
             regs = dict(cand.regs_init)
-            reg = rng.choice(sorted(regs))
+            if self.readset_aware:
+                from tools.sdc_pipeline.readset import live_first_read
+                live = sorted(live_first_read(cand))
+                reg = rng.choice(live) if live else rng.choice(sorted(regs))
+            else:
+                reg = rng.choice(sorted(regs))
             regs[reg] = rng.choice(all_vals)
             kids.append(self._child(cand, cand.source_asm, regs, ""))
         return kids
