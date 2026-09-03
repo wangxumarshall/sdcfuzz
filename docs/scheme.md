@@ -25,8 +25,8 @@
 
 - **变异策略**：SiliFuzz基于Centipede引擎的软件覆盖引导fuzzer，对输入随机变异，**不针对具体操作数或指令**（Operand-undirected），无目标操作数随机翻转。sdcfuzz已在gem5-CHAOS注入测试中验证，采用D13阶段的“directed-on-random”策略（运行时基于进位链等启发式）后，bit-flip检测效率提升3.00×、结构故障检测提升7.79×，显著超过纯随机。下一步工作包括将D13启发式集成回Centipede的变异循环中。  
 - **覆盖引导**：SiliFuzz追求传统软件意义上的代码覆盖（基本块/分支覆盖）。sdcfuzz想要在此基础上引入微架构特征的覆盖度（架构位激活、ACE/IBR等）作为指导，旨在覆盖更多硬件弱点。  
-- **真机部署**：SiliFuzz在Google服务器集群上运行。sdcfuzz已在4板446核 Kunpeng 920 ARM64服务器上部署，并区分真正SDC与噪声，但还需扩展到更大规模并结合自适应调度策略。  
-- **故障验证**：SiliFuzz没有注入故障模型，仅检测已存在的缺陷（通过互核/跨芯片一致性比对等发现Bug）。sdcfuzz基于[gem5-fi](https://github.com/wangxumarshall/gem5-fi)已实现单bit/单字节模型，但未来需引入多bit或时序相关缺陷模型。
+- **真机部署**：SiliFuzz在Google服务器集群上运行。sdcfuzz已在4板446核 Kunpeng 920 ARM64服务器上部署（0201板当前不可达，实际可用3板；E4实验已验证单远程板0101全链路），并区分真正SDC与噪声，但还需扩展到更大规模并结合自适应调度策略。  
+- **故障验证**：SiliFuzz没有注入故障模型，仅检测已存在的缺陷（通过互核/跨芯片一致性比对等发现Bug）。sdcfuzz基于[gem5-fi](https://github.com/wangxumarshall/gem5-fi)已实现单bit/单字节模型；多bit注入已有脚本级支持（gem5_sweep_multibit.py，max_faults可配），时序相关缺陷模型仍是未来工作。
 
 **预期目标：**在启发式或强化学习型变异和微架构覆盖引导上，超越SiliFuzz的纯随机翻转和纯软件覆盖率引导，在仿真和真实环境检测到更多SDC。  
 
@@ -81,21 +81,21 @@
 - **Snapshot机制**：已有生产级的Snapshot proto定义和快照重定位工具（SnapRelocator）、以及快照语料库（SnapCorpus）。  
 - **真机执行**：支持裸金属Runner + nolibc/seccomp沙箱执行，已在4板446核Kunpeng平台验证可行（RunSnapOutcome枚举区分正常/SDC/噪声）。  
 - **覆盖引导Fuzzing**：集成了Centipede熵编码遗传算法，并通过Unicorn代理和ArchFeatureGenerator采集基础指令覆盖，具备生产能力。  
-- **变异引擎**：提供基础的ProgramBatchMutator，支持分支位移（branch displacement）等操作。当前仅实现FlipRandomBit变异，但其架构可扩展。  
+- **变异引擎**：提供基础的ProgramBatchMutator，支持分支位移（branch displacement）等操作。指令级变异已有6个结构化mutator（InsertGeneratedInstruction/MutateInstruction/DeleteInstruction/SwapInstructions/CrossoverInsert/CrossoverOverwrite）+4个组合器（Retry/Repeat/Select/Weighted），FlipRandomBit是最底层原子操作；操作数级变异由sdc_pipeline框架的变异器池承担（位翻/字典/指令序列/功耗应力，见4.3注）。  
 - **大规模部署**：内置Orchestrator调度进程、分布式扫描脚本等，已验证可在4板446核架构上运行。  
 - **gem5故障注入**：实验性集成了CHAOS框架，可对寄存器或load-store单元进行Bit-flip或字节失序注入（如byte_lane_skew），在50次注入测试中约4%产生发散。  
-- **微架构种子**：已手工编写19个微架构靶向模板（E1-E3/V1-V2/M1/C1/O1等），覆盖7个弱点模块。  
+- **微架构种子**：已手工编写20个微架构靶向模板（E1-E3/V1-V6/M1-M3/C1-C3/O1-O2/I1-I2/L1-L2/F1），覆盖8个弱点模块（激发/电压/内存/缓存/乱序/取指/流水LSU/浮点）。  
 - **进化引擎**：提供原型版进化算法（Tools/sdc_mutator/evolution_engine.py），用三因子适应度选择，迭代生成演化序列，目前已演化到D13阶段，相对最初T=8方案SDC检测提升8.8倍（bit-flip 3.00×，structural 7.79×）。  
 - **学术基础**：做了sdcfuzz论文草稿，详细记录了D1-D13的演化路径和结果。  
 - **噪声分类**：在部署环境中已区分出真正的SDC（RunSnapOutcome 2/3/4）和噪声（5/6）。  
 
-**sdcfuzz当前不具备但需补充的能力**：  
-1. **微架构覆盖率引导的自动生成**（如ACE/IBR）。  
-2. **gem5 Golden vs 故障注入差分流程**（SDC故障环境有限，故障注入验证不可避免）。  
-3. **【可选】McPAT功耗标注**（筛选高功耗指令序列）。  
-4. **ISA感知变异器**（如全面的指令替换、指令编译、操作数演化等）。  
-5. **负载感知在线调度**（支持在线的SDC检测用例调度）。  
-6. **强化学习型变异**（比如基于RL来实现指令序列/操作码/操作数的精准高效变异）。  
+**sdcfuzz需补充的能力**（状态注记 2026-09-03：详见 docs/experiments/2026-09-03-scheme-compliance-assessment.md 与 tools/sdc_pipeline/README.md）：  
+1. **微架构覆盖率引导的自动生成**（如ACE/IBR）——ACE代理/IBR评估器已在 tools/sdc_pipeline 落地（Unicorn级）；ACE lifetime 寿命口径与 AutoµSens 结构逆向靶向仍是未来工作。  
+2. **gem5 Golden vs 故障注入差分流程**——已在 tools/sdc_pipeline/gem5_runner.py 落地（golden自动注册+CHAOS检出率验证，M2端到端实证）。  
+3. **【可选】McPAT功耗标注**（筛选高功耗指令序列）——第一版用 Unicorn 翻转率代理（toggle_power_proxy），McPAT Evaluator 插件位已留（安装中）。  
+4. **ISA感知变异器**（如全面的指令替换、指令编译、操作数演化等）——操作数变异（位翻/字典）与指令序列变异已入 sdc_pipeline 变异器池，全面ISA感知替换仍是未来工作。  
+5. **负载感知在线调度**（支持在线的SDC检测用例调度）——未实现。  
+6. **强化学习型变异**（比如基于RL来实现指令序列/操作码/操作数的精准高效变异）——接口已按Gym语义预留在 Pipeline.policy（第一版 HillClimbPolicy 占位），RL本体未实现。  
 
 
 ### 4.3 sdcfuzz方案架构设计
