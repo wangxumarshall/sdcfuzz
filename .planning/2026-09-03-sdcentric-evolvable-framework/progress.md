@@ -36,6 +36,14 @@
   - 10 种子对比: hill 5/bandit 3/tie 2 (bandit 1/3 预算打平, 诚实记录)
   - E8: A 0% < B Type-I 6.7% < C Type-II 13.3% 单调 (H2 方向一致),
     统计 INSUFFICIENT; McPAT duty 无组间区分度等三个诚实观察
+- **论文 v2/v2.1 (dfa8806)**: docs/paper/v2/paper_v2_en.md
+  - 全部成果囊括: D13核心 (3.00×/7.79×) + falsification 路径 + 五阶段框架
+    + 读集分析 + bandit + McPAT/E8v2 + 舰队部署
+  - 5维模拟评审 (Reject→整改路径): 3 大攻击点 (样本量自己算出不跑/
+    E8混杂/新颖性空心化) → 13 项整改全落实
+  - **E8v2 是关键新增实验**: 长度配平对照推翻 E8v1 自己的方向性信号
+    (应力14% vs 等长NOP 12%, p=0.83) — 评审质疑被实验证实
+  - 13 项数字 vs JSON 事实核对全过
 - **Phase 2 complete**：设计定稿 + 实施 plan 落盘
   - 用户决策：先轻后重（Unicorn 闭环先行）；功耗 Unicorn 代理 + McPAT 插件化
   - **McPAT 安装 subagent 已后台启动**（装到 ~/wangxu/mcpat + tsv110.xml V110 配置，V110 参数取自 kunpeng.md：4-wide OoO/PRF/L1D 64KB 4-way/L2 512KB 10cyc/scheduler 33 entries）
