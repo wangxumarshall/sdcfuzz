@@ -53,11 +53,15 @@ report = pipe.run(generations=3, per_gen_mutations=3, top_k=4)
 
 | 阶段 | 组件 | 现状 | 演进 |
 |---|---|---|---|
-| v1 (当前) | HillClimbPolicy | ✅ 三因子启发式 | — |
-| v1.5 | McPATEvaluator | 插件位已留 | McPAT + tsv110.xml 装好即插（后台安装中） |
-| v2 | RL policy | 接口已按 Gym 语义（choose_mutators/observe） | 替换 policy 对象即可 |
+| v1 | HillClimbPolicy | ✅ 三因子启发式 | — |
+| v1.5 | McPATEvaluator | ✅ 已实装（tsv110 + duty 映射 + peak 功耗） | 时序波形级 duty（需 gem5 stats/PMU） |
+| v1.6 | EpsilonGreedyBanditPolicy | ✅ RL 第一步实装（ε-greedy 增量 Q） | reward 换 gem5 检出率（E8 证有区分度）→ DQN/PPO |
 | v2 | AutoµSens | structure_tags 已是雏形 | 接 gem5 结构统计做 STRUCTURE_MAP 逆向靶向 |
 | v2.5 | 故障模型 | bit + byte_lane_skew + 多bit（gem5 侧） | 时序故障模型 |
+
+## 实验记录（框架内）
+- E7 闭环 vs 随机: 4/60 vs 3/60, TIE（模板 + 注入单位修复实证）
+- E8 功耗-SDC: A 0% < Type-I 6.7% < Type-II 13.3% 单调（H2 方向一致），统计不足
 
 ## 关键设计决策
 
