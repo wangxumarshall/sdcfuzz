@@ -90,6 +90,7 @@ class Pipeline:
         top-K 进 gem5+CHAOS 检出率验证 (重层), 结果写 Assessment.validated。"""
         report = PipelineReport()
         pool = list(self.seeds)  # 当前代种子池
+        self.pool = pool  # 终态引用 (E7 等对照实验需要各组自己的终代)
         for gen in range(1, generations + 1):
             chosen = self.policy.choose_mutators(self.rng)
             mutators = [m for m in self.mutators if m.name in chosen]
@@ -109,6 +110,7 @@ class Pipeline:
             # Filter: top-k 进入下代
             if assessed:
                 pool = self.filt.select(assessed, top_k)
+                self.pool = pool
             # Validate (重层, 可选): top-K gem5+CHAOS 检出率
             if self.validator is not None and validate_top_k > 0 and assessed:
                 for c in pool[:validate_top_k]:

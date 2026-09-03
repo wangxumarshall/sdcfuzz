@@ -62,7 +62,7 @@ def run_arm(arm_name, filt, out_dir, rng_seed):
                     policy=HillClimbPolicy([m.name for m in mutators]),
                     rng_seed=rng_seed)
     report = pipe.run(generations=GENS, per_gen_mutations=PER_GEN, top_k=TOP_K)
-    return vault, report
+    return vault, report, pipe
 
 
 def main():
@@ -77,13 +77,17 @@ def main():
                       ("RANDOM", RandomFilter(real_filt, rng_seed=999))]:
         print(f"===== {arm} 组: {GENS} 代 × {PER_GEN} 变异 =====")
         t0 = time.time()
-        vault, report = run_arm(arm, filt, out_dir, rng_seed=2026)
-        # 终代 top-K (按 ace_proxy)
-        top = vault.top_by("ace_proxy", FINAL_K)
+        vault, report, pipe = run_arm(arm, filt, out_dir, rng_seed=2026)
+        # 终代候选 = 该组**自己演化路径的终态 pool** (pipe.pool)。
+        # E7 第一轮分析 bug: 两组都用 vault.top_by(ace) 全局排序 →
+        # 选到同一批候选, 组间差异被抹掉 (5/60 vs 5/60 完全打平的假象)。
+        # 修正: EVOLVE 的 pool 是 Filter 选的 top, RANDOM 的 pool 是
+        # 随机选的 — 各自反映本组策略的终代。
+        top = [(c.ident, None) for c in pipe.pool[:FINAL_K]]
         print(f"  闭环完成 ({time.time()-t0:.0f}s), Vault={vault.count_candidates()}, "
-              f"final top{FINAL_K} by ace: {[(i, round(v,3)) for i, v in top]}")
+              f"终代 pool: {[i for i, _ in top]}")
         arm_runs, arm_diverge = 0, 0
-        for ident, ace in top:
+        for ident, _ace in top:
             cand = vault.get(ident)
             # Candidate 从 vault 取回无 code_bytes, 重编译
             cand = make_candidate(cand.source_asm, cand.regs_init,
@@ -97,7 +101,7 @@ def main():
                                              mode="bit", seed=77)
             arm_runs += r["n"]
             arm_diverge += r["clean_diverge"]
-            print(f"  {ident}: ace={ace:.3f} bit diverge={r['clean_diverge']}/{r['n']} "
+            print(f"  {ident}: bit diverge={r['clean_diverge']}/{r['n']} "
                   f"rate={r['rate']} CI=[{r['wilson_low']},{r['wilson_high']}]")
         results[arm] = {"runs": arm_runs, "diverge": arm_diverge,
                         "candidates": [(i, v) for i, v in top]}
