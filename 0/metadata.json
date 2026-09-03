@@ -1,0 +1,103 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1K5DY15RZMN3FBPNWY0PXNN",
+  "session_id": "344cb7e7-af11-4ba4-aed6-6e6b413fb673",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-03T08:16:12.85992307Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "glm-5.3",
+  "turn_id": "55bbd113ebce",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 19632800,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 83783,
+    "api_call_count": 171
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-superpowers:writing-plans-2026-09-03T06:01:21.2966083Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "superpowers:writing-plans"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "9aa15e81539c",
+      "timestamp": "2026-09-03T06:01:21.2966083Z",
+      "native": {
+        "command": "/superpowers:writing-plans"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/superpowers:writing-plans",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-planning-with-files-2026-09-03T07:00:39.36853237Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "planning-with-files"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "55bbd113ebce",
+      "timestamp": "2026-09-03T07:00:39.36853237Z",
+      "native": {
+        "command": "/planning-with-files"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/planning-with-files",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-call_da46c26e5b5942a5b427a7bd",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:writing-plans"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "55bbd113ebce",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 43,
+        "end": 44,
+        "entry_ids": [
+          "89df7461-faa3-4985-be27-1e8bab739ff8"
+        ],
+        "tool_use_id": "call_da46c26e5b5942a5b427a7bd"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_da46c26e5b5942a5b427a7bd"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:writing-plans",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 1
+  }
+}
