@@ -114,3 +114,32 @@ def test_pipeline_policy_learns_from_metric_delta():
         "高分 mutator 权重必须相对上升"
     chosen = pol.choose_mutators(rng=random.Random(0))
     assert all(m in ("m1", "m2") for m in chosen)
+
+
+def test_epsilon_greedy_bandit_learns_best_arm():
+    """RL policy 实装: ε-greedy 应收敛到高 reward 的臂。"""
+    from tools.sdc_pipeline.pipeline import EpsilonGreedyBanditPolicy
+    pol = EpsilonGreedyBanditPolicy(["bad", "good", "mid"], epsilon=0.1)
+    rng = random.Random(0)
+    # 模拟 30 代: good 恒高 reward
+    for gen in range(30):
+        arm = pol.choose_mutators(rng)[0]
+        rewards = {"bad": 0.1, "good": 0.9, "mid": 0.5}
+        pol.observe(gen, {arm: rewards[arm]}, baseline=0.5)
+    # 利用时多数采样应选 good (ε=0.1 探索仍可能选到别臂, 用多数表决)
+    rng2 = random.Random(123)
+    picks = [pol.choose_mutators(rng2)[0] for _ in range(50)]
+    assert picks.count("good") > 40, f"50 次中 good 应 >40, 实际 {picks.count('good')}"
+    assert pol._q["good"] > pol._q["bad"]
+    assert pol._n["good"] > pol._n["bad"], "good 臂应被拉最多"
+
+
+def test_epsilon_greedy_exploration():
+    """ε 概率应能探索非最优臂。"""
+    from tools.sdc_pipeline.pipeline import EpsilonGreedyBanditPolicy
+    pol = EpsilonGreedyBanditPolicy(["a", "b"], epsilon=0.5)
+    rng = random.Random(0)
+    picks = set()
+    for _ in range(60):
+        picks.add(pol.choose_mutators(rng)[0])
+    assert picks == {"a", "b"}, "高 ε 下两个臂都应被探索"

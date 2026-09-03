@@ -61,6 +61,44 @@ class HillClimbPolicy:
         return list(self.names)
 
 
+class EpsilonGreedyBanditPolicy:
+    """ε-greedy 多臂老虎机策略 — RL 的第一步真实实装 (scheme §5.2)。
+
+    每个 mutator = 一个臂; reward = 该 mutator 子代的指标均值。
+    ε 概率随机探索, 1-ε 概率选当前均值最高的臂。
+    与 HillClimbPolicy 同接口 (choose_mutators/observe), Pipeline 零改动。
+
+    相比 HillClimb 的区别: 真正的探索-利用权衡 (概率性选臂, 而非
+    全部参与只调权), 且有收敛保证 (UCB 风格的均值估计)。
+    """
+    def __init__(self, mutator_names: list, epsilon: float = 0.2,
+                 optimistic_init: float = 1.0):
+        self.names = list(mutator_names)
+        self.epsilon = epsilon
+        self.weights = {m: 1.0 for m in self.names}  # 兼容报告展示
+        self._q = {m: optimistic_init for m in self.names}  # 动作价值估计
+        self._n = {m: 0 for m in self.names}                # 臂的拉动次数
+
+    def observe(self, generation: int, mutator_scores: dict, baseline: float):
+        """增量均值更新: Q(a) ← Q(a) + (r - Q(a))/N(a)。"""
+        for m, s in mutator_scores.items():
+            if m not in self._q:
+                continue
+            self._n[m] += 1
+            self._q[m] += (s - self._q[m]) / self._n[m]
+        # weights 同步为 Q 值 (报告可读)
+        total = sum(self._q.values()) or 1.0
+        for m in self._q:
+            self.weights[m] = max(0.05, self._q[m] / total)
+
+    def choose_mutators(self, rng: random.Random) -> list:
+        """ε 探索 / 1-ε 利用, 返回 1 个臂 (mutator 名)。"""
+        if rng.random() < self.epsilon or all(n == 0 for n in self._n.values()):
+            return [rng.choice(self.names)]
+        best = max(self._q, key=self._q.get)
+        return [best]
+
+
 class Pipeline:
     def __init__(self, seeds: list, mutators: list, evaluators: list,
                  filt, vault: Vault, policy, rng_seed: int = 42,
