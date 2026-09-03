@@ -73,4 +73,4 @@ def test_evaluator_smoke_real_mcpat():
     m = ev.evaluate(cand)
     assert "power_mcpat_w" in m
     assert 0.1 < m["power_mcpat_w"] < 10.0, "单核 V110 功耗量级合理性 (22nm 近似)"
-    assert "power_note" in m, "必须携带 22nm 近似声明 (诚实边界)"
+    assert ev.last_note and "22nm" in ev.last_note, "必须携带 22nm 近似声明 (诚实边界)"

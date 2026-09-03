@@ -140,7 +140,8 @@ class Pipeline:
             metrics_mean = {}
             for _, a in assessed:
                 for mk, mv in a.metrics.items():
-                    metrics_mean.setdefault(mk, []).append(mv)
+                    if isinstance(mv, (int, float)):  # 防御: 跳过非数值
+                        metrics_mean.setdefault(mk, []).append(mv)
             metrics_mean = {k: sum(v) / len(v) for k, v in metrics_mean.items()}
             report.generations.append(GenerationReport(
                 generation=gen, produced=len(children),

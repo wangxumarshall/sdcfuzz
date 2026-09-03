@@ -117,12 +117,14 @@ class McPATEvaluator:
     def __init__(self, cycles_per_insn: float = 0.5):
         # IPC 2.0 画像 (与 tsv110 基线一致)
         self.cycles_per_insn = cycles_per_insn
+        self.last_note = ""  # 最近一次评估的诚实边界声明
 
     def evaluate(self, cand) -> dict:
         cats = classify_insns(cand.code_bytes)
         total = sum(cats.values())
         if total == 0:
-            return {"power_mcpat_w": 0.0, "power_note": POWER_NOTE}
+            self.last_note = POWER_NOTE
+            return {"power_mcpat_w": 0.0}
         cycles = int(total * self.cycles_per_insn)
         xml = build_xml(cats, total, cycles)
         res = run_mcpat(xml)
@@ -131,6 +133,8 @@ class McPATEvaluator:
         # duty 不敏感, 由 busy_cycles 驱动)。功耗应力筛选目标是"负载级
         # 差异", peak 更敏感。runtime_dynamic 保留作辅指标。
         w = res.get("peak_power_w") or 0.0
+        # power_note 是诚实边界声明, 不是数值指标 — 放 self.last_note
+        # (进 metrics 会污染 pipeline 的均值聚合)
+        self.last_note = POWER_NOTE
         return {"power_mcpat_w": round(w, 4),
-                "runtime_dynamic_w": round(res.get("runtime_dynamic_w") or 0.0, 4),
-                "power_note": POWER_NOTE}
+                "runtime_dynamic_w": round(res.get("runtime_dynamic_w") or 0.0, 4)}
