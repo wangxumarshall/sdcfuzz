@@ -6,6 +6,8 @@
 - ParetoFilter:  非支配排序 (NSGA 风格第一层), scheme §5.1 跨结构联合优化的
   "Pareto 最优序列集" 的高功耗/高覆盖筛选实现
 """
+import random
+
 from tools.sdc_pipeline.vault import Assessment
 
 
@@ -44,3 +46,23 @@ class ParetoFilter:
             if not any(self._dominates(r[1], a) for r in rows if r[0] is not c):
                 fronts.append(c)
         return fronts[:k]
+
+
+class RandomFilter:
+    """随机选择 top-k — 闭环 vs 纯随机对照实验 (E7) 的基线 Filter。
+
+    score 委托给内部真实 filter (保持 policy 反馈语义不变), 但 select
+    随机抽 k 个 — 等价于"无评估反馈的盲变异走"。
+    """
+    def __init__(self, inner, rng_seed: int = 0):
+        self.inner = inner
+        self.rng = random.Random(rng_seed)
+
+    def score(self, a: Assessment) -> float:
+        return self.inner.score(a) if hasattr(self.inner, "score") else 0.0
+
+    def select(self, rows: list, k: int) -> list:
+        pool = [r[0] for r in rows]
+        if len(pool) <= k:
+            return pool
+        return self.rng.sample(pool, k)
