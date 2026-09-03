@@ -50,3 +50,7 @@
 - L3 按 1MB private 近似（实际集群切片共享三模式）；L2 TLB 1024-entry 无法建模；FP64 quarter-rate、间接预测器不可表达；ROB 128/流水线 13 级等为有据估计值；负载统计为合成画像。</result>
 <usage><subagent_tokens>309</subagent_tokens><tool_uses>298</tool_uses><duration_ms>8728533</duration_ms></usage>
 </task-notification>
+
+---
+
+做
