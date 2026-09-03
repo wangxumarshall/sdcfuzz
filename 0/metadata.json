@@ -1,0 +1,232 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1M17ECBAGJVJKRWHECJS5RK",
+  "session_id": "344cb7e7-af11-4ba4-aed6-6e6b413fb673",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-03T16:22:01.70110089Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "save_step_count": 2,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "glm-5.3",
+  "turn_id": "2f7ed13ade37",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 70533876,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 203991,
+    "api_call_count": 386,
+    "subagent_tokens": {
+      "input_tokens": 585977,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 0,
+      "output_tokens": 29291,
+      "api_call_count": 14
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-superpowers:writing-plans-2026-09-03T06:01:21.2966083Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "superpowers:writing-plans"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "9aa15e81539c",
+      "timestamp": "2026-09-03T06:01:21.2966083Z",
+      "native": {
+        "command": "/superpowers:writing-plans"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/superpowers:writing-plans",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-planning-with-files-2026-09-03T07:00:39.36853237Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "planning-with-files"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "55bbd113ebce",
+      "timestamp": "2026-09-03T07:00:39.36853237Z",
+      "native": {
+        "command": "/planning-with-files"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/planning-with-files",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-goal-2026-09-03T13:27:55.4708608Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "20c5f5b129ca",
+      "timestamp": "2026-09-03T13:27:55.4708608Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-goal-2026-09-03T14:38:30.96458512Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "dcac778ef2c1",
+      "timestamp": "2026-09-03T14:38:30.96458512Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-goal-2026-09-03T15:03:28.19842948Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "143bf3ebd433",
+      "timestamp": "2026-09-03T15:03:28.19842948Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-call_da46c26e5b5942a5b427a7bd",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "superpowers:writing-plans"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "2f7ed13ade37",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 43,
+        "end": 44,
+        "entry_ids": [
+          "89df7461-faa3-4985-be27-1e8bab739ff8"
+        ],
+        "tool_use_id": "call_da46c26e5b5942a5b427a7bd"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_da46c26e5b5942a5b427a7bd"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: superpowers:writing-plans",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-call_308ea13f0ce1415282bad7c7",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "academic-research-skills:academic-paper"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "2f7ed13ade37",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 1416,
+        "end": 1417,
+        "entry_ids": [
+          "3481f603-8bbf-4d3e-8fdd-2a8fc8206ab9"
+        ],
+        "tool_use_id": "call_308ea13f0ce1415282bad7c7"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "call_308ea13f0ce1415282bad7c7"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: academic-research-skills:academic-paper",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 8
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 2696,
+      "user_lines_removed": 0,
+      "agent_lines_added": 359,
+      "agent_lines_removed": 8,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "http.log": 3,
+        "patch.py": 23,
+        "seeds/gem5/sdc_probe_workload_d6.c": 118,
+        "test.log": 859
+      }
+    }
+  ]
+}
