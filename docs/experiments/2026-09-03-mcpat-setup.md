@@ -198,3 +198,15 @@ L3 (1MB private 近似):
    (逐参数二分排查定位, 非猜测。)
 5. 试图从 gem5 上游取 TSV110 CPU 模型参数未果: 上游 gem5 从未包含 TSV110
    类 (搜索确认无此类), 转而用 Chips and Cheese 实测数据补齐 ROB/PRF/scheduler。
+
+---
+
+## 升级后记 (2026-09-04)
+
+本安装已被 **git submodule** 方案取代: `third_party/mcpat` →
+`git@github.com:wangxumarshall/mcpat.git` (master `3cf423f`, 含 ARM64
+Kunpeng920 支持, mcpat.mk 上游已修 aarch64 编译)。`~/wangxu/mcpat`
+目录已不存在; tsv110.xml 迁到 `tools/sdc_pipeline/mcpat_configs/`;
+新二进制输出口径变化 (out.ptrace, 不再打印文本功耗) 见
+[2026-09-04-mcpat-submodule-upgrade.md](2026-09-04-mcpat-submodule-upgrade.md)。
+本文的安装过程与 CACTI 22nm 建模口径分析仍有效, 保留作历史记录。
