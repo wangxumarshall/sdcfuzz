@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1N83ZQ0492A4TSG4PAYJBX3",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "MODULE.bazel",
+    "third_party/BUILD.capstone",
+    "third_party/BUILD.cityhash",
+    "third_party/BUILD.highwayhash",
+    "third_party/BUILD.liblzma",
+    "third_party/BUILD.libpfm4",
+    "third_party/BUILD.libxed",
+    "third_party/BUILD.lss",
+    "third_party/BUILD.mbuild",
+    "third_party/BUILD.net_zstd",
+    "third_party/BUILD.typing_extensions",
+    "third_party/BUILD.unicorn",
+    "third_party/absl_endian_visibility.patch",
+    "third_party/bazel_build_files/BUILD.capstone",
+    "third_party/bazel_build_files/BUILD.cityhash",
+    "third_party/bazel_build_files/BUILD.highwayhash",
+    "third_party/bazel_build_files/BUILD.liblzma",
+    "third_party/bazel_build_files/BUILD.libpfm4",
+    "third_party/bazel_build_files/BUILD.libxed",
+    "third_party/bazel_build_files/BUILD.lss",
+    "third_party/bazel_build_files/BUILD.mbuild",
+    "third_party/bazel_build_files/BUILD.net_zstd",
+    "third_party/bazel_build_files/BUILD.typing_extensions",
+    "third_party/bazel_build_files/BUILD.unicorn",
+    "third_party/bazel_build_files/absl_endian_visibility.patch"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 0
+  }
+}
