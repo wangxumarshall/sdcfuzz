@@ -55,14 +55,25 @@ run_stage_b() {
   local bin_dir="$BIN_DIR_A"
   [ -d "$bin_dir" ] || bin_dir="$SEED_DIR/bin"
   rm -rf "$CENT_WORKDIR"; mkdir -p "$CENT_WORKDIR"
-  # Centipede 以模板 .bin 为种子 (--corpus_from_files, 每文件一输入)
+  # Centipede 以模板 .bin 为种子做真实 fuzzing。
+  # 修复 (2026-09-04 全量 e2e 验证发现): 原用 --corpus_from_files, 该 flag 是
+  # "Export a corpus ... into the sharded remote corpus" 的纯导出操作 —
+  # strace 实证 0 次 fuzz 进程 fork (execve 总数=1, 即 centipede 自身),
+  # 50000 runs 2 秒"完成"实为静默空转, corpus.* 只是种子原样分片。
+  # 正确 flag 是 --corpus_dir (启动时导入 + while fuzzing 新元素写回)。
+  # 实证: --corpus_dir 2000 runs 真实执行 (end-fuzz: ft 25712, corp 205/205,
+  # exec/s 160, 10 shards 各 200-271 元素, 从 176 种子增长)。
   # -j=10 限制并发防 MCE (128 核服务器红线)
   bazel-bin/external/fuzztest+/centipede/centipede \
     --binary=bazel-bin/proxies/unicorn_aarch64 \
     --workdir="$CENT_WORKDIR" \
-    --corpus_from_files="$bin_dir/" \
-    -j=10 --num_runs="$NUM_RUNS" 2>&1 | tail -20 || true
-  echo "  阶段 B corpus 数: $(ls "$CENT_WORKDIR"/corpus.* 2>/dev/null | wc -l)"
+    --corpus_dir="$bin_dir/" \
+    -j=10 --num_runs="$NUM_RUNS" 2>&1 | tail -20
+  local rc=$?
+  if [ "$rc" -ne 0 ]; then
+    echo "  WARN: centipede 退出码 $rc (corpus.* 可能不完整, 如实保留)"
+  fi
+  echo "  阶段 B corpus 数 (shards): $(ls "$CENT_WORKDIR"/corpus.* 2>/dev/null | wc -l)"
 }
 
 case "$STAGE" in
