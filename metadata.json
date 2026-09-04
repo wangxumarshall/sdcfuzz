@@ -3,7 +3,7 @@
   "checkpoint_id": "01M1N7A3A7Y14TZY0HE63J375Y",
   "strategy": "manual-commit",
   "branch": "feat/sdc-pipeline-framework",
-  "checkpoints_count": 2,
+  "checkpoints_count": 3,
   "files_touched": [
     ".gitmodules",
     "third_party/mcpat",
@@ -24,13 +24,20 @@
       "compact_transcript": "/1/transcript.jsonl",
       "content_hash": "/1/content_hash.txt",
       "prompt": ""
+    },
+    {
+      "metadata": "/2/metadata.json",
+      "transcript": "/2/full.jsonl",
+      "compact_transcript": "/2/transcript.jsonl",
+      "content_hash": "/2/content_hash.txt",
+      "prompt": "/2/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 46976,
+    "input_tokens": 9882552,
     "cache_creation_tokens": 0,
     "cache_read_tokens": 0,
-    "output_tokens": 66,
-    "api_call_count": 1
+    "output_tokens": 40315,
+    "api_call_count": 154
   }
 }
