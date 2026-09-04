@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1N7A3A7Y14TZY0HE63J375Y",
+  "session_id": "24c54c89-c211-4ed5-a895-b074a90dbe1f",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-04T03:27:33.18329345Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".gitmodules",
+    "third_party/mcpat",
+    "tools/sdc_pipeline/mcpat_configs/tsv110.xml",
+    "tools/sdc_pipeline/mcpat_configs/tsv110_baseline_output.txt"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.3[1m]",
+  "turn_id": "dd5c8f5baee5",
+  "checkpoint_transcript_start": 176,
+  "transcript_lines_at_start": 176,
+  "compact_transcript_start": 29,
+  "token_usage": {
+    "input_tokens": 46976,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 66,
+    "api_call_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-04T03:27:33.13570128Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 665,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 665,
+    "total_lines_changed": 665,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}
