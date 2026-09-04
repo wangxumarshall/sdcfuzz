@@ -3,7 +3,7 @@
   "checkpoint_id": "01M1N7547PFE33YRNR7DX0R6WF",
   "strategy": "manual-commit",
   "branch": "feat/sdc-pipeline-framework",
-  "checkpoints_count": 2,
+  "checkpoints_count": 3,
   "files_touched": [
     ".gitmodules",
     "docs/cpu/kunpeng920_microarchitecture.md",
@@ -23,13 +23,20 @@
       "compact_transcript": "/1/transcript.jsonl",
       "content_hash": "/1/content_hash.txt",
       "prompt": "/1/prompt.txt"
+    },
+    {
+      "metadata": "/2/metadata.json",
+      "transcript": "/2/full.jsonl",
+      "compact_transcript": "/2/transcript.jsonl",
+      "content_hash": "/2/content_hash.txt",
+      "prompt": "/2/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 1149353,
+    "input_tokens": 10348370,
     "cache_creation_tokens": 0,
     "cache_read_tokens": 0,
-    "output_tokens": 22604,
-    "api_call_count": 36
+    "output_tokens": 61445,
+    "api_call_count": 183
   }
 }
