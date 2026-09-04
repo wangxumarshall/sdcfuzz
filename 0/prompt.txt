@@ -1,0 +1,1 @@
+/planning-with-files third_party目录下的mcpat升级到 git@github.com:wangxumarshall/mcpat.git mcpat，并作端到到的验证，这个mcpat弄成本代码仓的submodule放到third-party目录，同时整理third-party目录中现有的其他文件，放到third-party子目录中，避免太凌乱。
