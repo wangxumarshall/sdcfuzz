@@ -1,0 +1,69 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1N7547PFE33YRNR7DX0R6WF",
+  "session_id": "24c54c89-c211-4ed5-a895-b074a90dbe1f",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-04T03:24:55.08639836Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".gitmodules",
+    "docs/cpu/kunpeng920_microarchitecture.md",
+    "third_party/mcpat"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.3[1m]",
+  "turn_id": "dd5c8f5baee5",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 848351,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 20795,
+    "api_call_count": 26
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-04T03:24:55.05304912Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 253,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 253,
+    "total_lines_changed": 253,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 3557,
+      "user_lines_removed": 20,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".gitmodules": 3,
+        ".planning/.active_plan": 1,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/findings.md": 49,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/progress.md": 15,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/task_plan.md": 77,
+        "CLAUDE.md": 1,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "http.log": 3,
+        "patch.py": 23,
+        "seeds/gem5/sdc_probe_workload_d6.c": 118,
+        "test.log": 859,
+        "tools/sdc_pipeline/mcpat_configs/tsv110.xml": 429,
+        "tools/sdc_pipeline/mcpat_configs/tsv110_baseline_output.txt": 233,
+        "tools/sdc_pipeline/mcpat_eval.py": 53
+      },
+      "user_removed_per_file": {
+        ".planning/.active_plan": 1,
+        "CLAUDE.md": 1,
+        "tools/sdc_pipeline/mcpat_eval.py": 18
+      }
+    }
+  ]
+}
