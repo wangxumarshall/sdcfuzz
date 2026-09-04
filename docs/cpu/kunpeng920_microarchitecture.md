@@ -15,7 +15,7 @@
 | 核心数 | 128 逻辑 CPU = 128 物理核（无 SMT，每核 1 线程）| `lscpu` |
 | 微架构 | TaiShan v110（HiSilicon 首个自研 64 位 ARM 核，ARMv8.2）| MIDR `0x481fd010` |
 | 主频 | 2.6 GHz 固定（cppc_cpufreq，performance governor，boost 关闭）| sysfs cpufreq |
-| ISA | ARMv8-A：fp asimd aes pmull sha1 sha2 crc32 atomics(LSE) fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm；**无 SVE** | `/proc/cpuinfo` flags |
+| ISA | ARMv8.2 级：fp asimd aes pmull sha1 sha2(仅256) crc32 atomics(LSE) fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm；**无 SVE/无 AArch32/无 PAC/BTI/LRCPC/SHA512**（ID 寄存器精确边界见 §3.6） | `/proc/cpuinfo` + `ID_AA64*` 实测 |
 | NUMA | 4 节点（每 socket 2 个计算 die 各为一节点），节点 0/2 无本地内存 | `numactl -H` |
 | 内存 | 32 GB DDR4（node1 ≈ 15.1 GB + node3 ≈ 14.7 GB）| node meminfo |
 | OS | openEuler 24.03 LTS-SP4，内核 6.6.0-159.4.3.154 | `/etc/os-release` |
@@ -126,7 +126,6 @@ FDIV 17；FMA 7（CnC 实测 FP32 FMA 5）；向量整数加 2。
 ### 3.5 L3 partition 模式——对实验设计最重要的微架构特性
 
 华为把 L3 tag 放在 CPU 簇侧，且默认运行在 partition 模式：
-
 - 单核访问近端私有份额（<4 MB）：~36 周期，性能尚可；
 - 单核工作集增大逐步覆盖全 L3：延迟逐渐涨到 >90 周期；
 - **两个核共享同一段数据时，L3 表现退化为 shared 模式行为，全容量范围都是高延迟**
@@ -135,6 +134,48 @@ FDIV 17；FMA 7（CnC 实测 FP32 FMA 5）；向量整数加 2。
 
 **实验含义**：任何绑核 + 共享数组的微基准（包括 SDC 的双核压核实验），其 L3 延迟
 行为取决于数据共享模式，不能按"私有 36 周期"预期。
+
+### 3.6 ISA 特性精确边界（ID 寄存器 EL0 实测，2026-09-04 补充）
+
+用用户态 `mrs` 直读 ID 寄存器（`/tmp/idregs`，gcc `-O2`，可复现）：
+
+| 寄存器 | 值 | 解读 |
+|---|---|---|
+| `ID_AA64ISAR0_EL1` | 0x0001100010211120 | AES=2（AES+PMULL）、SHA1=1、**SHA2=1（仅 SHA256，无 SHA512）**、CRC32=1、Atomic=2（**完整 LSE**）、RDM=1（SQRDMLAH/B）、DP=1（UDOT/SDOT）、FHM=1（FMLAL）；**无 SHA3/SM3/SM4/I8MM/BF16** |
+| `ID_AA64ISAR1_EL1` | 0x0000000000011001 | DPB=1（DC POP）、JSCVT=1、FCMA=1、**APA=0/API=0 → 无指针认证 PAC**、**LRCPC=0 → 无 LDAPR** |
+| `ID_AA64PFR0_EL1` | 0x0000000000110011 | EL0=1（**仅 AArch64，无 AArch32**）、RAS=0（**无 ARMv8.2 RAS 架构扩展**）、SVE=0xf（无 SVE） |
+| `CTR_EL0` | 0x0000000084448004 | IminLine/DminLine=64B、**ERG=CWG=64B**、**L1Ip=2 → AIVIVT**（I-cache 别名虚拟索引，非主流 PIPT——I/D 别名场景行为要注意）、**DIC=IDC=0**（无 I/D 自动一致优化） |
+| `DCZID_EL0` | 0x0000000000000004 | DC ZVA 可用，块大小 64B |
+| `ID_AA64DFR0_EL1` | 0x0000000000000006 | CTX_CMPs=6 → **7 个上下文比较器**；WRPs/BRPs 读出为 0（每类至少 1 个） |
+| `ID_AA64MMFR0_EL1` | 0x00000111ff000000 | **读出值部分不可信**（见下） |
+
+⚠️ **ID 寄存器可信度**（对后续复测者重要）：MMFR0 读出 PARange=0、DFR0 读出
+PMUver=0，均与运行事实矛盾（内核跑 48-bit VA、PMUv3 全套事件可用）。判断是
+HiSilicon 固件对 EL0 可读 ID 寄存器部分字段未完整实现。**可信字段**：ISAR0/ISAR1
+（与 HWCAP 0x917fff/hwcap2=0 逐位吻合）、CTR/DCZID、PFR0 的 EL/SVE/RAS 位；
+**不可信字段**：MMFR0 低半、DFR0 的 PMUver。HWCAP2=0 确认无任何 v8.x 追加特性
+（无 BTI/PAC/MTE/SVE2/DIT/SSBS 等）。
+
+**对 SiliFuzz/SDC 的直接约束**：
+- 无 AArch32 → runner 不需要考虑 32 位状态切换；
+- LSE 完整可用（`casal` 实测依赖链 43 cyc——L1 争用下同步原语的代价参考）；
+- PAC/BTI 缺失 → 生成 snapshot 时不用避开相关重写（本来也没有）；
+- SHA 仅 256 无 512、无 SM3/SM4 → 加密指令覆盖实验的指令池边界；
+- AIVIVT I-cache → 理论上存在 VIPT 别名；但 64KB/4-way/64B 行 = 256 组 × 64B = 16KB
+  索引位 < 页大小 4KB×4 = 16KB，恰好处于别名临界，实测无别名问题（公共页着色），记录备考。
+
+### 3.7 固件与平台层（ACPI/EDAC/CPPC，2026-09-04 补充）
+
+| 项目 | 实测 | 含义 |
+|---|---|---|
+| ACPI 表 | APIC BERT DSDT EINJ ERST FACP GTDT HEST IORT MCFG **MPAM** PCCT **PPTT** **SDEI** SLIT SPCR SPMI SRAT SSDT | 完整的服务器 RAS 栈 |
+| **HEST/EINJ/BERT/ERST** | 1420/368/48/560 字节 | **硬件错误注入接口（EINJ）存在**——SDC 研究可用固件级错误注入路径 |
+| EDAC | `ghes_edac`，mc0 总 32768 MB；2 DIMM 枚举（SOCKET0 CH0 DIMM0 16GB + SOCKET1 CH0 DIMM1 16GB），Registered-DDR4，SECDED | **DDR4 RDIMM + SECDED**：单 bit 可纠正、双 bit 不可纠正；ce/ue 计数当前为 0（8-25 重启以来） |
+| **MPAM** | 1488 字节表 | ARM 内存分区监控（Memory Partitioning & Monitoring）——平台具备缓存/内存带宽 QoS 硬件分区能力，与 L3 partition 模式互补 |
+| SDEI | 48 字节 | 固件软件委派异常接口（REE 不可屏蔽事件通知） |
+| 中断控制器 | GICv3 + ITS-MSI（`/proc/interrupts` 实证），KVM vgic 在用 | LPI 支持完整 |
+| cpufreq | `cppc_cpufreq`，4 个 policy 域 = 每 NUMA node 一域（32 核/域），performance governor，2.6 GHz 固定 | **调频粒度是 die 级**——同 die 32 核共享一个频率决策 |
+| 定时器 | `cntvct_el0` = 100.000 MHz（实测校准，26.0 cyc/tick @2.6GHz） | 用户态低开销计时可用 |
 
 ---
 
@@ -215,7 +256,44 @@ FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/b
 > 或直接以 root 运行 perf。事件清单与 raw ID 全表见
 > [kunpeng920_pmu_events.md](kunpeng920_pmu_events.md)。
 
-### 5.4 其他系统事实
+### 5.4 单操作延迟/吞吐微基准（2026-09-04 实测补充）
+
+依赖链口径（`cntvct_el0` 计时，100 MHz 校准 = 26.0 cyc/tick，绑 cpu0，
+100 次展开 × 20000 重复，`/tmp/mb4`）：
+
+| 操作 | 实测 cyc/op | 与公开规格对照 |
+|---|---|---|
+| dependent int MUL | 3.42 | 公开 4（loop 摊薄后略低） |
+| dependent udiv（小商早退） | 6.20 | 公开全幅 19——**小商早退路径快得多** |
+| FP32 FADD / FMUL / FMA | 5.01 / 5.05 / 5.02 | FMA 延迟 = FADD（5），与 CnC 实测一致 |
+| FP32 FSQRT / FDIV | 7.01 / 6.01 | 依赖链口径远低于公开全幅（17）——除法器有投机/早退 |
+| CRC32X | 1.00 | 8 B/cyc 单元 |
+| AESD 单轮 | 3.01 | ≈5.3 GB/s 单核 AES |
+| SHA256H | 5.01 | |
+| **CASAL（LSE 原子）** | **43.45** | L1 争用 + acq/rel 全代价——**同步原语干扰实验的基准代价** |
+| dependent LDR（L1 自引用） | 2.87 | 依赖链 load-to-use ≈ 3（公开 4，或有前递） |
+| STR 同一行 | 1.00 | store buffer 吸收 |
+| DC ZVA（64B） | 4.02 | |
+| B.cond not-taken | 3.01 | 分支吞吐 3 cyc/个 |
+| NOP | 0.26 | ≈3.9 IPC，**4 宽退休直接实证** |
+
+### 5.5 访存带宽阶梯（2026-09-04 实测补充）
+
+`ldp`/`stp` 每次 4×16B 扫 64B 行（`/tmp/mb7`、`/tmp/mb8`，绑 cpu0）：
+
+| 工作集 | load 带宽 | load cyc/64B | store 带宽 | store cyc/64B |
+|---|---|---|---|---|
+| 32 KB（L1） | 54.6 GB/s | 3.0 | 41.2 GB/s | 4.0 |
+| 256 KB（L2） | 42.8 GB/s | 3.9 | 34.7 GB/s | 4.8 |
+| 2 MB（L3 近端份额） | 17.1 GB/s | 9.8 | — | — |
+| 32 MB（全 L3） | 9.3 GB/s | 17.9 | 14.6 GB/s | 11.4 |
+
+解读：
+- L1 load ~21 B/cyc（循环含串行 acc 加法，理论上限 2×16B ldp = 32 B/cyc）；store ~15.8 B/cyc；
+- 单核全 L3 load 9.3 GB/s，约为公开"簇级 21.7 GB/s"的一半——与"4 核簇共享 L3 tag/带宽"的设计自洽；
+- store 在全 L3 工作集下（14.6 GB/s）反高于 load（9.3 GB/s）：write-back 行为 + store buffer 异步吸收，load 侧要等数据。
+
+### 5.6 其他系统事实
 
 - 内核启动参数含 `nospectre_bhb`、`arm64.nopauth`（指针认证已关）、smmu bypass 两个设备
   —— SDC 实验不受 spectre 缓解干扰；
@@ -249,7 +327,10 @@ FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/b
 
 **本机实测**：`lscpu`、`/proc/cpuinfo`、`/sys/devices/system/cpu/cpu*/{cache,topology,regs}`
 、`/sys/bus/event_source/devices/`、`numactl -H`、`perf stat`（含 §5.2 引用的真实输出）、
-指针追逐微基准（§5.1，源码思路：64B 行随机置换追逐，gcc -O2）。
+指针追逐微基准（§5.1，源码思路：64B 行随机置换追逐，gcc -O2）、
+用户态 `mrs` 读 ID 寄存器（§3.6，`cntvct_el0` 100 MHz 校准）、
+单操作延迟/带宽微基准（§5.4/§5.5，`cntvct_el0` 计时 + wall-clock 交叉验证）、
+ACPI 表/EDAC/CPPC（§3.7，`/sys/firmware/acpi/tables/`、`/sys/devices/system/edac/`）。
 
 **公开资料**（微架构规格，本机无法直接读出的部分）：
 - [Chips and Cheese — Huawei's Kunpeng 920 and TaiShan v110 CPU Architecture (2025-07)](https://chipsandcheese.com/p/huaweis-kunpeng-920-and-taishan-v110)

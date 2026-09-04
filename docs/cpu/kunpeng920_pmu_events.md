@@ -33,6 +33,11 @@
 | `threshold_compare` | config1:3-4 | 比较模式（不可用） |
 | `threshold_count` | config1:2 | 计数模式（不可用） |
 
+调试硬件（`ID_AA64DFR0_EL1` EL0 实测 = 0x6）：**7 个上下文比较器**（CTX_CMPs=6），
+watchpoint/breakpoint 至少各 1（寄存器读出值保守，见微架构文档 §3.6 的 ID 寄存器
+可信度说明）。`armv8_pmuv3_0` 的 `rdpmc` 格式位存在，但用户态直读计数器需先经
+`perf_event_open` 使能（PMSELR/PMEVCNTR 访问由内核管控）。
+
 ---
 
 ## 2. 核心 PMU：架构事件（48 个，raw ID 实测自 sysfs）
