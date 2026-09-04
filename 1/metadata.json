@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1P8ZE56YXS1MFM5GS69HM2N",
+  "session_id": "1d1a958f-6d57-41ce-8183-1c28085a24fe",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-04T13:15:55.46637162Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "GLM-5.3[1m]",
+  "turn_id": "9f816341cf01",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 14893287,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 73232,
+    "api_call_count": 143
+  },
+  "session_metrics": {
+    "turn_count": 3
+  }
+}
