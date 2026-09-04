@@ -1,0 +1,88 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1NC956PB1A65M9XQZRMVQ9C",
+  "session_id": "08fd91ff-9afd-43e1-8d4d-7dea176166ca",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-04T04:54:25.16866096Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/cpu/kunpeng920_microarchitecture.md",
+    "docs/cpu/kunpeng920_pmu_events.md"
+  ],
+  "agent": "Claude Code",
+  "model": "glm-5.3",
+  "turn_id": "cf8324f85308",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 4753708,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 23218,
+    "api_call_count": 82
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-planning-with-files-2026-09-04T04:03:59.73767955Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "planning-with-files"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "cf8324f85308",
+      "timestamp": "2026-09-04T04:03:59.73767955Z",
+      "native": {
+        "command": "/planning-with-files"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/planning-with-files",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "initial_attribution": {
+    "calculated_at": "2026-09-04T04:54:25.09663534Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 382,
+    "human_modified": 3,
+    "human_removed": 0,
+    "total_committed": 382,
+    "total_lines_changed": 385,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2885,
+      "user_lines_removed": 2,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/.active_plan": 1,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/findings.md": 69,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/progress.md": 43,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/task_plan.md": 77,
+        "CLAUDE.md": 1,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "http.log": 1,
+        "patch.py": 23,
+        "seeds/gem5/sdc_probe_workload_d6.c": 118,
+        "test.log": 859
+      },
+      "user_removed_per_file": {
+        ".planning/.active_plan": 1,
+        "CLAUDE.md": 1
+      }
+    }
+  ]
+}
