@@ -55,10 +55,15 @@
 - 全程 `set -euo pipefail`；每步前后打时间戳与耗时。
 
 **验证命令**（Task 1 完成时全部真实执行并引用输出）：
-1. `bash -n scripts/run_e2e.sh` — 语法检查
-2. `bash scripts/run_e2e.sh --dry-run` — dry-run 打印命令序列（不执行，无副作用）
-3. `bash scripts/run_e2e.sh --scan-mode local --duration 10s --skip-mutation` — 真实小规模端到端（种子已编好、语料已在：build_seeds + build_sdc_corpus + 本机 orchestrator 10s）
-4. 回归：`bash scripts/ci_verify.sh` — 五项 gate 不退化
+- [x] 1. `bash -n scripts/run_e2e.sh` — 语法检查 → SYNTAX_OK
+- [x] 2. `bash scripts/run_e2e.sh --dry-run` — dry-run 打印命令序列（local/distributed/loop=2 三模式核对）→ 命令序列正确
+- [x] 3. `bash scripts/run_e2e.sh --scan-mode local --duration 10s --skip-mutation --feedback hw` — 真实小规模端到端 → 五步全通；hw_scan `play_count=192, issues_detected=0, orch_rc=0`；feedback 诚实空转（total_hits=0, 健康硅片预期）
+- [x] 4. 回归：`bash scripts/ci_verify.sh` — `20 通过, 0 失败 CI PASSED`
+
+实施中真实暴露并修复的三处（诚实记录）：
+1. timeout 裸 duration 满负载收尾被误杀 rc=124 → 余量 +60s（hw_scan.py 同口径）
+2. hw_scan `--max-cpus` 用 nproc-8=120 超出 `MAX_CPUS_HARD_LIMIT=64` 红线 → 上限钳到 64
+3. bash `$(( $(cmd) + 60 ))` 嵌套替换语法错误 → 中间变量
 
 **Commit**: `feat(scripts): run_e2e.sh 一键式端到端总控——五步脚本链单命令串联+loop+MCE红线防护`
 
@@ -67,7 +72,7 @@
 **文件**：`README.md`（§4 一键式节开头改为 run_e2e.sh 单命令，五步明细降为"内部步骤"）、`tools/sdc_pipeline/README.md`（演进表加一行）、`docs/superpowers/plans/2026-09-04-sdc-e2e-master-script.md`（勾选全部 checkbox）。
 
 **验证命令**：
-1. README 中引用的 `scripts/run_e2e.sh` 存在且可执行
-2. `python3 -m pytest tools/sdc_pipeline/ -q` 不退化（89 项）
+- [x] 1. README 中引用的 `scripts/run_e2e.sh` 存在且可执行
+- [x] 2. `python3 -m pytest tools/sdc_pipeline/ -q` 不退化（89 项）
 
 **Commit**: `docs(readme): 一键式端到端接线 run_e2e.sh——单命令流程+参数说明`

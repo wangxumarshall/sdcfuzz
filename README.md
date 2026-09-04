@@ -110,7 +110,22 @@ seeds/e1_carry_chain.S  ──as/objcopy──▶  seeds/bin/e1_carry_chain.bin
 
 ## 4. 一键式端到端 (快速开始)
 
-以下脚本链覆盖"种子 → 变异 → 语料 → 真机 → 反馈”全流程。所有脚本已内置 MCE 红线 (build `--jobs=32`, fuzz/orchestrator `-j=10`/`--max_cpus`, gem5 并行 ≤4)。
+**单命令全流程** (总控脚本 `scripts/run_e2e.sh`, 串联下方五步)：
+
+```bash
+# 本机 60s 扫描 (默认)
+bash scripts/run_e2e.sh
+
+# 常用变体
+bash scripts/run_e2e.sh --dry-run                          # 只打印命令序列不执行
+bash scripts/run_e2e.sh --scan-mode distributed --duration 5m   # 3 板分布式
+bash scripts/run_e2e.sh --loop 3 --duration 2m             # 3 轮演化迭代 (命中→回灌→再变异)
+bash scripts/run_e2e.sh --skip-mutation --duration 10s     # 用现有语料直接扫
+```
+
+参数：`--scan-mode local|distributed`、`--duration` (30s/5m/8h)、`--loop N`、`--num-runs` (Centipede 变异数)、`--no-stress`、`--feedback auto|legacy|hw|none`、`--skip-mutation`、`--dry-run`。产物与各步日志落 `output/e2e/<run_id>/` (含 manifest.json)。fail-fast: 任一步真实退出码非零即停。
+
+以下五步是总控内部的明细 (也可单独调用)。所有脚本已内置 MCE 红线 (build `--jobs=32`, fuzz/orchestrator `-j=10`/`--max_cpus`, gem5 并行 ≤4)。
 
 前置 (一次性)： [docs/AArch64_Deployment.md](docs/AArch64_Deployment.md) §1–§3 — clang builtin 软链, MODULE.bazel 镜像改写, lss 本地 http 服务, Kunpeng→NeoverseN1 平台映射。验证平台被识别：
 
