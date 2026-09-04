@@ -1,0 +1,429 @@
+<?xml version="1.0" ?>
+<!--
+  =====================================================================
+  McPAT configuration: HiSilicon TaiShan V110 core (Kunpeng 920)
+  =====================================================================
+  Target: ARM TaiShan V110, the custom 4-wide OoO core of Kunpeng 920
+          (this repo's host: TaiShan 200 model 2280, 2 sockets x 64 cores,
+           4 NUMA nodes x 32 cores, 2.6 GHz max).
+
+  *** TECHNOLOGY NODE APPROXIMATION ***
+  Actual silicon: TSMC 7nm HPC. McPAT 1.3's CACTI technology library
+  supports only 180/90/65/45/32/22 nm (the 16nm branch is commented out;
+  anything below 22nm exits with "Invalid technology nodes"). Therefore
+  this model uses the closest available node, 22nm, and the power/area
+  numbers are OVERESTIMATES (7nm would be considerably lower power and
+  area). All absolute watts must be treated as rough approximations;
+  relative component breakdowns are more trustworthy than absolutes.
+
+  Parameter sources:
+   - docs/superpowers/plans/2026-08-20-sdc/kunpeng.md (project doc)
+   - Chips and Cheese, "Huawei's Kunpeng 920 and TaiShan v110 CPU
+     Architecture" (2025-07-22), measured capacities:
+       GPR rename capacity 112, FPR 96, Flags 32,
+       scheduler ~32-33 entries per (ALU/MEM/FPV) unified scheduler.
+
+  Known modeling limitations (beyond the node approximation):
+   1. L3 modeled as 1MB-per-core private (per instruction). Real chip:
+      32MB shared per compute die (4 NUMA-node host shows 32MB/numa-node,
+      15-way, 64B line, shared by 32 cores => 1MB/core average), sliced
+      per 4-core cluster (CCL), Shared/Private/Partition modes, ~36 cycle
+      latency in partition mode. McPAT cannot express cluster-sliced
+      partially-shared L3, so private 1MB per core is the honest
+      approximation requested by the task.
+   2. L2 TLB (1024-entry, 11-cycle hit) is not directly modelable in
+      McPAT 1.3 (only iTLB/dTLB entries per core are). The L1 iTLB and
+      dTLB are set to the real 32 entries each.
+   3. McPAT's branch predictor model is a tournament (local+global+
+      chooser) predictor with a separate BTB. V110's real "two-level
+      dynamic predictor" + 64-entry BTB + 31-entry RAS + indirect
+      predictor (~256 targets) is approximated with the tournament
+      structure sized to plausible values; only BTB(64) and RAS(31) are
+      measured facts.
+   4. Dual-FSU (FP32 FMA x2 ports 128-bit, FP64 quarter-rate) is
+      approximated with FPU_per_core=2; McPAT has no quarter-rate
+      concept.
+   5. Statistics below are a synthetic steady-state integer workload
+      profile (per 100k cycles, ~IPC 2.0), NOT measured silicon counters.
+      They are placeholders for future gem5/silicon-driven replacement.
+
+  Based on: McPAT's ARM_A9_2GHz.xml (template), heavily reparametrized.
+  =====================================================================
+-->
+<component id="root" name="root">
+	<component id="system" name="system">
+		<!-- Single core modeled (homogeneous); number_of_cores=1 keeps the
+		     output a per-core baseline. Scale externally for 64c/128c. -->
+		<param name="number_of_cores" value="1"/>
+		<param name="number_of_L1Directories" value="0"/>
+		<param name="number_of_L2Directories" value="0"/>
+		<!-- NOTE: McPAT's XML parser unconditionally expects one L1Directory
+		     component node below (even when number_of_L1Directories=0 and it
+		     contributes no power). Same for L2Directory. -->
+		<param name="number_of_L2s" value="1"/><!-- private L2 per core -->
+		<param name="Private_L2" value="1"/><!--1 Private, 0 shared/coherent -->
+		<param name="number_of_L3s" value="1"/><!-- 1MB private approximation (see header) -->
+		<param name="number_of_NoCs" value="0"/>
+		<param name="homogeneous_cores" value="1"/>
+		<param name="homogeneous_L2s" value="1"/>
+		<param name="homogeneous_L1Directories" value="1"/>
+		<param name="homogeneous_L2Directories" value="1"/>
+		<param name="homogeneous_L3s" value="1"/>
+		<param name="homogeneous_ccs" value="1"/>
+		<param name="homogeneous_NoCs" value="1"/>
+		<!-- 7nm real; 22nm is the closest McPAT-supported node (approximation) -->
+		<param name="core_tech_node" value="22"/><!-- nm -->
+		<param name="target_core_clockrate" value="2600"/><!--MHz, host max freq -->
+		<param name="temperature" value="340"/><!-- Kelvin -->
+		<param name="number_cache_levels" value="3"/>
+		<param name="interconnect_projection_type" value="1"/><!--0: aggressive; 1: conservative wire -->
+		<param name="device_type" value="2"/><!--0: HP; 1: LSTP; 2: LOP (low operating power, server-class choice) -->
+		<param name="longer_channel_device" value="1"/><!-- 0 no use; 1 use when possible -->
+		<param name="Embedded" value="1"/><!-- embedded/ARM-class core -->
+		<param name="opt_clockrate" value="1"/>
+		<param name="machine_bits" value="64"/>
+		<param name="virtual_address_width" value="48"/>
+		<param name="physical_address_width" value="48"/>
+		<param name="virtual_memory_page_size" value="4096"/>
+		<stat name="total_cycles" value="100000"/>
+		<stat name="idle_cycles" value="0"/>
+		<stat name="busy_cycles"  value="100000"/>
+
+		<!-- *********************** core0: TaiShan V110 ******************* -->
+		<component id="system.core0" name="core0">
+			<!-- Core property -->
+			<param name="clock_rate" value="2600"/>
+			<param name="opt_local" value="0"/>
+			<param name="instruction_length" value="32"/>
+			<param name="opcode_width" value="7"/>
+			<param name="x86" value="0"/>
+			<param name="micro_opcode_width" value="8"/>
+			<param name="machine_type" value="0"/>
+			<!-- inorder/OoO; 1 inorder; 0 OOO. V110 is 4-wide OoO. -->
+			<param name="number_hardware_threads" value="1"/>
+			<!-- V110: 4-wide fetch/decode/issue/commit -->
+			<param name="fetch_width" value="4"/>
+			<param name="number_instruction_fetch_ports" value="1"/>
+			<param name="decode_width" value="4"/>
+			<param name="issue_width" value="4"/>
+			<param name="peak_issue_width" value="8"/>
+			<!-- 3 ALU + 1 MUL/DIV int ports + 2 AGU + 2 FSU = 8 peak issue -->
+			<param name="commit_width" value="4"/>
+			<!-- dual FSU: FP issue width 2 -->
+			<param name="fp_issue_width" value="2"/>
+			<param name="prediction_width" value="1"/>
+			<param name="pipelines_per_core" value="1,1"/>
+			<!-- V110 pipeline depth is not publicly documented; ~12-15 stages
+			     typical for a 2.6GHz 4-wide OoO. 13,13 is an estimate. -->
+			<param name="pipeline_depth" value="13,13"/>
+			<!-- issue and exe units -->
+			<!-- V110: 3x simple ALU (add/bitwise), branch can use 2 of them -->
+			<param name="ALU_per_core" value="3"/>
+			<!-- 1x complex port (multiply 4-cycle, divide) -->
+			<param name="MUL_per_core" value="1"/>
+			<!-- dual-pipe FSU (FP32 FMA 2 ports 128-bit; FP64 quarter-rate) -->
+			<param name="FPU_per_core" value="2"/>
+			<!-- buffers -->
+			<param name="instruction_buffer_size" value="64"/>
+			<!-- 4-wide fetch, deep speculation => 64-entry IF buffer estimate -->
+			<param name="decoded_stream_buffer_size" value="32"/>
+			<!-- PRF-based OoO, unified schedulers -->
+			<param name="instruction_window_scheme" value="0"/><!-- 0 PHYREG based, 1 RSBASED -->
+			<!-- V110: 3 unified schedulers (ALU/MEM/FPV) ~33 entries each.
+			     McPAT splits int vs fp windows; 33 int + 33 fp+vec approximates
+			     the ALU+MEM scheduler pair and the FPV scheduler. -->
+			<param name="instruction_window_size" value="33"/>
+			<param name="fp_instruction_window_size" value="33"/>
+			<!-- ROB: not publicly documented; "similar to Goldmont Plus
+			     (128 entries)" per Chips and Cheese; 128 is the estimate. -->
+			<param name="ROB_size" value="128"/>
+			<!-- registers: AArch64 = 31 GPR + 1 zero / 32 FPR.
+			     Physical: GPR rename capacity measured 112; FPR 96;
+			     flags rename ~31 (see header note). -->
+			<param name="archi_Regs_IRF_size" value="32"/>
+			<param name="archi_Regs_FRF_size" value="32"/>
+			<param name="phy_Regs_IRF_size" value="112"/>
+			<param name="phy_Regs_FRF_size" value="96"/>
+			<!-- rename logic: RAM-based (PRF with free list), move elimination -->
+			<param name="rename_scheme" value="0"/>
+			<param name="checkpoint_depth" value="4"/>
+			<param name="register_windows_size" value="0"/>
+			<!-- V110: 2x AGU, parallel load/store, 2x128-bit/cycle L1D -->
+			<param name="LSU_order" value="outorder"/>
+			<param name="store_buffer_size" value="32"/>
+			<param name="load_buffer_size" value="32"/>
+			<!-- 2 memory ops per cycle (2x128-bit accesses) -->
+			<param name="memory_ports" value="2"/>
+			<!-- 31-entry return address stack (measured) -->
+			<param name="RAS_size" value="31"/>
+
+			<!-- general stats: synthetic integer steady-state profile -->
+			<stat name="total_instructions" value="200000"/>
+			<stat name="int_instructions" value="150000"/>
+			<stat name="fp_instructions" value="10000"/>
+			<stat name="branch_instructions" value="30000"/>
+			<stat name="branch_mispredictions" value="2000"/>
+			<stat name="load_instructions" value="40000"/>
+			<stat name="store_instructions" value="20000"/>
+			<stat name="committed_instructions" value="200000"/>
+			<stat name="committed_int_instructions" value="150000"/>
+			<stat name="committed_fp_instructions" value="10000"/>
+			<stat name="pipeline_duty_cycle" value="0.5"/><!-- IPC 2.0 / peak 4 -->
+			<stat name="total_cycles" value="100000"/>
+			<stat name="idle_cycles" value="0"/>
+			<stat name="busy_cycles"  value="100000"/>
+			<!-- ROB stats: 200k committed -> 200k writes, ~2x reads -->
+			<stat name="ROB_reads" value="400000"/>
+			<stat name="ROB_writes" value="200000"/>
+			<!-- RAT accesses: 2 source reads + 1 dest write per inst -->
+			<stat name="rename_reads" value="400000"/>
+			<stat name="rename_writes" value="200000"/>
+			<stat name="fp_rename_reads" value="20000"/>
+			<stat name="fp_rename_writes" value="10000"/>
+			<!-- scheduler window stats -->
+			<stat name="inst_window_reads" value="300000"/>
+			<stat name="inst_window_writes" value="150000"/>
+			<stat name="inst_window_wakeup_accesses" value="300000"/>
+			<stat name="fp_inst_window_reads" value="20000"/>
+			<stat name="fp_inst_window_writes" value="10000"/>
+			<stat name="fp_inst_window_wakeup_accesses" value="20000"/>
+			<!-- RF accesses: 2 reads + 1 write per int inst roughly -->
+			<stat name="int_regfile_reads" value="300000"/>
+			<stat name="float_regfile_reads" value="20000"/>
+			<stat name="int_regfile_writes" value="150000"/>
+			<stat name="float_regfile_writes" value="10000"/>
+			<stat name="function_calls" value="3000"/>
+			<stat name="context_switches" value="10"/>
+			<!-- ALU stats: 150k int insts -> ialu; mul 4-cycle port;
+			     fpu accesses incl. both FSU pipes -->
+			<stat name="ialu_accesses" value="150000"/>
+			<stat name="fpu_accesses" value="10000"/>
+			<stat name="mul_accesses" value="20000"/>
+			<stat name="cdb_alu_accesses" value="150000"/>
+			<stat name="cdb_mul_accesses" value="20000"/>
+			<stat name="cdb_fpu_accesses" value="10000"/>
+			<!-- duty cycles for peak power computation -->
+			<stat name="IFU_duty_cycle" value="0.9"/>
+			<stat name="BR_duty_cycle" value="0.72"/>
+			<stat name="LSU_duty_cycle" value="0.71"/>
+			<stat name="MemManU_I_duty_cycle" value="0.9"/>
+			<stat name="MemManU_D_duty_cycle" value="0.71"/>
+			<stat name="ALU_duty_cycle" value="0.76"/>
+			<stat name="MUL_duty_cycle" value="0.82"/>
+			<stat name="FPU_duty_cycle" value="0.41"/>
+			<!-- dual FSU but FP minority in integer workload -->
+			<stat name="ALU_cdb_duty_cycle" value="0.76"/>
+			<stat name="MUL_cdb_duty_cycle" value="0.82"/>
+			<stat name="FPU_cdb_duty_cycle" value="0.41"/>
+
+			<!-- branch predictor: tournament structure approximation.
+			     Two-level dynamic per Huawei; sizes are estimates except
+			     BTB(64)/RAS(31) which are measured. -->
+			<param name="number_of_BPT" value="1"/>
+			<component id="system.core0.predictor" name="PBT">
+				<param name="local_predictor_size" value="10,3"/>
+				<param name="local_predictor_entries" value="128"/>
+				<param name="global_predictor_entries" value="4096"/>
+				<param name="global_predictor_bits" value="2"/>
+				<param name="chooser_predictor_entries" value="4096"/>
+				<param name="chooser_predictor_bits" value="2"/>
+			</component>
+
+			<!-- iTLB: 32-entry (measured); L2 TLB 1024 not modelable -->
+			<component id="system.core0.itlb" name="itlb">
+				<param name="number_entries" value="32"/>
+				<stat name="total_accesses" value="200000"/>
+				<stat name="total_misses" value="20"/>
+				<stat name="conflicts" value="0"/>
+			</component>
+
+			<!-- L1I: 64KB, 4-way, 64B line (measured/official).
+			     Config: capacity,block_width,assoc,banks,throughput,latency,
+			     output_width,policy. Fetch 4 insts(16B)/cycle; hit latency ~3
+			     cycles (taken-branch redirect within 32KB window is 3 cycles). -->
+			<component id="system.core0.icache" name="icache">
+				<param name="icache_config" value="65536,64,4,1,1,3,16,0"/>
+				<param name="buffer_sizes" value="8, 8, 8, 8"/>
+				<stat name="read_accesses" value="200000"/>
+				<stat name="read_misses" value="500"/>
+				<stat name="conflicts" value="0"/>
+			</component>
+
+			<!-- dTLB: 32-entry fully associative (measured) -->
+			<component id="system.core0.dtlb" name="dtlb">
+				<param name="number_entries" value="32"/>
+				<stat name="total_accesses" value="60000"/>
+				<stat name="total_misses" value="100"/>
+				<stat name="conflicts" value="0"/>
+			</component>
+
+			<!-- L1D: 64KB, 4-way, 64B line, 2x128-bit accesses/cycle
+			     (2 loads or 1 load + 1 store), load-to-use 4 cycles.
+			     Dual-pumped bank modeled via 2 banks. Write-back policy. -->
+			<component id="system.core0.dcache" name="dcache">
+				<param name="dcache_config" value="65536,64,4,2,1,4,16,1"/>
+				<param name="buffer_sizes" value="8, 8, 8, 8"/>
+				<stat name="read_accesses" value="40000"/>
+				<stat name="write_accesses" value="20000"/>
+				<stat name="read_misses" value="800"/>
+				<stat name="write_misses" value="400"/>
+				<stat name="conflicts" value="0"/>
+			</component>
+
+			<!-- BTB: 64 entries (measured), 1-cycle taken targets.
+			     Config: capacity,block_width,assoc,bank,throughput,latency.
+			     NOTE: block_width=2 is a CACTI modeling granularity only - (dash)
+			     McPAT/CACTI requires sets-per-way (=cap/(block*assoc)) >= 16
+			     (MINSUBARRAYROWS); with cap=64,assoc=2 the minimum block is 2B.
+			     Real BTB entry width (tag+target) is not the XML block_width. -->
+			<param name="number_of_BTB" value="1"/>
+			<component id="system.core0.BTB" name="BTB">
+				<param name="BTB_config" value="64,2,2, 1, 1,1"/>
+				<stat name="read_accesses" value="30000"/>
+				<stat name="write_accesses" value="0"/>
+			</component>
+		</component>
+
+		<!-- Placeholder L1Directory node: parsed but not modeled
+		     (number_of_L1Directories=0 above). V110 coherence is handled
+		     by the cluster-level HHA/LLC tag, outside this per-core model. -->
+		<component id="system.L1Directory0" name="L1Directory0">
+			<param name="Directory_type" value="0"/>
+			<param name="Dir_config" value="64,16,4,1, 4, 4, 8"/>
+			<param name="buffer_sizes" value="8, 8, 8, 8"/>
+			<param name="clockrate" value="2600"/>
+			<param name="ports" value="1,1,1"/>
+			<param name="device_type" value="2"/>
+			<stat name="read_accesses" value="0"/>
+			<stat name="write_accesses" value="0"/>
+			<stat name="read_misses" value="0"/>
+			<stat name="write_misses" value="0"/>
+			<stat name="conflicts" value="0"/>
+			<stat name="duty_cycle" value="0.0"/>
+		</component>
+
+		<!-- Placeholder L2Directory node: parsed but not modeled
+		     (number_of_L2Directories=0 above). -->
+		<component id="system.L2Directory0" name="L2Directory0">
+			<param name="Directory_type" value="1"/>
+			<param name="Dir_config" value="64,16,4,1, 2, 100"/>
+			<param name="buffer_sizes" value="8, 8, 8, 8"/>
+			<param name="clockrate" value="2600"/>
+			<param name="ports" value="1,1,1"/>
+			<param name="device_type" value="2"/>
+			<stat name="read_accesses" value="0"/>
+			<stat name="write_accesses" value="0"/>
+			<stat name="read_misses" value="0"/>
+			<stat name="write_misses" value="0"/>
+			<stat name="conflicts" value="0"/>
+			<stat name="duty_cycle" value="0.0"/>
+		</component>
+
+		<!-- Private L2: 512KB, 10-cycle, ~20-32 B/cycle to L1D.
+		     Real chip reports 512KB 8-way (sysfs on this host);
+		     config uses measured 8-way, 64B line, latency 10 cycles.
+		     Clock: core-domain (private L2 at core clock on Kunpeng 920). -->
+		<component id="system.L20" name="L20">
+			<param name="L2_config" value="524288,64, 8, 2, 1, 10, 32, 1"/>
+			<!-- capacity,block_width,assoc,bank,throughput,latency,output_width,policy -->
+			<param name="buffer_sizes" value="16, 16, 16, 16"/>
+			<param name="clockrate" value="2600"/>
+			<param name="ports" value="1,1,1"/>
+			<param name="device_type" value="2"/>
+			<stat name="read_accesses" value="1300"/>
+			<stat name="write_accesses" value="400"/>
+			<stat name="read_misses" value="200"/>
+			<stat name="write_misses" value="60"/>
+			<stat name="conflicts" value="0"/>
+			<stat name="duty_cycle" value="0.05"/>
+		</component>
+
+		<!-- L3: 1MB private approximation of the cluster-sliced shared LLC
+		     (see header limitation #1). Real: ~36 cycle latency in partition
+		     mode, 15-way 32MB/32-core slice group per NUMA node on this
+		     host. Modeled at core clock, 64B line, 16-way, ~36 cycle. -->
+		<component id="system.L30" name="L30">
+			<param name="L3_config" value="1048576,64,16, 2, 1, 36, 32, 1"/>
+			<!-- capacity,block_width,assoc,bank,throughput,latency,output_width,policy -->
+			<param name="clockrate" value="2600"/>
+			<param name="ports" value="1,1,1"/>
+			<param name="device_type" value="2"/>
+			<param name="buffer_sizes" value="16, 16, 16, 16"/>
+			<stat name="read_accesses" value="260"/>
+			<stat name="write_accesses" value="60"/>
+			<stat name="read_misses" value="80"/>
+			<stat name="write_misses" value="20"/>
+			<stat name="conflicts" value="0"/>
+			<stat name="duty_cycle" value="0.01"/>
+		</component>
+
+		<!-- Placeholder NoC node: parsed but not modeled (number_of_NoCs=0).
+		     The real Kunpeng 920 bufferless dual-ring NoC is outside the
+		     per-core V110 scope. -->
+		<component id="system.NoC0" name="noc0">
+			<param name="clockrate" value="2600"/>
+			<param name="type" value="0"/>
+			<param name="horizontal_nodes" value="1"/>
+			<param name="vertical_nodes" value="1"/>
+			<param name="has_global_link" value="0"/>
+			<param name="link_throughput" value="1"/>
+			<param name="link_latency" value="1"/>
+			<param name="input_ports" value="1"/>
+			<param name="output_ports" value="1"/>
+			<param name="flit_bits" value="64"/>
+			<param name="chip_coverage" value="1"/>
+			<param name="link_routing_over_percentage" value="0.5"/>
+			<stat name="total_accesses" value="0"/>
+			<stat name="duty_cycle" value="0.0"/>
+		</component>
+
+		<!-- Memory controller / IO off (per-core core+cache baseline).
+		     Kunpeng 920 SoC-level DDR4-2933 8ch/controllers, PCIe4, RoCE
+		     are outside the scope of a per-core V110 model. -->
+		<component id="system.mc" name="mc">
+			<param name="type" value="1"/>
+			<param name="mc_clock" value="400"/>
+			<param name="peak_transfer_rate" value="6400"/>
+			<param name="block_size" value="64"/>
+			<param name="number_mcs" value="0"/>
+			<param name="memory_channels_per_mc" value="1"/>
+			<param name="number_ranks" value="0"/>
+			<param name="req_window_size_per_channel" value="32"/>
+			<param name="IO_buffer_size_per_channel" value="32"/>
+			<param name="databus_width" value="128"/>
+			<param name="addressbus_width" value="51"/>
+			<stat name="memory_accesses" value="0"/>
+			<stat name="memory_reads" value="0"/>
+			<stat name="memory_writes" value="0"/>
+			<param name="withPHY" value="1"/>
+		</component>
+
+		<component id="system.niu" name="niu">
+			<param name="type" value="1"/>
+			<param name="clockrate" value="350"/>
+			<param name="number_units" value="0"/>
+			<stat name="duty_cycle" value="1.0"/>
+			<stat name="total_load_perc" value="0.7"/>
+		</component>
+
+		<component id="system.pcie" name="pcie">
+			<param name="type" value="1"/>
+			<param name="withPHY" value="1"/>
+			<param name="clockrate" value="350"/>
+			<param name="number_units" value="0"/>
+			<param name="num_channels" value="8"/>
+			<stat name="duty_cycle" value="1.0"/>
+			<stat name="total_load_perc" value="0.7"/>
+		</component>
+
+		<component id="system.flashc" name="flashc">
+			<param name="number_flashcs" value="0"/>
+			<param name="type" value="1"/>
+			<param name="withPHY" value="1"/>
+			<param name="peak_transfer_rate" value="200"/>
+			<stat name="duty_cycle" value="1.0"/>
+			<stat name="total_load_perc" value="0.7"/>
+		</component>
+
+	</component>
+</component>

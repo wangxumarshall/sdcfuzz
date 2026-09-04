@@ -29,14 +29,14 @@ http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "ht
 
 http_archive(
     name = "lss",
-    build_file = "@silifuzz//:third_party/BUILD.lss",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.lss",
     url = "http://127.0.0.1:8000/lss.tar.gz",
     sha256 = "360db5544e22a8d43b7dee8c51ae255810fb81c44e3bc92133f2e0b76d40544f",
 )
 
 new_git_repository(
     name = "cityhash",
-    build_file = "@silifuzz//:third_party/BUILD.cityhash",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.cityhash",
     commit = "8af9b8c2b889d80c22d6bc26ba0df1afb79a30db",
     patch_cmds = [
         # Running "configure" creates the config.h file needed for this library.
@@ -51,7 +51,7 @@ new_git_repository(
 
 new_git_repository(
     name = "mbuild",
-    build_file = "@silifuzz//:third_party/BUILD.mbuild",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.mbuild",
     commit = "75cb46e6536758f1a3cdb3d6bd83a4a9fd0338bb",
     remote = "https://ghproxy.net/https://github.com/intelxed/mbuild",
     shallow_since = "1659030943 +0300",
@@ -59,7 +59,7 @@ new_git_repository(
 
 new_git_repository(
     name = "libxed",
-    build_file = "@silifuzz//:third_party/BUILD.libxed",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.libxed",
     commit = "dc6bdbe036515c7ef55d3b2d50bafc5232bfe534",
     patch_cmds = [
         """sed -i -e 's/from genutil/from pysrc.genutil/' pysrc/*.py""",
@@ -70,7 +70,7 @@ new_git_repository(
 
 http_archive(
     name = "liblzma",
-    build_file = "@silifuzz//:third_party/BUILD.liblzma",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.liblzma",
     sha256 = "f6f4910fd033078738bd82bfba4f49219d03b17eb0794eb91efbae419f4aba10",
     strip_prefix = "xz-5.2.5",
     urls = [
@@ -81,7 +81,7 @@ http_archive(
 
 http_archive(
     name = "typing_extensions",
-    build_file = "@silifuzz//:third_party/BUILD.typing_extensions",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.typing_extensions",
     strip_prefix = "typing_extensions-4.12.2/src",
     urls = [
         "https://ghproxy.net/https://github.com/python/typing_extensions/archive/4.12.2.tar.gz",
@@ -91,7 +91,7 @@ http_archive(
 # Capstone disassembler
 new_git_repository(
     name = "capstone",
-    build_file = "@silifuzz//:third_party/BUILD.capstone",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.capstone",
     commit = "702dbe78ca116de8ec65f122d9202c2c1f4a2b4c",
     remote = "https://ghproxy.net/https://github.com/capstone-engine/capstone.git",
 )
@@ -99,7 +99,7 @@ new_git_repository(
 # Unicorn for the proxies
 new_git_repository(
     name = "unicorn",
-    build_file = "@silifuzz//:third_party/BUILD.unicorn",
+    build_file = "@silifuzz//:third_party/bazel_build_files/BUILD.unicorn",
     commit = "d4b92485b1a228fb003e1218e42f6c778c655809",
     patch_cmds = [
         # crc32 and crc32c functions are prefixed with "unicorn_" to avoid linking errors from
