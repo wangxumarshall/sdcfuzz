@@ -173,9 +173,13 @@ HiSilicon 固件对 EL0 可读 ID 寄存器部分字段未完整实现。**可�
 | EDAC | `ghes_edac`，mc0 总 32768 MB；2 DIMM 枚举（SOCKET0 CH0 DIMM0 16GB + SOCKET1 CH0 DIMM1 16GB），Registered-DDR4，SECDED | **DDR4 RDIMM + SECDED**：单 bit 可纠正、双 bit 不可纠正；ce/ue 计数当前为 0（8-25 重启以来） |
 | **MPAM** | 1488 字节表 | ARM 内存分区监控（Memory Partitioning & Monitoring）——平台具备缓存/内存带宽 QoS 硬件分区能力，与 L3 partition 模式互补 |
 | SDEI | 48 字节 | 固件软件委派异常接口（REE 不可屏蔽事件通知） |
-| 中断控制器 | GICv3 + ITS-MSI（`/proc/interrupts` 实证），KVM vgic 在用 | LPI 支持完整 |
+| 中断控制器 | GICv3（+GICv4.1 特性）：16 PPI、640 SPI、0 Extended SPI、DirectLPI、**NMI 不支持**（GICD_TYPER）、split EOI/Deactivate；**2 个 ITS 按 socket 绑定**（ITS0↔node0、ITS1↔node2，SRAT），每个 65536 Devices + 65536 VCPU 表（flat） | LPI 支持完整；内核日志为证 |
 | cpufreq | `cppc_cpufreq`，4 个 policy 域 = 每 NUMA node 一域（32 核/域），performance governor，2.6 GHz 固定 | **调频粒度是 die 级**——同 die 32 核共享一个频率决策 |
 | 定时器 | `cntvct_el0` = 100.000 MHz（实测校准，26.0 cyc/tick @2.6GHz） | 用户态低开销计时可用 |
+
+> 普通用户**不可及**的项（诚实记录）：PPTT 二进制 root-only（0400）无法解码——但内核
+> 已消费 PPTT 并输出到 sysfs topology（`cluster_id`/`physical_package_id` 等，§2 已有等价信息）；
+> `/proc/ras` 此内核不存在；ESR/ERR（RAS 错误记录寄存器）EL1-only，错误上报走 ghes_edac。
 
 ---
 
@@ -275,6 +279,7 @@ FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/b
 | STR 同一行 | 1.00 | store buffer 吸收 |
 | DC ZVA（64B） | 4.02 | |
 | B.cond not-taken | 3.01 | 分支吞吐 3 cyc/个 |
+| taken `b` 密集链（50 连全预测命中） | **5.8** | **硬件计数器交叉验证**（`br_retired`=4.06M / `cpu_cycles`=23.5M）。与公开"taken 单周期零气泡"矛盾——密集连续 taken 分支是取指重定向/BTB 的最坏情况口径，不代表稀疏分支代价 |
 | NOP | 0.26 | ≈3.9 IPC，**4 宽退休直接实证** |
 
 ### 5.5 访存带宽阶梯（2026-09-04 实测补充）
