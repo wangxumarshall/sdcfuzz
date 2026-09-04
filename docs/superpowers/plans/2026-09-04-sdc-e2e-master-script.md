@@ -65,6 +65,17 @@
 2. hw_scan `--max-cpus` 用 nproc-8=120 超出 `MAX_CPUS_HARD_LIMIT=64` 红线 → 上限钳到 64
 3. bash `$(( $(cmd) + 60 ))` 嵌套替换语法错误 → 中间变量
 
+## 全量端到端验证矩阵（2026-09-04 实测，commit 08c4d56 后状态）
+
+| # | 场景 | 结果 | 关键证据 |
+|---|---|---|---|
+| V1 | 全量 local（含变异 50000 runs，60s 扫描，hw 反馈） | ✅ | 五步全通；hw_scan `play_count=1088, issues_detected=0, orch_rc=0`；反馈诚实空转 |
+| V2 | distributed（4 板部署+扫描+收集，legacy 反馈） | ✅ | 0201 恢复可达，4 板全 done；噪声分类正常（0101 板 598 SIGSEGV-outside-snap 满载噪声、0 真 SDC）；总 SDC=0 |
+| V3 | `--loop 2`（第 2 轮真实走变异→打包→扫描→反馈） | ✅ | 两轮各五步完整执行，非跳过 |
+| V4 | fail-fast 反向（centipede 不可执行） | ✅ | preflight 拦截 + 打印补建命令，exit_code=1 |
+
+**全量验证发现并修复的存量 bug（commit 08c4d56）**：`run_guided_mutation.sh` 阶段 B 用 `--corpus_from_files`，该 flag 是纯导出操作——strace 实证 0 次 fuzz 进程 fork（execve 总数=1），50000 runs 2 秒"完成"实为静默空转。改 `--corpus_dir` 后真实执行（~5 分钟，ft 119314，corp 每 shard 2210-2466），下游 snapshot 产出 104 → **37088**。修复前整条管线的探索上限一直被此 bug 压制。
+
 **Commit**: `feat(scripts): run_e2e.sh 一键式端到端总控——五步脚本链单命令串联+loop+MCE红线防护`
 
 ## Task 2: README §4 接线 + 演进表更新
