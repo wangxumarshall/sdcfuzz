@@ -192,8 +192,10 @@ $ taskset -c 4 perf stat -e cycles,instructions,l1d_cache,l1d_cache_refill,l2d_c
 ```
 
 可用的事件族：`armv8_pmuv3_0`（含 `stall_frontend/backend`、`ll_cache_rd/miss_rd`、
-`inst_spec`、`exe_stall_cycle`、`if_is_stall` 等 Hisilicon 扩展事件）+ topdown L1 指标
-（`bad_speculation` 等）。
+`inst_spec`、`exe_stall_cycle`、`if_is_stall` 等 Hisilicon 扩展事件）。
+**topdown L1 指标（`bad_speculation` 等）不可用**——2026-09-04 复测确认 v110 无
+FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/backend` 近似。
+全部事件名与 raw ID 详见 [kunpeng920_pmu_events.md](kunpeng920_pmu_events.md)。
 
 ### 5.3 Uncore PMU（SDC 环境敏感性实验的现成工具）
 
@@ -206,6 +208,12 @@ $ taskset -c 4 perf stat -e cycles,instructions,l1d_cache,l1d_cache_refill,l2d_c
 
 这给了 SDC"环境干扰→缓存状态→SDC 翻转"链条一个**硬件级的因果观测手段**，
 是设计共享 LLC 干扰实验时的首选仪器。
+
+> ⚠️ **权限更正（2026-09-04 复测）**：uncore 事件在 `perf_event_paranoid=2` 下
+> 普通用户打不开（perf 自动加的 `exclude_kernel=1` 被 hisi uncore 驱动以 EINVAL
+> 拒绝；不加则 EACCES）。需要 root：`sudo sysctl kernel.perf_event_paranoid=1`
+> 或直接以 root 运行 perf。事件清单与 raw ID 全表见
+> [kunpeng920_pmu_events.md](kunpeng920_pmu_events.md)。
 
 ### 5.4 其他系统事实
 
@@ -229,7 +237,8 @@ $ taskset -c 4 perf stat -e cycles,instructions,l1d_cache,l1d_cache_refill,l2d_c
    必须以 128B 为 L3 粒度设计，而非 x86 直觉的 64B；
 4. **L3 partition 模式 + 共享退化**：双核共享数据时 L3 延迟全域 >90 周期——
    设计"压力干扰核 + 受害核共享 L3"的实验时，观测到的慢是**设计使然**，不是故障；
-5. **PMU 完备**：核心 + L3C/HHA/DDRC uncore 全套可用，SDC 论文的环境敏感性
+5. **PMU 完备（核心普通用户即可用；uncore 需 root）**：核心 + L3C/HHA/DDRC uncore
+   全套就绪（uncore 需 `perf_event_paranoid<=1`，见 §5.3 更正），SDC 论文的环境敏感性
    机制分析可直接落地，无需额外仪器；
 6. **无 SVE**（HWCAP 无 sve 位，features 无 sve）：所有 snapshot/工具链不得使用
    SVE 指令，`util/aarch64/sve.*` 的运行时路径在这台机器上不会被触发。
