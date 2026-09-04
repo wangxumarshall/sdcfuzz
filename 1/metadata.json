@@ -1,0 +1,84 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1N8D87XR1YBPSM8APN8V25V",
+  "session_id": "5a284937-6b69-4998-ad54-6c2e6c3bd28c",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-04T03:46:46.14117622Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/experiments/2026-09-04-mcpat-submodule-upgrade.md"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.3[1m]",
+  "turn_id": "ad9dcf8d538c",
+  "checkpoint_transcript_start": 663,
+  "transcript_lines_at_start": 663,
+  "compact_transcript_start": 169,
+  "token_usage": {
+    "input_tokens": 672755,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 2774,
+    "api_call_count": 6
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-planning-with-files-2026-09-04T01:47:06.17469203Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "planning-with-files"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "99ecb5e2cb69",
+      "timestamp": "2026-09-04T01:47:06.17469203Z",
+      "native": {
+        "command": "/planning-with-files"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/planning-with-files",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-planning-with-files-2026-09-04T03:12:55.7799224Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "planning-with-files"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "ad9dcf8d538c",
+      "timestamp": "2026-09-04T03:12:55.7799224Z",
+      "native": {
+        "command": "/planning-with-files"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/planning-with-files",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "initial_attribution": {
+    "calculated_at": "2026-09-04T03:46:46.00188013Z",
+    "agent_lines": 120,
+    "agent_removed": 0,
+    "human_added": 12,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 132,
+    "total_lines_changed": 132,
+    "agent_percentage": 90.9090909090909,
+    "metric_version": 2
+  }
+}
