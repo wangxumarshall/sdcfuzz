@@ -22,7 +22,13 @@
 """
 import os, sys, json, random, subprocess, struct
 
-# 操作数字典 — CSP 定向族 (来自 csp_targeted_generator.py 的实证族)
+# 操作数字典 — (name, init, step) 步进链族。溯源 (2026-09-05 逐值审计):
+#   - 8 族值借自 csp_targeted_generator.CARRY_CHAIN_TARGETED (同名同值);
+#   - cc64_full/cc64_nonzero 是其 cc64_full_zero/cc64_full_nonzero 改名简化;
+#   - 8 族 (alt01_step/golden_step/sparse_walk 等) 为 sdcbench 原创步进链设计
+#     (golden_step=0x9E3779B97F4A7C15 溯源校准实验 sdcbench2.c), CSP 表无对应物。
+#   注意语义差异: CSP 表是 (x1,x2) 操作数对, 本表是 (init,step) 步进对 —
+#   不做强行合并 (两语义塞一张表是假抽象)。
 OPERAND_FAMILIES = [
     ("cc64_full",        0xFFFFFFFFFFFFFFFF, 0x0000000000000001),  # 64位全进位链→0
     ("cc64_nonzero",     0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF),  # 全进位+非零结果
