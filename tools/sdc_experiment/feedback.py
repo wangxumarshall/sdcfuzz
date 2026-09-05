@@ -33,7 +33,14 @@ import os
 import re
 import subprocess
 
-SNAP_TOOL = "/usr/local/bin/snap_tool"
+# snap_tool 优先 bazel-bin 新构建 (认识 arm-kunpeng920 枚举);
+# /usr/local/bin 的 2026-08-25 部署版先于专属 PlatformId (2d04539), 会拒绝
+# --target_platform=arm-kunpeng920 (实测 Illegal value), 仅作 fallback。
+_BAZEL_SNAP_TOOL = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "bazel-bin/tools/snap_tool")
+SNAP_TOOL = _BAZEL_SNAP_TOOL if os.path.isfile(_BAZEL_SNAP_TOOL) \
+    else "/usr/local/bin/snap_tool"
 RUNNER = "/usr/local/bin/reading_runner_main_nolibc"
 
 # sdc_details 行形态 (runner.cc:687, 与 hw_scan.py parse_log 同源):
