@@ -2,7 +2,7 @@
   "cli_version": "0.10.2",
   "checkpoint_id": "01M1RTSKX2GAXQQ2HK2FFD50H7",
   "strategy": "manual-commit",
-  "branch": "refactor/scheme-northstar-alignment",
+  "branch": "feat/sdc-pipeline-framework",
   "checkpoints_count": 2,
   "files_touched": [
     "tools/sdc_pipeline/fault_signatures.py"
