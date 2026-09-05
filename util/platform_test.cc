@@ -162,6 +162,7 @@ const absl::flat_hash_map<PlatformId, ArmMainId> kArmPlatformToCpuId = {
     {PlatformId::kArmNeoverseN2, {0x41, 0xd49, PlatformId::kArmNeoverseN2}},
     {PlatformId::kArmNeoverseN3, {0x41, 0xd8e, PlatformId::kArmNeoverseN3}},
     {PlatformId::kAmpereOne, {0xc0, 0xac3, PlatformId::kAmpereOne}},
+    {PlatformId::kArmKunpeng920, {0x48, 0xd01, PlatformId::kArmKunpeng920}},
 };
 
 TEST(PlatformUtilsAarch, ArmPlatformIdFromMainId) {
