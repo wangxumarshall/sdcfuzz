@@ -3,8 +3,10 @@
   "checkpoint_id": "01M1RTSKX2GAXQQ2HK2FFD50H7",
   "strategy": "manual-commit",
   "branch": "refactor/scheme-northstar-alignment",
-  "checkpoints_count": 1,
-  "files_touched": null,
+  "checkpoints_count": 2,
+  "files_touched": [
+    "tools/sdc_pipeline/fault_signatures.py"
+  ],
   "sessions": [
     {
       "metadata": "/0/metadata.json",
@@ -12,13 +14,27 @@
       "compact_transcript": "/0/transcript.jsonl",
       "content_hash": "/0/content_hash.txt",
       "prompt": "/0/prompt.txt"
+    },
+    {
+      "metadata": "/1/metadata.json",
+      "transcript": "/1/full.jsonl",
+      "compact_transcript": "/1/transcript.jsonl",
+      "content_hash": "/1/content_hash.txt",
+      "prompt": "/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 18713574,
+    "input_tokens": 164173848,
     "cache_creation_tokens": 0,
     "cache_read_tokens": 0,
-    "output_tokens": 50063,
-    "api_call_count": 187
+    "output_tokens": 235346,
+    "api_call_count": 829,
+    "subagent_tokens": {
+      "input_tokens": 0,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 0,
+      "output_tokens": 0,
+      "api_call_count": 0
+    }
   }
 }
