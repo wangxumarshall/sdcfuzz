@@ -135,6 +135,11 @@ namespace silifuzz {
 
 namespace {
 
+// Exit code used when the watchdog terminates the process. Distinct from
+// EXIT_SUCCESS (clean finish) and EXIT_FAILURE (failed snapshots detected) so
+// that external monitors can tell an overrun apart from either.
+constexpr int kWatchdogExitCode = 3;
+
 // Lists all available CPUs according to sched_getaffinity(2).
 std::vector<int> AvailableCpus() {
   std::vector<int> available_cpus;
@@ -162,8 +167,10 @@ CpuExecutionContext* OrchestratorInit(
     absl::Duration watchdog_timeout = deadline - absl::Now() + overrun;
     std::thread watchdog([watchdog_timeout]() {
       absl::SleepFor(watchdog_timeout);
+      // Distinguish watchdog termination from a clean finish: monitors key
+      // off the exit code and EXIT_SUCCESS would hide the overrun.
       ABSL_RAW_LOG(ERROR, "Terminated by watchdog\n");
-      _exit(EXIT_SUCCESS);
+      _exit(kWatchdogExitCode);
     });
     watchdog.detach();
   }

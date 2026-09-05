@@ -75,6 +75,13 @@ void RunnerThread(CpuExecutionContext* ctx, const RunnerThreadArgs& args) {
       args.corpora->shards.size(), args.runner_options.sequential_mode(),
       args.thread_idx);
 
+  // Backoff for runners that die immediately (e.g. missing binary, bad
+  // corpus path). Without this, a fast-failing runner is respawned in a
+  // tight loop and burns a full core doing nothing.
+  constexpr int kMaxConsecutiveFastFailures = 3;
+  int consecutive_fast_failures = 0;
+  absl::Duration fast_failure_backoff = absl::Seconds(1);
+
   int iteration = 0;
   for (iteration = 0; !ctx->ShouldStop() && !args.cpus.empty(); iteration++) {
     absl::Time start_time = absl::Now();
@@ -103,6 +110,26 @@ void RunnerThread(CpuExecutionContext* ctx, const RunnerThreadArgs& args) {
 
     absl::Duration elapsed_time = absl::Now() - start_time;
 
+    // A healthy runner takes at least the process spawn + corpus load time,
+    // so anything under a second is a fast failure. Count consecutive ones
+    // and back off exponentially when they pile up.
+    if (!run_result.execution_result().ok() &&
+        elapsed_time < absl::Seconds(1)) {
+      if (++consecutive_fast_failures >= kMaxConsecutiveFastFailures) {
+        LOG_ERROR("T", args.thread_idx, " runner failed fast ",
+                  consecutive_fast_failures,
+                  " times in a row; backing off for ",
+                  absl::ToInt64Seconds(fast_failure_backoff), "s");
+        absl::SleepFor(fast_failure_backoff);
+        fast_failure_backoff = std::min(fast_failure_backoff * 2,
+                                        absl::Seconds(30));
+      }
+    } else {
+      // Reset the streak on any healthy or slow iteration.
+      consecutive_fast_failures = 0;
+      fast_failure_backoff = absl::Seconds(1);
+    }
+
     std::string log_msg = absl::StrCat(
         "T", args.thread_idx, " cpu: ", target_cpu, " corpus: ", shard.name,
         " time: ", absl::ToInt64Seconds(elapsed_time),
@@ -125,6 +152,13 @@ void RunnerThread(CpuExecutionContext* ctx, const RunnerThreadArgs& args) {
   }
 
   ctx->Stop();
+  const int dropped = ctx->num_dropped_results();
+  if (dropped > 0) {
+    // Results carry failure counts; if any were dropped the final verdict
+    // may be skewed. Make the loss visible on the way out.
+    LOG_ERROR("T", args.thread_idx, " dropped ", dropped,
+              " results due to a full queue; final counts may undercount");
+  }
   VLOG_INFO(0, "T", args.thread_idx, " stopped after ", iteration,
             " iterations");
 }
