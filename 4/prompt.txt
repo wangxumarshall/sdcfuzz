@@ -1,0 +1,5 @@
+/academic-research-skills:academic-paper  深度理解本项目源码和docs及其中的paper，撰写顶会bestpaper，对标silifuzz这篇paper，重点讲清楚基于他做的改进。
+
+---
+
+把论文 翻译成中文
