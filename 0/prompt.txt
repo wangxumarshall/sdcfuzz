@@ -19,3 +19,7 @@ A
 
   按 one-patch-per-unit 纪律，接下来是 C5（kSnapExitAddress 双定义收敛，~5
   行）→ C1 → C3 → C4 → C6。
+
+---
+
+/goal 执行sdcfuzz，全程运行，要生成高sdc检出率的1000个sdc检测序列，你要实时调整策略。
