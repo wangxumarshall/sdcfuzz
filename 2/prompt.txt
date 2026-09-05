@@ -1,0 +1,13 @@
+/academic-research-skills:academic-paper  深度理解本项目源码、docs/paperdocs及其中的paper，撰写顶会bestpaper，对标silifuzz这篇paper，重点讲清楚基于他做的改进。
+
+---
+
+使用superpower的plan，然后调用 academic-research-skills:academic-paper 执行如下工作： 深度理解本项目源码、docs/paper/ref 目录中的所有参考文献，重构docs/paper2，达成系统软件或芯片领域顶会bestpaper水平，可以对标silifuzz、Harpocrates_Automated_Functional_Program_Generation_Against_CPU_Faults_and_Silent_Data_Corrupt、Harpocrates_Breaking_the_Silence_of_CPU_Faults_through_Hardware-in-the-Loop_Program_Generatio。
+
+---
+
+每个交付件的含义
+
+---
+
+04_draft 与paper2 区别

@@ -3,7 +3,7 @@
   "checkpoint_id": "01M1RP6MB8XD0FVK36Y5YWSQ40",
   "strategy": "manual-commit",
   "branch": "refactor/scheme-northstar-alignment",
-  "checkpoints_count": 2,
+  "checkpoints_count": 5,
   "files_touched": [
     "scripts/__pycache__/ssh_lib.cpython-311.pyc"
   ],
@@ -18,20 +18,27 @@
     {
       "metadata": "/1/metadata.json",
       "prompt": ""
+    },
+    {
+      "metadata": "/2/metadata.json",
+      "transcript": "/2/full.jsonl",
+      "compact_transcript": "/2/transcript.jsonl",
+      "content_hash": "/2/content_hash.txt",
+      "prompt": "/2/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 12612694,
+    "input_tokens": 13155767,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 0,
-    "output_tokens": 40705,
-    "api_call_count": 145,
+    "cache_read_tokens": 11846144,
+    "output_tokens": 130280,
+    "api_call_count": 224,
     "subagent_tokens": {
-      "input_tokens": 6039043,
+      "input_tokens": 6391755,
       "cache_creation_tokens": 0,
-      "cache_read_tokens": 0,
-      "output_tokens": 27567,
-      "api_call_count": 67
+      "cache_read_tokens": 311424,
+      "output_tokens": 51037,
+      "api_call_count": 78
     }
   }
 }
