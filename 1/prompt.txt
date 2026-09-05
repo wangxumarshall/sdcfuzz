@@ -7,3 +7,15 @@
 ---
 
 A
+
+---
+
+/goal 完成全部的工作：  1. 现存 corpus 已失配：旧 corpus 的 end state 位图是 N1，本机跑会找不到匹配
+  end state——下次实验前按 build_fuzz.sh 流程重新生成（你已接受此成本）。
+  2. 三处脚本硬编码 
+  arm-neoverse-n1（tools/sdc_experiment/feedback.py:152、scripts/experiments/ex
+  p03_corpus_hw_local.sh:29、exp05_crosslayer.sh:182）需同步改——我会作为独立小
+  patch 处理。
+
+  按 one-patch-per-unit 纪律，接下来是 C5（kSnapExitAddress 双定义收敛，~5
+  行）→ C1 → C3 → C4 → C6。
