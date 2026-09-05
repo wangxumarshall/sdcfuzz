@@ -3,30 +3,21 @@
   "checkpoint_id": "01M1RTSKX2GAXQQ2HK2FFD50H7",
   "session_id": "56d8f467-f4e8-4159-bcf0-873168d1cdd8",
   "strategy": "manual-commit",
-  "created_at": "2026-09-05T13:05:50.82355804Z",
-  "branch": "refactor/scheme-northstar-alignment",
+  "created_at": "2026-09-05T13:07:07.12853817Z",
+  "branch": "feat/sdc-pipeline-framework",
   "checkpoints_count": 1,
-  "save_step_count": 2,
-  "files_touched": [
-    "tools/sdc_pipeline/fault_signatures.py"
-  ],
+  "save_step_count": 1,
+  "files_touched": [],
   "agent": "Claude Code",
   "model": "glm-5.3",
   "turn_id": "6118b35074d6",
   "compact_transcript_start": 0,
   "token_usage": {
-    "input_tokens": 145460274,
+    "input_tokens": 147855581,
     "cache_creation_tokens": 0,
     "cache_read_tokens": 0,
-    "output_tokens": 185283,
-    "api_call_count": 642,
-    "subagent_tokens": {
-      "input_tokens": 0,
-      "cache_creation_tokens": 0,
-      "cache_read_tokens": 0,
-      "output_tokens": 0,
-      "api_call_count": 0
-    }
+    "output_tokens": 186109,
+    "api_call_count": 648
   },
   "skill_events_version": 1,
   "skill_events": [
@@ -99,36 +90,5 @@
   ],
   "session_metrics": {
     "turn_count": 15
-  },
-  "initial_attribution": {
-    "calculated_at": "2026-09-05T13:05:50.37654924Z",
-    "agent_lines": 0,
-    "agent_removed": 0,
-    "human_added": 483,
-    "human_modified": 0,
-    "human_removed": 0,
-    "total_committed": 483,
-    "total_lines_changed": 491,
-    "agent_percentage": 0,
-    "metric_version": 2
-  },
-  "prompt_attributions": [
-    {
-      "checkpoint_number": 2,
-      "user_lines_added": 0,
-      "user_lines_removed": 0,
-      "agent_lines_added": 0,
-      "agent_lines_removed": 0
-    },
-    {
-      "checkpoint_number": 3,
-      "user_lines_added": 3,
-      "user_lines_removed": 0,
-      "agent_lines_added": 4202,
-      "agent_lines_removed": 0,
-      "user_added_per_file": {
-        ".claude/scheduled_tasks.json": 3
-      }
-    }
-  ]
+  }
 }
