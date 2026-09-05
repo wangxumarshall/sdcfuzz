@@ -57,6 +57,7 @@ ArchitectureId PlatformArchitecture(PlatformId platform) {
     case PlatformId::kAmpereOne:
     case PlatformId::kArmNeoverseV2:
     case PlatformId::kArmNeoverseN3:
+    case PlatformId::kArmKunpeng920:
       return ArchitectureId::kAArch64;
     case PlatformId::kUndefined:
     case PlatformId::kAny:
@@ -163,7 +164,17 @@ PlatformId ArmPlatformIdFromMainId(uint32_t implementer, uint32_t part_number) {
     LOG_ERROR("Unknown Ampere part number: ", HexStr(part_number));
     return PlatformId::kUndefined;
   } else if (implementer == 0x48) {
-    return PlatformId::kArmNeoverseN1;
+    // Huawei. Part numbers are TaiShan core IP generations, which are
+    // microarchitecturally distinct from ARM's public Neoverse cores, so
+    // they must not share an end-state platform ID with them.
+    switch (part_number) {
+      case 0xd01:
+        // Kunpeng 920 (TaiShan v110).
+        return PlatformId::kArmKunpeng920;
+      default:
+        LOG_ERROR("Unknown Huawei part number: ", HexStr(part_number));
+        return PlatformId::kUndefined;
+    }
   }
 
   LOG_ERROR("Unknown implementer: ", HexStr(implementer));
