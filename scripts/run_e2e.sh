@@ -30,7 +30,7 @@ NUM_RUNS="${NUM_RUNS:-50000}"  # centipede 阶段 B 变异数
 NO_STRESS=""               # 空 = 开 stress-ng 环境毒化 (distributed)
 FEEDBACK="auto"            # auto | legacy | hw | none
 SKIP_MUTATION=""           # 跳过步骤 2 (直接扫现有语料)
-DRY_RUN=""
+DRY_RUN="${DRY_RUN:-}"    # 保留环境变量形式 (DRY_RUN=1); --dry-run flag 亦设 1
 
 usage() { sed -n '4,20p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 while [ $# -gt 0 ]; do

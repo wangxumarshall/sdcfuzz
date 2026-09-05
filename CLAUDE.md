@@ -26,7 +26,7 @@ This checkout is an **active AArch64 port** targeting Huawei Kunpeng CPUs on ope
 ### 能力现状注记（2026-09-05，对照 scheme.md §4.2 六项补齐能力）
 
 1. **ACE/IBR 评估**：部分落地（Unicorn 级代理，`sdc_pipeline/evaluators.py`）；ACE lifetime / AutoµSens 未实现。
-2. **gem5 golden vs 注入差分**：已落地（`gem5_runner.py`，M2/E7 实证）。gem5 本体在 `~/gem5-fi-wangxu/`，路径解析经 `tools/sdc_experiment/gem5_env.py`。
+2. **gem5 golden vs 注入差分**：已落地（`gem5_runner.py`，M2/E7 实证）。gem5 本体在 `~/wangxu/gem5-fi-wangxu/`（HOME=/home/sdc 下用户目录嵌套），路径解析经 `tools/sdc_experiment/gem5_env.py`。
 3. **McPAT 功耗**：近似口径已落地（`mcpat_eval.py`，tsv110.xml，22nm 近似 7nm 诚实标注；E8 实证）。
 4. **ISA 感知变异**：部分落地（指令级 `fuzzer/program_aarch64.cc` 已入产线；操作数级字典/位翻/功耗应力已入 sdc_pipeline 变异器池）。
 5. **负载感知在线调度**：未实现（零代码）。

@@ -632,8 +632,9 @@ Expected: 全 pass，0 failed（基线 89 + Task 2 新增 3 + Task 6 新增 3 = 
 
 - [ ] **Step 2: e2e 脚本 dry-run 冒烟**
 
-Run: `DRY_RUN=1 bash scripts/run_e2e.sh --scan-mode local --duration 10s --loop 1 --feedback none 2>&1 | tail -10`
-Expected: dry-run 模式输出各步骤计划，无报错退出（脚本自身支持 DRY_RUN，见 run_e2e.sh 第 160 行）。
+Run: `bash scripts/run_e2e.sh --dry-run --scan-mode local --duration 10s --loop 1 --feedback none 2>&1 | tail -10`
+Expected: dry-run 模式输出各步骤计划，无报错退出（脚本自身支持 --dry-run flag，见 run_e2e.sh 参数解析）。
+（注意：DRY_RUN 环境变量形式在本计划执行期间曾被 run_e2e.sh:33 的初始化覆盖触发过一次真实满核扫描，该缺陷已由本 commit 修复为 ${DRY_RUN:-}）
 
 - [ ] **Step 3: bazel 回归（证明 C++ 侧零改动零破坏）**
 
