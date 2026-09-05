@@ -16,6 +16,7 @@
 #define THIRD_PARTY_SILIFUZZ_UTIL_ARCH_H_
 
 #include <cstddef>
+#include <cstdint>
 
 #include "./util/checks.h"
 #include "./util/itoa.h"
@@ -55,6 +56,15 @@ inline constexpr const char* EnumNameMap<ArchitectureId>[3] = {
 };
 
 #define ALL_ARCH_TYPES X86_64, AArch64
+
+// A pre-defined address for transferring control from a Snap back to the
+// runner. This address does not change in different runner binaries so that we
+// can directly generate jumps to this address in Snaps. Lives here, in the
+// lowest common layer, so that both snap/ and common/ can reference a single
+// definition (previously duplicated in snap/exit_sequence.h and
+// common/raw_insns_util.cc).
+// REQUIRES: page size aligned.
+inline constexpr uint64_t kSnapExitAddress = 0xABCD0000;
 
 #if defined(__x86_64__)
 using Host = X86_64;

@@ -39,9 +39,7 @@
 
 namespace silifuzz {
 
-// TODO(ncbray): share with exit_sequence.h
-// This file is in silifuzz/snap/ and silifuzz/common/ should not depend on it.
-constexpr inline uint64_t kSnapExitAddress = 0xABCD0000;
+// kSnapExitAddress lives in util/arch.h (shared with snap/exit_sequence.h).
 
 namespace {
 
