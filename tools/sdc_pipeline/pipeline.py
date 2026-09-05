@@ -185,7 +185,23 @@ class Pipeline:
                 generation=gen, produced=len(children),
                 metrics_mean=metrics_mean, mutator_scores=mut_scores))
         # 终榜 (Vault 全量 top)
-        report.final_top = self.vault.top_by(
-            next(iter(self.evaluators[0].evaluate(pool[0]).keys()))
-            if pool else "ace_proxy", 5)
+        # final_top 选取也过负对照 (vault.top_by 会绕过 select 过滤,
+        # 把已证伪形态的纯寄存器链带回 top — FS-001 教训的管线级修复)
+        metric = (next(iter(self.evaluators[0].evaluate(pool[0]).keys()))
+                  if pool else "ace_proxy")
+        candidates = self.vault.top_by(metric, max(5 * 4, 20))
+        final = []
+        for ident, score in candidates:
+            cand = self.vault.get(ident)
+            if cand is None:
+                continue
+            asm = getattr(cand, "source_asm", "")
+            has_load = ("ldr" in asm) or ("ldp" in asm)
+            tags = getattr(cand, "structure_tags", [])
+            if not has_load and any("fs001" in t for t in tags):
+                continue  # 已证伪形态, 不入 final_top
+            final.append((ident, score))
+            if len(final) >= 5:
+                break
+        report.final_top = final
         return report

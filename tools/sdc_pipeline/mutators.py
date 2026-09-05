@@ -201,3 +201,113 @@ class PowerStressMutator(MutatorBase):
             child.structure_tags = list(cand.structure_tags) + [f"power_type{self.stress_type}"]
             kids.append(child)
         return kids
+
+
+# ===========================================================================
+# 故障签名先验变异器 (经验模式 FS-001 的可执行承载)
+# 来源: tools/sdc_pipeline/fault_signatures.py + docs/fault_signature_playbook.md
+# 确证案例: 0102 cpu179 load 返回通路缺陷 (2026-09-05 loadsink 4/11 轮检出)
+# ===========================================================================
+
+# FS-001 触发要素的指令积木 (与 loadsink_gen.py 同源, 结构参数化)
+_GATHER_BLOCK = """    ldrsw   x12, [x6, x3, lsl #2]    // FS-001 要素① 间接寻址: 索引表
+    ldr     d0, [x7, x12, lsl #3]     //   两级追逐: 数据表 gather
+    fmsub   d0, d5, d4, d0            // 要素② load→FMA
+    str     d0, [x7, x12, lsl #3]     //   →store 同址往返 (陈旧行回放窗口)
+    add     x3, x3, #1"""
+
+_ROUNDTRIP_HEADER = """    mov     x3, #0                     // gather 游标清零
+    fmov    d4, x9                     // 要素③ 长存活 FP 累加器"""
+
+_FOOTER = """    fadd    d4, d4, d5                // 累加器跨循环存活"""
+
+
+class LoadPathMutator(MutatorBase):
+    """FS-001 定向变异器: 把候选改造成带触发五要素的 load 密集形态。
+
+    经验来源 (fault_signatures.FS001.trigger_elements):
+      ① 间接寻址链 (索引表→数据表两级 gather)
+      ② load→FMA→store 同址往返
+      ③ 长存活 FP 累加器
+      ④ 偶发 fdiv (cdiv 相位)
+      ⑤ 满载执行环境 (由部署侧负责, 非指令层)
+
+    行为: 在候选 _start 后注入参数化的 gather 链块。chain_len/roundtrips/
+    div_prob 从 FS-001 要素参数空间采样; chain×round 乘积钳在页预算内。
+    子代 structure_tags 附加 "fs001_loadpath" (评估/统计分组用)。
+    """
+    name = "fs001_loadpath"
+
+    def __init__(self, n_children=2, max_chain_product=110, fs_id="FS-001"):
+        from tools.sdc_pipeline import fault_signatures
+        self.fs = fault_signatures.get(fs_id)
+        te = self.fs["trigger_elements"]
+        self.fma_op = te["fma_ops"][0]          # fmsub
+        self.div_prob = te["cond_branch_fp_div"]
+        self.min_loads = te["min_loads_per_round"]
+        self.n_children = n_children
+        self.max_chain_product = max_chain_product
+
+    def _emit_block(self, rng):
+        chain_len = rng.choice([8, 12, 16, 20])
+        max_r = max(2, self.max_chain_product // chain_len)
+        rounds = rng.randint(max(2, max_r // 2), max_r)
+        div_on = rng.random() < self.div_prob
+        lines = [_ROUNDTRIP_HEADER]
+        for _ in range(rounds):
+            lines.append(f"    .rept {chain_len}")
+            lines.append(_GATHER_BLOCK)
+            lines.append("    .endr")
+            lines.append(_FOOTER)
+            if div_on and rng.random() < 0.5:
+                lines.append("    fdiv d6, d4, d5    // 要素④ cdiv 相位")
+        return "\n".join(lines)
+
+    def mutate(self, cand, rng):
+        lines = cand.source_asm.splitlines()
+        try:
+            start_idx = next(i for i, l in enumerate(lines)
+                             if l.strip() == "_start:")
+        except StopIteration:
+            return []
+        kids = []
+        for _ in range(self.n_children):
+            block = self._emit_block(rng)
+            new_lines = (lines[:start_idx + 1] +
+                         [block + "    // fs001_loadpath 注入"] +
+                         lines[start_idx + 1:])
+            asm = "\n".join(new_lines) + "\n"
+            child = self._child(cand, asm, cand.regs_init, "")
+            child.structure_tags = list(set(cand.structure_tags +
+                                            ["fs001_loadpath"]))
+            kids.append(child)
+        return kids
+
+
+class NegativeControlFilter:
+    """FS 负对照过滤: 拦截命中"已证伪形态"的候选, 省变异预算。
+
+    经验来源 (fault_signatures.FS001.negative_controls): 11 个真机证伪
+    形态 (纯 FMA/纯 gather/纯 NEON/密集 GEMM/...)。检测规则:
+      - 候选 asm 无任何 load 指令 且 候选带 fs001 检出意图 → reg_only_chain
+        (纯寄存器链对 load 通路缺陷 0 检出, sdcbench 60431 次播放的教训)
+    后续模式追加时在此扩展判定。
+    用法: filt = NegativeControlFilter(); filt.reject(cand) -> bool
+    """
+    def __init__(self, fs_ids=("FS-001",)):
+        from tools.sdc_pipeline import fault_signatures
+        self.tags = set()
+        for fid in fs_ids:
+            self.tags.update(fault_signatures.get(fid)["negative_controls"])
+
+    def reject(self, cand) -> bool:
+        asm = cand.source_asm
+        has_load = any(op in asm for op in ("ldr", "ldp"))
+        # 规则1: 若管线目标是 FS-001 (cand 带 fs001 标签或其父代带),
+        #        纯寄存器链是已证伪形态
+        if "fs001_loadpath" in getattr(cand, "structure_tags", []):
+            pass  # 已注入 gather 块, 必有 load
+        elif not has_load and any("fs001" in t for t in
+                                  getattr(cand, "structure_tags", [])):
+            return True   # fs001 定向管线里退化成纯寄存器链 → 拒
+        return False

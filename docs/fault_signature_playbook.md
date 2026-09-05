@@ -82,10 +82,33 @@ for c in ...; do taskset -c $c ./mrueig 100000 <seed> & done
 
 ---
 
+## 工具承载（经验的可执行形态）
+
+本 playbook 是人读叙事；**同一内容以机器可读+可执行形态承载在变异工具里**，
+两层必须同步修改：
+
+| 承载层 | 文件 | 作用 |
+|---|---|---|
+| 数据层 | `tools/sdc_pipeline/fault_signatures.py` | FS 模式的结构化数据（trigger_elements / negative_controls / execution_env），变异器 import 的单一事实源 |
+| 变异层 | `tools/sdc_pipeline/mutators.py` `LoadPathMutator` | 把 FS-001 五要素注入候选：间接寻址链 + load→FMA→store 同址往返 + 长存活 d4 + fdiv，chain×round 页预算钳制 |
+| 过滤层 | `tools/sdc_pipeline/filters.py` `NegativeControlFilter` | 拦截已证伪形态（fs001 管线里的纯寄存器链），适配 pipeline select/score 协议 |
+| 管线层 | `tools/sdc_pipeline/pipeline.py` final_top 闸门 | vault.top_by 绕过 select 的旁路修复——final_top 选取同样过负对照 |
+| 回归层 | `tools/sdc_pipeline/test_fault_signature_mutators.py` | 守护数据完整性/要素携带/拦截行为三件事 |
+
+闭环验证（2026-09-05 实测）：LoadPathMutator + NegativeControlFilter 进 Pipeline
+跑 3 代，final_top 全部为含触发要素的 load 密集形态（ldr×6-14 + fmsub）；
+未接闸门时 ACE 评估器偏置会把纯寄存器链（已证伪形态）带回 top——**这本身就是
+"经验必须进工具"的实证：文档写 100 遍，评估器偏置照样把管线带回老路**。
+
+已知事项：ACE 评估器对 load 密集序列打分偏低（0.125 vs 纯 ALU 链 1.0），
+FS 定向管线的 evaluator 权重应按模式调整（trigger_elements 命中率应进评分）——
+待 FS-002 案例出现时一并处理。
+
 ## 维护规则
 
 1. 新案例确证后：在本文件追加 FS-XXX 模式（签名/要素/模板/协议/教训五节齐全），
-   同时在对应生成器源码头部注释指向 FS 编号。
+   同时在对应生成器源码头部注释指向 FS 编号；**并同步
+   `tools/sdc_pipeline/fault_signatures.py`（数据）与 mutators/filters（行为）**。
 2. 模式被新实验修正时（如要素增删）：更新本文件并在 `docs/experiments/` 留实验报告
    链接，旧结论不删除——标注"已被 FS-XXX-v2 修正"。
 3. AutoµSens / RL 变异器实现时，应把本库作为先验：故障签名匹配 → 直接加载对应
