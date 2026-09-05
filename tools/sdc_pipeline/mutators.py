@@ -62,13 +62,54 @@ class OperandBitFlipMutator(MutatorBase):
 
     readset_aware=True 时只变异 live_readset 内的寄存器 (M2 实证的
     逻辑掩蔽防线: 变异被"写前不读"覆写的寄存器是纯浪费)。
+
+    2026-09-05 起此名是 OperandMutator 的别名/兼容壳: 三种操作数变异
+    (bit 翻转 / 移位 / 随机值) 统一进 OperandMutator, 按策略权重采样。
     """
     name = "operand_bitflip"
 
     def __init__(self, n_children=4, max_bits=4, readset_aware=True):
+        self._inner = OperandMutator(
+            n_children=n_children, max_bits=max_bits,
+            readset_aware=readset_aware,
+            strategy_weights={"bitflip": 1.0})
+
+    @property
+    def n_children(self):
+        return self._inner.n_children
+
+    def mutate(self, cand, rng):
+        return self._inner.mutate(cand, rng)
+
+
+class OperandMutator(MutatorBase):
+    """统一操作数变异器: 三种策略按权重采样, 保留 readset 反掩蔽。
+
+    策略 (操作数空间的三个正交维度, 2026-09-05 应需求扩展):
+      bitflip  随机 bit 翻转: 翻 1..max_bits 个随机位 (原 BitFlip 行为)
+      shift    移位: 8/16/24/32/48/56/64-bit 粒度左移或右移 (含跨字节边界
+               的非对称粒度; 移位保持值的"家族相似性"——进位链/符号位
+               结构保留, 与 bitflip 的全随机和 dict 的跳变形成互补探索)
+      random   随机值: 整寄存器重掷 64-bit 随机数 (跳出局部最优的探索跳变)
+
+    每个子代 origin 标注具体策略 (mutate:operand:<strategy>), 供
+    HillClimbPolicy/RL 按策略归因得分。
+
+    readset_aware=True 时只变异 live_readset 内的寄存器 (M2 实证的
+    逻辑掩蔽防线: 变异被"写前不读"覆写的寄存器是纯浪费)。
+    """
+    name = "operand"
+
+    # 移位粒度: 8 的倍数为主 (字节边界), 含 4/12 等非对称项制造跨半字节边界
+    SHIFT_GRANULARITIES = (8, 16, 24, 32, 48, 56, 64, 4, 12)
+
+    def __init__(self, n_children=4, max_bits=4, readset_aware=True,
+                 strategy_weights=None):
         self.n_children = n_children
         self.max_bits = max_bits
         self.readset_aware = readset_aware
+        self.strategy_weights = strategy_weights or {
+            "bitflip": 0.4, "shift": 0.3, "random": 0.3}
 
     def _pick_reg(self, cand, rng):
         if self.readset_aware:
@@ -78,16 +119,49 @@ class OperandBitFlipMutator(MutatorBase):
                 return rng.choice(live)
         return rng.choice(sorted(cand.regs_init))
 
+    def _apply_bitflip(self, val, rng):
+        v = val
+        for _ in range(rng.randint(1, self.max_bits)):
+            v ^= 1 << rng.randrange(64)
+        return v
+
+    def _apply_shift(self, val, rng):
+        n = rng.choice(self.SHIFT_GRANULARITIES)
+        if rng.random() < 0.5:                      # 左移 (高位截断)
+            return (val << n) & ((1 << 64) - 1)
+        return val >> n                             # 右移 (低位丢失)
+
+    def _apply_random(self, val, rng):
+        return rng.getrandbits(64)
+
+    def _strategies(self):
+        import random as _r
+        total = sum(self.strategy_weights.values())
+        items = list(self.strategy_weights.items())
+        return items, total
+
     def mutate(self, cand, rng):
+        if not cand.regs_init:
+            return []
+        items, total = self._strategies()
         kids = []
         for _ in range(self.n_children):
-            if not cand.regs_init:
-                break
             regs = dict(cand.regs_init)
             reg = self._pick_reg(cand, rng)
-            for _ in range(rng.randint(1, self.max_bits)):
-                regs[reg] ^= 1 << rng.randrange(64)
-            kids.append(self._child(cand, cand.source_asm, regs, ""))
+            # 按权重选策略
+            pick, acc = rng.random() * total, 0.0
+            chosen = items[-1][0]
+            for name, w in items:
+                acc += w
+                if pick < acc:
+                    chosen = name
+                    break
+            apply = {"bitflip": self._apply_bitflip,
+                     "shift": self._apply_shift,
+                     "random": self._apply_random}[chosen]
+            regs[reg] = apply(regs[reg], rng) & ((1 << 64) - 1)
+            kids.append(self._child(cand, cand.source_asm, regs,
+                                    f":{chosen}"))
         return kids
 
 

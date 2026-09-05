@@ -12,7 +12,10 @@ import sys
 
 from tools.sdc_pipeline.candidate import make_candidate
 from tools.sdc_pipeline.fault_signatures import FAULT_SIGNATURES, negative_control_tags
-from tools.sdc_pipeline.mutators import LoadPathMutator, NegativeControlFilter
+from tools.sdc_pipeline.mutators import (LoadPathMutator,
+                                          NegativeControlFilter,
+                                          OperandBitFlipMutator,
+                                          OperandMutator)
 
 SEED_ASM = """    .include "asm_common.S.inc"
     .text
@@ -75,3 +78,72 @@ if __name__ == "__main__":
     test_loadpath_mutator_children_carry_elements()
     test_negative_control_filter()
     print("all fault-signature mutator tests passed")
+
+
+
+
+# ---------------------------------------------------------------------------
+# OperandMutator 三策略 (2026-09-05: bit 翻转 / 移位 / 随机值)
+# ---------------------------------------------------------------------------
+_BASE = 0x123456789ABCDEF0
+
+
+def _changed(seed, kid):
+    return [r for r in seed.regs_init
+            if kid.regs_init[r] != seed.regs_init[r]]
+
+
+def test_operand_mutator_bitflip():
+    rng = random.Random(2026)
+    seed = _seed()
+    kids = OperandMutator(20, strategy_weights={"bitflip": 1.0}).mutate(seed, rng)
+    assert len(kids) == 20
+    for k in kids:
+        ch = _changed(seed, k)
+        assert len(ch) == 1                       # 恰好一个寄存器被变异
+        assert 1 <= bin(k.regs_init[ch[0]] ^ seed.regs_init[ch[0]]).count("1") <= 4
+        assert k.origin == "mutate:operand:bitflip"
+
+
+def test_operand_mutator_shift():
+    rng = random.Random(7)
+    seed = make_candidate(SEED_ASM, {i: _BASE for i in range(4)},
+                          [], "seed:t")
+    gr = OperandMutator.SHIFT_GRANULARITIES
+    assert (8, 16, 24, 32) == gr[:4]              # 需求要求的粒度
+    kids = OperandMutator(25, strategy_weights={"shift": 1.0}).mutate(seed, rng)
+    for k in kids:
+        ch = _changed(seed, k)
+        assert len(ch) == 1
+        x, b = k.regs_init[ch[0]], seed.regs_init[ch[0]]
+        assert any(x == ((b << n) & ((1 << 64) - 1)) or x == (b >> n)
+                   for n in gr), f"{x:#x} 不是 {_BASE:#x} 的合法粒度移位"
+        assert k.origin == "mutate:operand:shift"
+
+
+def test_operand_mutator_random():
+    rng = random.Random(11)
+    seed = make_candidate(SEED_ASM, {i: _BASE for i in range(4)},
+                          [], "seed:t")
+    kids = OperandMutator(15, strategy_weights={"random": 1.0}).mutate(seed, rng)
+    for k in kids:
+        ch = _changed(seed, k)
+        assert len(ch) == 1
+        v = k.regs_init[ch[0]]
+        assert v != _BASE                          # 整寄存器重掷
+        assert 16 < bin(v).count("1") < 48         # 高熵 (期望 ~32)
+        assert k.origin == "mutate:operand:random"
+
+
+def test_operand_mutator_mixed_and_compat():
+    rng = random.Random(13)
+    seed = _seed()
+    kids = OperandMutator(40).mutate(seed, rng)    # 默认权重 0.4/0.3/0.3
+    from collections import Counter
+    dist = Counter(k.origin.split(":")[-1] for k in kids)
+    assert set(dist) == {"bitflip", "shift", "random"}
+    assert all(dist[s] >= 5 for s in dist)         # 三策略都有代表
+    # 兼容壳: 旧名不改调用方
+    old = OperandBitFlipMutator(3).mutate(seed, rng)
+    assert len(old) == 3 and all(k.origin == "mutate:operand:bitflip"
+                                 for k in old)
