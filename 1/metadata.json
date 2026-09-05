@@ -1,0 +1,103 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1QHEVP21S7B1ZTMT0WYEQFD",
+  "session_id": "56d8f467-f4e8-4159-bcf0-873168d1cdd8",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-05T01:03:23.78485729Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "save_step_count": 2,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "glm-5.3",
+  "turn_id": "ceebfd09e04d",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 6436674,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 31286,
+    "api_call_count": 69,
+    "subagent_tokens": {
+      "input_tokens": 39051630,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 0,
+      "output_tokens": 147679,
+      "api_call_count": 468
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-goal-2026-09-05T01:01:36.58608347Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "ceebfd09e04d",
+      "timestamp": "2026-09-05T01:01:36.58608347Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 5526,
+      "user_lines_removed": 1,
+      "agent_lines_added": 327,
+      "agent_lines_removed": 2,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/all_pmu_raw_event_ids.txt": 102,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/core_events.txt": 48,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/core_impdef_events.txt": 65,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/core_impdef_raw_ids.txt": 50,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/ddrc_events_sample.txt": 40,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/hha_events_sample.txt": 60,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/l3c_events_sample.txt": 60,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/data/perf_list_pmu_full.txt": 1832,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/findings.md": 73,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/progress.md": 27,
+        ".planning/2026-09-04-cpu-microarchitecture-pmu-events-deep-re/task_plan.md": 52,
+        ".planning/2026-09-04-cpu-scholar-deep-dive-unexplored-cpu-inf/findings.md": 130,
+        ".planning/2026-09-04-cpu-scholar-deep-dive-unexplored-cpu-inf/progress.md": 28,
+        ".planning/2026-09-04-cpu-scholar-deep-dive-unexplored-cpu-inf/task_plan.md": 52,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/findings.md": 69,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/progress.md": 65,
+        ".planning/2026-09-04-mcpat-submodule-upgrade/task_plan.md": 77,
+        "build.log": 1281,
+        "build_fuzz.log": 409,
+        "http.log": 2,
+        "output/experiments/feedback/hits.json": 1,
+        "patch.py": 23,
+        "seeds/gem5/sdc_probe_workload_d6.c": 118,
+        "test.log": 859
+      },
+      "user_removed_per_file": {
+        "output/experiments/feedback/hits.json": 1
+      }
+    }
+  ]
+}
