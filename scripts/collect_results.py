@@ -10,9 +10,11 @@
 
 用法: collect_results.py [--boards name=ip,...]
 """
-import os, sys, re, json, argparse
+import os, sys, json, argparse
 sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ssh_lib import ssh, scp
+from tools.sdc_experiment.hw_log_parser import parse_log  # noqa: E402
 
 DEFAULT_BOARDS = {
     "0101": "172.168.177.97",
@@ -28,37 +30,6 @@ BOARD_CFG = {
 }
 REMOTE_CORPUS = "/sdc_corpus"
 OUT = "output/distributed"
-
-def parse_log(text):
-    """从 orchestrator 日志解析 SDC 命中与噪声。
-    满负载时 runner 日志会交织, 须精确匹配结构化失败标记。
-    真正的 SDC = snapshot 执行失败 (end-state mismatch), 形如:
-      'Snapshot [hash] failed, outcome = ...' (非 SIGSEGV/SIGTERM 杀的)
-    SIGSEGV-outside-snap / SIGTERM(timeout) 是噪声, 不算 SDC。"""
-    sigsegv_outside = len(re.findall(r'SIGSEGV while outside of snap', text))
-    sigterm = len(re.findall(r'SIGTERM', text))
-    # runner RunSnapOutcome 枚举 (runner/runner.h):
-    #   0=kAsExpected 1=kPlatformMismatch 2=kMemoryMismatch 3=kRegisterStateMismatch
-    #   4=kEndpointMismatch 5=kExecutionRunaway 6=kExecutionMisbehave
-    # 真 SDC = outcome 2 (Memory mismatch) 或 3 (Register mismatch) 或 4 (Endpoint mismatch)
-    #   — 这些是计算结果与预期不符 (静默数据损坏)
-    # outcome 5 (runaway, 满负载调度延迟超时) / 6 (misbehave, 信号) = 噪声, 非 SDC
-    all_failed = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = (\d+)', text)
-    # 真 SDC: outcome ∈ {2,3,4}
-    sdc_outcomes = [o for o in all_failed if o in ('2', '3', '4')]
-    # 噪声: outcome ∈ {5 (runaway), 6 (misbehave)}
-    runaway = sum(1 for o in all_failed if o == '5')
-    misbehave = sum(1 for o in all_failed if o == '6')
-    # SDC 详情 (含 hash + outcome)
-    sdc_details = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = [234]', text)[:10]
-    return {
-        "sigsegv_noise": sigsegv_outside,
-        "sigterm": sigterm,
-        "runaway_noise": runaway,      # outcome=5, 满负载超时, 非 SDC
-        "misbehave_noise": misbehave, # outcome=6, 信号, 非 SDC
-        "sdc_hits": len(sdc_outcomes),  # 真 SDC = outcome 2/3/4
-        "sdc_details": sdc_details,
-    }
 
 def collect_one(name, ip, all_results):
     """拉取单板 scan.log 并解析。"""

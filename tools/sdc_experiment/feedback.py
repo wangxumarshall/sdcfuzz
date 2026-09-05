@@ -32,6 +32,14 @@ import json
 import os
 import re
 import subprocess
+import sys
+
+# 直跑 (python3 tools/sdc_experiment/feedback.py, feedback_loop.sh:29) 时
+# sys.path[0] 是 tools/sdc_experiment/ 而非 repo 根 — 补 repo 根才能 import
+# tools.sdc_experiment.hw_log_parser; 被 pytest 以 repo 根加载时幂等无害。
+_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if _REPO not in sys.path:
+    sys.path.insert(0, _REPO)
 
 # snap_tool 优先 bazel-bin 新构建 (认识 arm-kunpeng920 枚举);
 # /usr/local/bin 的 2026-08-25 部署版先于专属 PlatformId (2d04539), 会拒绝
@@ -43,10 +51,8 @@ SNAP_TOOL = _BAZEL_SNAP_TOOL if os.path.isfile(_BAZEL_SNAP_TOOL) \
     else "/usr/local/bin/snap_tool"
 RUNNER = "/usr/local/bin/reading_runner_main_nolibc"
 
-# sdc_details 行形态 (runner.cc:687, 与 hw_scan.py parse_log 同源):
-#   Snapshot [<40位hex>] failed, outcome = <2|3|4>
-_HASH_RE = re.compile(r"Snapshot \[([0-9a-f]+)\]")
-_OUTCOME_RE = re.compile(r"outcome = (\d+)")
+# sdc_details 行形态 (runner.cc:687): 单一权威解析/正则在 hw_log_parser.py
+from tools.sdc_experiment.hw_log_parser import HASH_RE as _HASH_RE, OUTCOME_RE as _OUTCOME_RE  # noqa: E402
 
 
 def extract_hits(exp_dir: str) -> list:
