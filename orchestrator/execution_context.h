@@ -87,6 +87,13 @@ class ExecutionContext {
   // all worker thread have been joined.
   void ProcessResultQueue();
 
+  // Number of results dropped because the bounded result queue was full.
+  // Results carry failure counts, so drops can skew the final verdict;
+  // exposing the count keeps the loss observable.
+  int num_dropped_results() const {
+    return num_dropped_results_.load(std::memory_order_relaxed);
+  }
+
   absl::Time deadline() const { return deadline_; }
 
  private:
@@ -110,6 +117,9 @@ class ExecutionContext {
 
   // A queue of execution results.
   std::vector<RunResultT> invocation_results_ ABSL_GUARDED_BY(mu_);
+
+  // Count of results rejected because the queue was full.
+  std::atomic<int> num_dropped_results_{0};
 };
 
 }  // namespace silifuzz

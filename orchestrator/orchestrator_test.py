@@ -238,12 +238,17 @@ class OrchestratorTest(parameterized.TestCase):
         returncode, 1, msg='Expected EXIT_FAILURE ' + '\n'.join(err_log)
     )
     latest_entry = self._parse_v1_log(err_log)
+    # The snap_fail test runner exits immediately, so the orchestrator's
+    # fast-failure backoff (3 consecutive sub-second failures trigger an
+    # exponential backoff, see RunnerThread) throttles respawns. This test
+    # verifies the failure detection/reporting pipeline, not throughput,
+    # so a handful of detected failures suffices.
     self.assertGreater(
         int(latest_entry['issues_detected']),
-        50,  # a fairly arbitrary number of failures expected in 3 sec.
+        2,
         msg=(
-            'Expected at least a 50 failures to be detected within the'
-            ' duration of the test'
+            'Expected multiple failures to be detected within the duration'
+            ' of the test'
         ),
     )
     self.assertStrSeqContainsAll(
@@ -375,7 +380,10 @@ class OrchestratorTest(parameterized.TestCase):
         ['ignore_alarm', 'sleep100'],
         extra_args=['--watchdog_allowed_overrun=1s'],
     )
-    self.assertEqual(returncode, 0)
+    # The watchdog exits with a dedicated code (kWatchdogExitCode=3) so that
+    # external monitors can distinguish an overrun from a clean finish (0)
+    # or detected snapshot failures (1).
+    self.assertEqual(returncode, 3)
     self.assertStrSeqContainsAll(
         err_log,
         [

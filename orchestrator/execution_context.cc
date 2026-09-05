@@ -54,6 +54,7 @@ bool ExecutionContext<RunResultT>::OfferRunResult(
 
   // Allow at most 1 result slot per thread.
   if (invocation_results_.size() >= num_threads_) {
+    num_dropped_results_.fetch_add(1, std::memory_order_relaxed);
     return false;
   }
   invocation_results_.emplace_back(*result);

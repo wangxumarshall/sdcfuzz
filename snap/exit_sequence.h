@@ -18,15 +18,13 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "./util/arch.h"
 #include "./util/ucontext/ucontext_types.h"
 
 namespace silifuzz {
 
-// A pre-defined address for transfer control from a Snap back to the runner.
-// This address does not change in different runner binaries so that we can
-// directly generate jumps to this address in Snaps.
-// REQUIRES: page size aligned.
-inline constexpr uint64_t kSnapExitAddress = 0xABCD0000;
+// kSnapExitAddress now lives in util/arch.h (lowest common layer shared by
+// snap/ and common/). Kept visible here via the include below.
 
 // Size of Snap exit sequence.
 template <typename Arch>
