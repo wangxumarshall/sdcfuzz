@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1QJ1G13GDJFDPHCMK0Q3M8V",
+  "session_id": "56d8f467-f4e8-4159-bcf0-873168d1cdd8",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-05T01:13:34.01782456Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Claude Code",
+  "model": "glm-5.3",
+  "turn_id": "ceebfd09e04d",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 9852739,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 35301,
+    "api_call_count": 99
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-goal-2026-09-05T01:01:36.58608347Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "ceebfd09e04d",
+      "timestamp": "2026-09-05T01:01:36.58608347Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 1
+  }
+}
