@@ -14,10 +14,19 @@ bazelisk build --jobs=32 -c opt --copt=-UNDEBUG --dynamic_mode=off \
 echo "Building centipede..."
 bazelisk build --jobs=32 -c opt @fuzztest//centipede:centipede
 
-echo "Running centipede fuzzing (10,000 runs)..."
+echo "Building silifuzz_centipede (instruction-aware mutator)..."
+bazelisk build --jobs=32 -c opt @silifuzz//fuzzer:silifuzz_centipede
+
+echo "Running centipede fuzzing with instruction-aware mutator (10,000 runs)..."
+# silifuzz_centipede wraps the centipede driver and replaces the default byte
+# mutator with the AArch64 instruction-aware one (program_aarch64.cc: keeps
+# branch displacements pointing at instruction boundaries across
+# insert/delete/swap mutations). --arch=aarch64 enables it; without it the
+# wrapper falls back to byte mutation.
 # Limit to 10 parallel fuzzing jobs instead of 30 to keep load reasonable
-bazel-bin/external/fuzztest+/centipede/centipede \
-  --binary=bazel-bin/proxies/unicorn_aarch64 \
+bazel-bin/fuzzer/silifuzz_centipede \
+  --arch=aarch64 \
+  --binary="$(pwd)/bazel-bin/proxies/unicorn_aarch64" \
   --workdir=/tmp/centipede_wd \
   -j=10 --num_runs=10000
 
