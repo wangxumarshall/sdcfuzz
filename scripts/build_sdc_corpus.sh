@@ -37,7 +37,7 @@ echo "  阶段 A .pb 数: $pb_count"
 
 STAGE_A_CORPUS=output/sdc_stage_a.corpus
 if [ "$pb_count" -gt 0 ]; then
-  bazel-bin/tools/snap_tool --target_platform=arm-neoverse-n1 \
+  bazel-bin/tools/snap_tool --target_platform=arm-kunpeng920 \
     generate_corpus "$PB_DIR"/*.pb --out="$STAGE_A_CORPUS" >/dev/null 2>&1
   echo "  阶段 A corpus: $STAGE_A_CORPUS ($(stat -c%s "$STAGE_A_CORPUS") bytes)"
 fi

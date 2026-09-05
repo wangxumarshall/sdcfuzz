@@ -179,7 +179,7 @@ for b in sorted(glob.glob("seeds/bin/*.bin"))[:12]:
     subprocess.run([SNAP_TOOL, "--raw", f"--runner={RUNNER}",
                     f"--out={pb}", "make", b], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.run([SNAP_TOOL, "--target_platform=arm-neoverse-n1",
+    subprocess.run([SNAP_TOOL, "--target_platform=arm-kunpeng920",
                     "generate_corpus", pb, f"--out={corpus}"], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     r = hw_scan(local, corpus, duration_s=DUR, max_cpus=MAXCPUS)

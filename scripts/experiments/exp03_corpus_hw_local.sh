@@ -26,7 +26,7 @@ done
 echo "[1/4] $N 个模板 .pb 生成完成"
 
 # 2. snapshot → relocatable corpus (实测 flag: generate_corpus ... --out=)
-"$SNAP_TOOL" --target_platform=arm-neoverse-n1 \
+"$SNAP_TOOL" --target_platform=arm-kunpeng920 \
     generate_corpus output/experiments/$EXP/pb/*.pb \
     --out=output/experiments/$EXP/corpus >/dev/null 2>&1
 echo "[2/4] corpus 生成: output/experiments/$EXP/corpus ($(stat -c%s output/experiments/$EXP/corpus) bytes)"

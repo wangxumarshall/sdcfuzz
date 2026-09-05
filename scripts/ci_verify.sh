@@ -35,7 +35,7 @@ for bin in seeds/bin/*.bin; do
   # make
   bazel-bin/tools/snap_tool --raw --runner=/usr/local/bin/reading_runner_main_nolibc --out=/tmp/ci_${name}.pb make "$bin" >/dev/null 2>&1 || { FAIL=$((FAIL+1)); FAIL_LIST="$FAIL_LIST $name(make)"; continue; }
   # generate_corpus + replay
-  bazel-bin/tools/snap_tool --target_platform=arm-neoverse-n1 generate_corpus /tmp/ci_${name}.pb --out=/tmp/ci_${name}.corpus >/dev/null 2>&1
+  bazel-bin/tools/snap_tool --target_platform=arm-kunpeng920 generate_corpus /tmp/ci_${name}.pb --out=/tmp/ci_${name}.corpus >/dev/null 2>&1
   r=$(timeout 5 bazel-bin/runner/reading_runner_main_nolibc --num_iterations=10 /tmp/ci_${name}.corpus 2>/dev/null | grep -o 'code:[0-9]' | head -1)
   if [ "$r" = "code:1" ]; then PASS=$((PASS+1)); else FAIL=$((FAIL+1)); FAIL_LIST="$FAIL_LIST $name(replay=$r)"; fi
 done

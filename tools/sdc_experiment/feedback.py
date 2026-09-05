@@ -149,10 +149,10 @@ def build_feedback_report(hits: list, corpus_dir: str,
 
 def package_pb_as_corpus(pb_file: str, work_dir: str,
                          snap_tool: str = SNAP_TOOL,
-                         platform: str = "arm-neoverse-n1"):
+                         platform: str = "arm-kunpeng920"):
     """单 .pb → runner 可读单 snapshot SnapCorpus (exp03 已验证管线)。
 
-    snap_tool --target_platform=arm-neoverse-n1 generate_corpus <pb>
+    snap_tool --target_platform=arm-kunpeng920 generate_corpus <pb>
               --out=<work_dir>/<basename>.corpus
     返回 corpus 路径; 失败返回 None (如 end state 无该 platform 位)。
     """
