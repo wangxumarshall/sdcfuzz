@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1RTF5A53KTCWAPEDCA9NK50",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/fault_signature_playbook.md",
+    "tools/sdc_pipeline/fault_signatures.py",
+    "tools/sdc_pipeline/filters.py",
+    "tools/sdc_pipeline/mutators.py",
+    "tools/sdc_pipeline/pipeline.py",
+    "tools/sdc_pipeline/test_fault_signature_mutators.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 18247639,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 49113,
+    "api_call_count": 184
+  }
+}
