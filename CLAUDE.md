@@ -32,7 +32,7 @@ This checkout is an **active AArch64 port** targeting Huawei Kunpeng CPUs on ope
 5. **负载感知在线调度**：未实现（零代码）。
 6. **RL 变异**：接口 + ε-greedy bandit 已实装（`pipeline.py` EpsilonGreedyBanditPolicy + `bandit_bench.py`），超出 scheme.md 旧注记；reward 仍是 Unicorn 代理指标，非 gem5 检出率。
 
-已知边界（诚实记录）：Vault 目前仅 sdc_pipeline 内部读写（无外部消费者）；sim→hw 关联在组粒度（E5 verdict NOT_SIGNIFICANT）；Layer 4 的 PMU 风险评分/自适应调度未动工。sdcbench 1000 序列生产线（`tools/sdc_experiment/sdcbench_*.py`）是独立交付线，未并入 pipeline 闭环。
+已知边界（诚实记录，2026-09-05 北极星对齐重构后）：Vault 目前仅 sdc_pipeline 内部读写（无外部消费者）；sim→hw 关联在组粒度（E5 verdict NOT_SIGNIFICANT）；Layer 4 的 PMU 风险评分/自适应调度未动工。sdcbench 1000 序列生产线（`tools/sdc_experiment/sdcbench_*.py`）是独立交付线，未并入 pipeline 闭环。回灌接线（seeds/evolved → 阶段 A 池）已通但尚未有真实 SDC 命中流过（4 板真机扫描 60,431 次播放 0 issues——健康硅片，阳性对照验证过检测回路有效）。gem5 环境：`gem5_env.py` 解析到 `~/wangxu/gem5-fi-wangxu/`（check_env 自检），但 13 个历史实验脚本（`scripts/d*_sweep.py`、`scripts/gem5_sweep_*.py`、`gem5_ace_scanner.py`）仍各自硬编码 `~/gem5-fi/CHAOS/` 旧路径（本机不存在，属历史遗留）。
 
 ## Build & run
 
@@ -44,7 +44,7 @@ bazel build -c opt //tools:{snap_corpus_tool,fuzz_filter_tool,snap_tool,silifuzz
     //runner:reading_runner_main_nolibc \
     //orchestrator:silifuzz_orchestrator_main
 ```
-Tests: `bazel test -c opt //...` (or scope to a package, e.g. `//util/...`). Run a single target: `bazel test -c opt //util:crc32c_test`.
+Tests: `bazel test -c opt //...` (or scope to a package, e.g. `//util/...`). Run a single target: `bazel test -c opt //util:crc32c_test`. Python 侧（sdc_pipeline/sdc_mutator/sdc_experiment）pytest 裸跑：`python3 -m pytest tools/sdc_experiment/ tools/sdc_pipeline/ tools/sdc_mutator/ -q`（注意不要指到 `tools/` 根——会误收集 minimizer 的 Bazel cc_test）。
 
 **AArch64 / openEuler porting prerequisites** (from `README_AArch64_Deployment.md` — required, not optional, on this host):
 - `compiler-rt` builtin path: symlink the openEuler-named `libclang_rt.builtins.a` into `/usr/lib64/clang/17/lib/linux/libclang_rt.builtins-aarch64.a`.
@@ -63,7 +63,9 @@ End-to-end fuzzing + corpus generation (the `build_fuzz.sh` flow):
 
 Inspect snapshots with `snap_tool print|make|play|generate_corpus` (see README "How to" section).
 
-**sdcfuzz 生产链路**（SDC 研究，与上面 build_fuzz.sh 的通用 fuzzing 链并存）：`scripts/run_e2e.sh` = build_seeds（模板 .S → .bin）→ run_guided_mutation（操作数字典变异 + Centipede 探索）→ build_sdc_corpus（.bin → SnapCorpus）→ 真机扫描（local 或 4 板分布式）→ feedback（SDC 命中三复跑确认 → 回灌 `seeds/evolved/`）。研究闭环（Gen→Assess→Filter→Validate→Feedback，含 gem5/McPAT/Vault）在 `tools/sdc_pipeline/`（README 有架构图）。两套链路独立运行，尚未互连。
+**sdcfuzz 生产链路**（SDC 研究，与上面 build_fuzz.sh 的通用 fuzzing 链并存）：`scripts/run_e2e.sh` = build_seeds（模板 .S → .bin）→ run_guided_mutation（操作数字典变异 + Centipede 探索；**回灌种子接入**：`seeds/evolved/*.bin` 自动进入阶段 A 池）→ build_sdc_corpus（.bin → SnapCorpus）→ 真机扫描（local 或 4 板分布式）→ feedback（SDC 命中三复跑确认 → 回灌 `seeds/evolved/`）——即 **L3→L1 反馈闭环已接线**（feedback.reseed → seeds/evolved → run_guided_mutation → 下一轮扫描）。注意 `run_e2e.sh` 的 dry-run 用 `--dry-run` flag（DRY_RUN 环境变量形式 2026-09-05 起也生效，此前曾被脚本初始化覆盖）。研究闭环（Gen→Assess→Filter→Validate→Feedback，含 gem5/McPAT/Vault）在 `tools/sdc_pipeline/`（README 有架构图）。两套链路独立运行，尚未互连。
+
+**SDC 判定口径单一权威**：runner/orchestrator 日志解析（outcome 2/3/4=SDC、5/6=噪声、SIGSEGV-outside-snap/SIGTERM=噪声）唯一定义在 `tools/sdc_experiment/hw_log_parser.py`（parse_log + HASH_RE/OUTCOME_RE），hw_scan/collect_results/feedback 三处消费方均引用它——修改判定口径只改这一个文件。
 
 ## Architecture
 
