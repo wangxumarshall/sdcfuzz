@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1QHEVP21S7B1ZTMT0WYEQFD",
+  "strategy": "manual-commit",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/build_sdc_corpus.sh",
+    "scripts/ci_verify.sh",
+    "scripts/experiments/exp03_corpus_hw_local.sh",
+    "scripts/experiments/exp05_crosslayer.sh",
+    "tools/sdc_experiment/feedback.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 0
+  }
+}
