@@ -2,6 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 """loadsink_gen.py — 对准 cpu179 load 通路缺陷的 SiliFuzz 用例生成器
 
+经验模式: docs/fault_signature_playbook.md FS-001 (load 数据返回通路时序边界缺陷).
+触发五要素/负对照清单/执行协议均以该 playbook 为单一事实源, 本文件是其
+快照化模板实现.
+
 设计依据 (2026-09-05 MRU 复现实验的反汇编取证):
   cpu179 缺陷单元 = load 数据返回通路 (fill-buffer/L1D 读出组装级).
   MRU (Eigen Cholesky factorize_preordered) 触发循环 0x403158 窗口的五要素:
