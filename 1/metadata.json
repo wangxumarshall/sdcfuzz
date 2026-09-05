@@ -1,0 +1,192 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1RFCXD19WZTHH7FMW4AFRTZ",
+  "session_id": "56d8f467-f4e8-4159-bcf0-873168d1cdd8",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-05T09:46:41.71327573Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 6,
+  "save_step_count": 7,
+  "files_touched": [
+    "CLAUDE.md"
+  ],
+  "agent": "Claude Code",
+  "model": "glm-5.3",
+  "turn_id": "ec6abdcf6a4c",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 82955233,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 123005,
+    "api_call_count": 461,
+    "subagent_tokens": {
+      "input_tokens": 0,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 0,
+      "output_tokens": 0,
+      "api_call_count": 0
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-goal-2026-09-05T01:01:36.58608347Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "ceebfd09e04d",
+      "timestamp": "2026-09-05T01:01:36.58608347Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "prompt-skill-claude-code-goal-2026-09-05T02:59:28.99016418Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "goal"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "31a497a3eba9",
+      "timestamp": "2026-09-05T02:59:28.99016418Z",
+      "native": {
+        "command": "/goal"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/goal",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 9
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-05T09:46:41.39556281Z",
+    "agent_lines": 1,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1,
+    "total_lines_changed": 2,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 14,
+      "user_lines_removed": 1,
+      "agent_lines_added": 5856,
+      "agent_lines_removed": 2,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/2026-09-04-source-architecture-review-and-solutions/task_plan.md": 10,
+        "output/experiments/feedback/hits.json": 1
+      },
+      "user_removed_per_file": {
+        "output/experiments/feedback/hits.json": 1
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 14,
+      "user_lines_removed": 1,
+      "agent_lines_added": 5856,
+      "agent_lines_removed": 2,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/2026-09-04-source-architecture-review-and-solutions/task_plan.md": 10,
+        "output/experiments/feedback/hits.json": 1
+      },
+      "user_removed_per_file": {
+        "output/experiments/feedback/hits.json": 1
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 14,
+      "user_lines_removed": 1,
+      "agent_lines_added": 5856,
+      "agent_lines_removed": 2,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/2026-09-04-source-architecture-review-and-solutions/task_plan.md": 10,
+        "output/experiments/feedback/hits.json": 1
+      },
+      "user_removed_per_file": {
+        "output/experiments/feedback/hits.json": 1
+      }
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 14,
+      "user_lines_removed": 1,
+      "agent_lines_added": 5856,
+      "agent_lines_removed": 2,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/2026-09-04-source-architecture-review-and-solutions/task_plan.md": 10,
+        "output/experiments/feedback/hits.json": 1
+      },
+      "user_removed_per_file": {
+        "output/experiments/feedback/hits.json": 1
+      }
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 14,
+      "user_lines_removed": 1,
+      "agent_lines_added": 5856,
+      "agent_lines_removed": 2,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/2026-09-04-source-architecture-review-and-solutions/task_plan.md": 10,
+        "output/experiments/feedback/hits.json": 1
+      },
+      "user_removed_per_file": {
+        "output/experiments/feedback/hits.json": 1
+      }
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 14,
+      "user_lines_removed": 1,
+      "agent_lines_added": 5856,
+      "agent_lines_removed": 2,
+      "user_added_per_file": {
+        ".claude/scheduled_tasks.json": 3,
+        ".planning/2026-09-04-source-architecture-review-and-solutions/task_plan.md": 10,
+        "output/experiments/feedback/hits.json": 1
+      },
+      "user_removed_per_file": {
+        "output/experiments/feedback/hits.json": 1
+      }
+    }
+  ]
+}
