@@ -177,6 +177,14 @@ struct Snap {
   // the initial memory state.  This representation is optimized for checking
   // memory writable by a snapshot.
   //
+  // WARNING: same field name as proto EndState.memory_bytes, but DIFFERENT
+  // semantics. The proto field is a delta ("only differences from the
+  // starting state", see proto/snapshot.proto); this field is a full cover of
+  // all writable memory. SnapifyMemoryBytes() performs the delta-to-full
+  // conversion when a Snapshot becomes a Snap. Code that reads the proto
+  // directly must NOT treat end-state memory bytes as a full cover, and code
+  // that reads a Snap must NOT treat them as deltas.
+  //
   // TODO(dougkwan): [as-needed] We may support other modes of memory checking
   // like just checking only the memory that a snapshot changes.
   SnapArray<SnapMemoryBytes> end_state_memory_bytes;

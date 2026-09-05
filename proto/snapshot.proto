@@ -184,6 +184,10 @@ message EndState {
   // The expected memory state to exist at `endpoint`.
   // Only differences from the starting state need to be mentioned here.
   // Same constraints as for Snapshot.memory_bytes below wrt Snapshot.mappings.
+  // NOTE: the in-memory Snap format has a field with the same name
+  // (Snap::end_state_memory_bytes) but the OPPOSITE semantics: it is a full
+  // cover of all writable memory, not a delta. Snapify performs the
+  // conversion; do not interchange the two interpretations.
   repeated MemoryBytes memory_bytes = 3;  // can be missing
 
   // Set of platforms for which we've observed this EndState to occur

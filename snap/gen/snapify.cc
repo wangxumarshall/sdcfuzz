@@ -120,6 +120,12 @@ absl::StatusOr<Snapshot::MemoryBytesList> SnapifyMemoryByteList(
 // Specifically, ensures that all MemoryBytes are fragmented according to `opts`
 // in both the Snapshot and all EndStates. Populates all EndStates with all
 // writable bytes from the parent Snapshot.
+//
+// This is where the same-named field changes semantics: proto/Snapshot
+// EndState.memory_bytes is a delta vs the initial state, while Snap
+// end_state_memory_bytes must fully cover all writable memory. The
+// MakeInitial + SetMemoryBytes below materializes the full state from the
+// delta before re-serializing it.
 absl::Status SnapifyMemoryBytes(Snapshot &snapshot,
                                 const SnapifyOptions &opts) {
   MemoryState memory_state =
