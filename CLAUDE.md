@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-SiliFuzz finds CPU defects by fuzzing software **proxies** (CPU emulators / disassemblers), accumulating the resulting inputs into a **corpus**, then executing that corpus on real CPUs at scale and checking for divergent end states. See the [paper](paper/silifuzz.pdf) and [doc/proxy_architecture.md](doc/proxy_architecture.md).
+SiliFuzz finds CPU defects by fuzzing software **proxies** (CPU emulators / disassemblers), accumulating the resulting inputs into a **corpus**, then executing that corpus on real CPUs at scale and checking for divergent end states. See the [paper](paper/silifuzz.pdf) and [docs/proxy_architecture.md](docs/proxy_architecture.md).
 
 The core data unit is a **Snapshot** (`silifuzz.proto.Snapshot`): a short instruction sequence plus an initial register/memory state, executed deterministically. A **Snap** is the relocatable in-memory form a Runner loads from disk. Each Snap carries exactly one expected end state, so Snaps are microarchitecture-specific.
 
