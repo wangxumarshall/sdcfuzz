@@ -1,0 +1,66 @@
+{
+  "cli_version": "0.10.2",
+  "checkpoint_id": "01M1QJM0SX9XXD52BC4N15NQZR",
+  "session_id": "18343fdb-057b-4c0a-afe6-7f38461a2c15",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-05T01:23:40.13696219Z",
+  "branch": "feat/sdc-pipeline-framework",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "orchestrator/execution_context.cc",
+    "orchestrator/execution_context.h",
+    "orchestrator/orchestrator_test.py",
+    "orchestrator/silifuzz_orchestrator.cc",
+    "orchestrator/silifuzz_orchestrator_main.cc"
+  ],
+  "agent": "Claude Code",
+  "model": "GLM-5.3[1m]",
+  "turn_id": "bb7690456164",
+  "checkpoint_transcript_start": 71,
+  "transcript_lines_at_start": 71,
+  "compact_transcript_start": 14,
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 0
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-planning-with-files-2026-09-04T01:41:30.67890567Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "planning-with-files"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "bb7690456164",
+      "timestamp": "2026-09-04T01:41:30.67890567Z",
+      "native": {
+        "command": "/planning-with-files"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/planning-with-files",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "initial_attribution": {
+    "calculated_at": "2026-09-05T01:23:40.10517948Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 60,
+    "human_modified": 5,
+    "human_removed": 0,
+    "total_committed": 60,
+    "total_lines_changed": 65,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}
