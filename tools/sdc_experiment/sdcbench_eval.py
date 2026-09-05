@@ -15,8 +15,8 @@
 import os, sys, json, re, subprocess, argparse, shutil, tempfile
 from concurrent.futures import ThreadPoolExecutor
 
-GEM5 = "/home/sdc/wangxu/gem5-fi-wangxu/build/ARM/gem5.opt"
-CFG = "/home/sdc/wangxu/gem5-fi-wangxu/configs/se/arm_chaos.py"
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from tools.sdc_experiment.gem5_env import GEM5_OPT as GEM5, CHAOS_SE_SCRIPT as CFG
 ENV = dict(os.environ)
 ENV["LD_LIBRARY_PATH"] = "/home/sdc/gem5-deps/py/usr/lib64:/home/sdc/gem5-deps/usr/lib64:" + ENV.get("LD_LIBRARY_PATH", "")
 WORK_BASE = "/tmp/sdcbench_eval"
