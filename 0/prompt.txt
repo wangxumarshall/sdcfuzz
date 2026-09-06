@@ -1,0 +1,5 @@
+/planning-with-files 深度研究 docs/scheme.md，以此为北极星，更新claude.md；然后基于最新的claude.md北极星，对本项目源码进行重构，使得项目符合github上最优秀的软件架构、符合典型的软件架构设计。最后对项目claude.md进行修正。
+
+---
+
+1
