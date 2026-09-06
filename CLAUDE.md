@@ -10,6 +10,8 @@ SiliFuzz 基座：fuzzing software **proxies** (CPU emulators / disassemblers) �
 
 The core data unit is a **Snapshot** (`silifuzz.proto.Snapshot`): a short instruction sequence plus an initial register/memory state, executed deterministically. A **Snap** is the relocatable in-memory form a Runner loads from disk. Each Snap carries exactly one expected end state, so Snaps are microarchitecture-specific.
 
+**SDC 用例生成经验模式库**：真机确证的缺陷案例固化在 `docs/fault_signature_playbook.md`（故障签名→触发要素→生成器模板）。生成任何检测用例前先查该库——指令形态必须对准故障单元（教训：纯寄存器链打 load 通路缺陷 = 60431 次播放 0 检出）。
+
 This checkout is an **active AArch64 port** targeting Huawei Kunpeng CPUs on openEuler — the upstream is x86_64-first. `README_AArch64_Deployment.md` is the canonical end-to-end runbook for this port (dependency fixes, build, Centipede corpus generation). Treat x86_64-only assumptions in comments and code as porting targets, not ground truth.
 
 ### 四层架构 ↔ 仓库目录映射（sdcfuzz 视角）
