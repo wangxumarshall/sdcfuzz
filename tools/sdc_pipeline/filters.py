@@ -66,3 +66,45 @@ class RandomFilter:
         if len(pool) <= k:
             return pool
         return self.rng.sample(pool, k)
+
+
+class NegativeControlFilter:
+    """FS-001 负对照过滤 (Filter 接口): select 前先剔除已证伪形态。
+
+    经验承载: docs/fault_signature_playbook.md 负对照清单的执行体。
+    与 mutators.NegativeControlFilter 同源逻辑; 本类适配 pipeline 的
+    select(rows, k) 协议 (rows 元素需有 .cand 或就是 Candidate)。
+    """
+    def __init__(self, fs_ids=("FS-001",), inner=None):
+        from tools.sdc_pipeline.fault_signatures import negative_control_tags
+        self.tags = negative_control_tags() if not fs_ids else set()
+        if fs_ids:
+            from tools.sdc_pipeline import fault_signatures
+            for fid in fs_ids:
+                self.tags.update(
+                    fault_signatures.get(fid)["negative_controls"])
+        self.inner = inner
+
+    def _reject(self, cand) -> bool:
+        asm = getattr(cand, "source_asm", "")
+        has_load = ("ldr" in asm) or ("ldp" in asm)
+        tags = getattr(cand, "structure_tags", [])
+        if not has_load and any("fs001" in t for t in tags):
+            return True  # fs001 定向管线里的纯寄存器链 = 已证伪形态
+        return False
+
+    def score(self, a):
+        # score 透传内层 (无内层时给 0 — 本过滤器的职责是拦截, 不是排序)
+        return self.inner.score(a) if self.inner is not None else 0.0
+
+    def select(self, rows, k):
+        cand_of = lambda r: getattr(r, "cand", r)
+        kept = [r for r in rows if not self._reject(cand_of(r))]
+        dropped = len(rows) - len(kept)
+        if dropped:
+            import sys
+            print(f"[NegativeControlFilter] 拦截 {dropped} 个已证伪形态候选",
+                  file=sys.stderr)
+        if self.inner is not None:
+            return self.inner.select(kept, k)
+        return [r[0] for r in kept[:k]]

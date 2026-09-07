@@ -15,7 +15,8 @@ DEPS = os.path.expanduser("~/gem5-deps")
 # 本机 gem5-fi 实际位于 ~/wangxu/gem5-fi (HOME=/home/sdc, 用户目录嵌套)
 def _find_gem5_opt():
     cands = [os.path.expanduser(p) for p in (
-        "~/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt",  # 本机 0103 实际位置
+        "~/wangxu/gem5-fi-wangxu/build/ARM/gem5.opt",      # 本机实测唯一存在 (sdcbench 1000 序列评估所用)
+        "~/wangxu/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt",  # 历史 0103 布局
         "~/gem5-fi/CHAOS/gem5/build/ARM/gem5.opt",          # 常规布局
     )]
     for c in cands:
@@ -26,6 +27,12 @@ def _find_gem5_opt():
 GEM5_OPT = _find_gem5_opt()
 TAISHAN_SCRIPT = os.path.join(_REPO, "gem5_config/configs/two_level_taishan.py")
 WORKLOAD_DIR = os.path.join(_REPO, "gem5_config/workloads")
+
+# sdcbench 协议 (sdcbench_eval.py) 的 SE 注入脚本 — 与 TAISHAN_SCRIPT
+# (two_level_taishan.py, sdc_pipeline gem5_runner 协议) 是两套配置, 见
+# findings F2 断链点4: 两套 gem5 协议并存是已知现状, 本 task 只统一路径来源。
+CHAOS_SE_SCRIPT = os.path.expanduser(
+    "~/wangxu/gem5-fi-wangxu/configs/se/arm_chaos.py")
 
 # 复刻 ~/gem5-deps/env.sh 的关键环境 (source 不可用于 subprocess)
 def local_gem5_env() -> dict:
