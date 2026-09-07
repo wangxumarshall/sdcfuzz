@@ -47,6 +47,11 @@ run_stage_a() {
   done
   # 加入原始模板 .bin (无 MUT 标记的也算种子)
   cp "$SEED_DIR"/bin/*.bin "$BIN_DIR_A"/ 2>/dev/null || true
+  # 回灌接线 (R3): feedback.py reseed 确认命中 → seeds/evolved/<hash>.bin
+  # (与 seeds/bin 同格式, cmp 逐字节一致)。拷入阶段 A 池, 使 build_sdc_corpus
+  # 阶段 A 消费 → 下一轮扫描包含确认命中序列。北极星 L3→L1 闭环接线点。
+  cp "$SEED_DIR"/evolved/*.bin "$BIN_DIR_A"/ 2>/dev/null || \
+    echo "  (seeds/evolved/ 为空或不存在, 无回灌种子 — 正常)"
   echo "  阶段 A .bin 数: $(ls "$BIN_DIR_A"/*.bin 2>/dev/null | wc -l)"
 }
 

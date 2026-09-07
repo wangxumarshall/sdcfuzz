@@ -26,29 +26,12 @@ import time
 _REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, _REPO)
 
+from tools.sdc_experiment.hw_log_parser import parse_log as _parse_log  # noqa: E402  权威解析
+
 
 def parse_log(text: str) -> dict:
-    """与 scripts/collect_results.py::parse_log 逐字符一致的解析 (移植)。
-
-    runner RunSnapOutcome 枚举 (common/snapshot_enums.h):
-      0=kAsExpected 1=kPlatformMismatch 2=kMemoryMismatch
-      3=kRegisterStateMismatch 4=kEndpointMismatch
-      5=kExecutionRunaway 6=kExecutionMisbehave
-    真 SDC = outcome 2/3/4 (计算结果与预期不符, 静默数据损坏);
-    outcome 5 (满负载调度延迟超时) / 6 (信号) = 噪声;
-    SIGSEGV-outside-snap (fork/mmap 资源耗尽击中 snap 外路径) / SIGTERM = 噪声。
-    """
-    sigsegv_outside = len(re.findall(r'SIGSEGV while outside of snap', text))
-    sigterm = len(re.findall(r'SIGTERM', text))
-    all_failed = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = (\d+)', text)
-    sdc_outcomes = [o for o in all_failed if o in ('2', '3', '4')]
-    runaway = sum(1 for o in all_failed if o == '5')
-    misbehave = sum(1 for o in all_failed if o == '6')
-    sdc_details = re.findall(r'Snapshot \[[0-9a-f]+\][^\n]*failed, outcome = [234]', text)[:10]
-    return {"sigsegv_noise": sigsegv_outside, "sigterm": sigterm,
-            "runaway_noise": runaway, "misbehave_noise": misbehave,
-            "sdc_hits": len(sdc_outcomes), "sdc_details": sdc_details,
-            "total_failed": len(all_failed)}
+    """单一权威解析在 hw_log_parser.py (口径: outcome 2/3/4=SDC)。"""
+    return _parse_log(text)
 
 
 def parse_v1_summary(text: str):

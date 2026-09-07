@@ -12,6 +12,13 @@ reseed: 只回灌 confirmed 条目 → seeds/evolved/<hash>.bin。
 confirmed-path 真实化说明: 用 snap_tool set_bytes 把健康 snapshot 的首条
 指令 NOP 化构造确定性 outcome=3 失败 (无 mock/无 forcing) — 与真机 SDC 的
 复跑判定走完全相同的 runner 输出路径。跳过条件: 宿主缺 snap_tool/runner。
+
+# fixture 重生 (kunpeng920 平台切换 2026-09-05 后旧 N1 fixture 失配):
+#   bazel-bin/tools/snap_tool --raw \
+#     --runner=/usr/local/bin/reading_runner_main_nolibc \
+#     --target_platform=arm-kunpeng920 \
+#     --out=output/experiments/exp03-corpus-hw-local/pb/e1_carry_chain.pb \
+#     make output/bin_stage_a/e1_carry_chain.bin
 """
 import json
 import os

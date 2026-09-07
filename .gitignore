@@ -5,3 +5,5 @@ __pycache__/
 output/
 output/devices/
 seeds/bin/
+*.log
+*.tar.gz
