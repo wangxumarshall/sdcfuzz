@@ -1,6 +1,6 @@
 # sdcfuzz — 面向 ARM64 的 SDC 检测用例生成与跨层验证系统
 
-> Fork of Google [SiliFuzz](https://github.com/google/silifuzz), 原创性重构为**华为鲲鹏 920 (TaiShan V110) 上的静默数据破坏 (Silent Data Corruption, SDC) 定向检测系统**。
+> Fork of Google [SiliFuzz](https://github.com/google/silifuzz), 原创性重构为**ARM64上的静默数据破坏 (Silent Data Corruption, SDC) 定向检测系统**。
 > 上游 SiliFuzz 只做"随机 fuzzing → 真机一致性比对"， 本项目在其工程基座之上叠加了**微架构靶向种子、定向变异、gem5-CHAOS 故障注入评分、多板分布式扫描与演化反馈闭环**， 目标是产出高 SDC 检出率的检测用例。
 
 - 完整方案设计： [docs/scheme.md](docs/scheme.md)
