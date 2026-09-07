@@ -1,0 +1,10 @@
+/planning-with-files 深度研究 docs/scheme.md，以此为北极星，更新claude.md；然后基于最新的claude.md北极星，对本项目源码进行重构，使得项目符合github上最优秀的软件架构、符合典型的软件架构设计。最后对项目claude.md进行修正。
+
+---
+
+1
+
+---
+
+/goal 合并到一起：  你另一会话的 mutator 工作（7c0276c0，操作数变异三策略）搭车落在了这个分支，但它引用的 playbook/实验文档/loadsink_gen 还在 feat/sdc-pipeline-framework 上。两分支的 sdc_pipeline 
+  五文件内容相同但 SHA 不同——建议先合 feat 分支（四件套齐全）再合本分支，或把 f62742d4+3d136267+a6f631ca cherry-pick 过来。要我处理的话说一声。
