@@ -58,7 +58,7 @@ and `%xmm0`. The two segment selectors are set by the kernel to 0x33 and 0x2b
 for userspace. The xmm register is a workaround for
 [erratum 1386](https://www.amd.com/system/files/TechDocs/56683-PUB-1.07.pdf)
 On X86_64 `RSP` points to the top of the first page of *DATA1*
-(`DATA1_start + 4KiB`), not to the limit of the whole region — random
+(`DATA1_start + 4KiB`), not to the limit of the whole region: random
 fuzzed code only gets one valid stack page before faulting. See
 `GenerateUContextForInstructions<X86_64>` in `common/raw_insns_util.cc`.
 
@@ -68,22 +68,22 @@ AArch64 (`DEFAULT_FUZZING_CONFIG<AArch64>` in `common/proxy_config.h`) differs
 from X86_64 in the memory layout and register seeding:
 
 *   Memory mappings:
-    *   *CODE*: `[0x30000000, 0xB0000000)` — 2 GB, same as X86_64.
-    *   A dedicated one-page *STACK* at `[0x2000000, 0x2001000)` — unlike
+    *   *CODE*: `[0x30000000, 0xB0000000)`: 2 GB, same as X86_64.
+    *   A dedicated one-page *STACK* at `[0x2000000, 0x2001000)`. Unlike
         X86_64, which has no separate stack and spills into *DATA1*, AArch64
         gets its own 4 KiB stack mapping (the runner maps each Snapshot memory
         mapping in its entirety or not at all, so a separate stack keeps the
         *DATA* regions one-mapping-each).
-    *   *DATA1*: `[0x700000000, 0x70400000)` — 4 MB (X86_64 uses 512 MB).
-    *   *DATA2*: `[0x100700000000, 0x100704000000)` — 4 MB.
+    *   *DATA1*: `[0x700000000, 0x70400000)`: 4 MB (X86_64 uses 512 MB).
+    *   *DATA2*: `[0x100700000000, 0x100704000000)`: 4 MB.
     *   As on X86_64, the two data regions are placed so that a single
         instruction can translate an address from one to the other, and one
         resides in the lower 4 GB while the other does not.
 *   Initial register state (`GenerateUContextForInstructions<AArch64>`):
-    *   `PC = X30 = CODE_PAGE_start` — the link register aliases the entry PC
+    *   `PC = X30 = CODE_PAGE_start`: the link register aliases the entry PC
         as an artifact of how the runner jumps into the code.
     *   `SP = STACK_limit` (top of the dedicated stack page).
-    *   `X6 = DATA1_start`, `X7 = DATA2_start` — deliberate seeding of data
+    *   `X6 = DATA1_start`, `X7 = DATA2_start`: deliberate seeding of data
         pointers so that random load/store instructions have a chance of
         landing inside a valid mapping.
     *   Everything else, including FPCR/FPSR, is zero (FPCR of zero means
@@ -121,7 +121,7 @@ measures can dramatically reduce the number of memory mappings each runner
 creates from O(snapshots_per_shard) to O(1).
 
 On the downside, this optimization makes large contiguous chunks of memory
-accessible to every snapshot and potentially reduces the runner’s ability to
+accessible to every snapshot and potentially reduces the runner's ability to
 detect SDCs (e.g. detecting accesses to memory outside of the declared
 mappings). To reduce the chances of this we can poke holes in the *CODE* and
 *DATA* regions with `PROT_NONE` pages until we reach some predefined maximum

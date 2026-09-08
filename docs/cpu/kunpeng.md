@@ -18,17 +18,17 @@
 - HPRE（高性能加密）、SEC（安全引擎）、RSA/ECC非对称加密加速。
 - 支持SVM（Shared Virtual Memory）虚拟化。
 封装：60mm×75mm BGA，Compute Die面积约452mm²。
-### 2. 指令集特征（ARMv8.2-A ISA，深度定制）
-鲲鹏920基于ARMv8.2-A架构授权（Architecture License）进行了深度定制，完全兼容ARMv8.0/8.1及AArch64指令集。
+### 2. 指令集特征（ARMv8.2-A ISA）
+鲲鹏920持有ARMv8.2-A架构授权（Architecture License），自主实现核心微架构，兼容ARMv8.0/8.1及AArch64指令集。
 - **寄存器与编码优化**：AArch64提供**31个通用寄存器（x0–x30）** + 零寄存器（XZR，硬编码为0），指令编码精简（移除AArch32时代大部分条件执行指令），显著减少编译器在处理复杂逻辑时的寄存器溢出（Register Spill）损耗。
 - **向量/SIMD**：支持**128位宽NEON Advanced SIMD**指令集，双FSU流水线（FP32×2或FP64 quarter-rate）。支持**FP16扩展**（ARMv8.2可选），适用于轻量级AI推理硬件加速。与x86对比：向量宽度仅为AVX-512的1/4，避免超宽向量运算导致的严重降频（AVX Offset），在标量整数运算为主的云微服务、Web应用和数据库场景中能维持更高稳定频率和功耗。
-- **密码学与安全扩展**：原生支持SHA-1/SHA-2、AES、CRC32硬件级计算指令，在网络封包处理、HTTPS加密连接、存储数据校验时性能有数量级跃升。
+- **密码学与安全扩展**：原生支持SHA-1/SHA-2、AES、CRC32硬件级计算指令，网络封包处理、HTTPS加密连接、存储数据校验可走硬件加速。
 - **虚拟化与RAS特性**：
   - **VHE（Virtualization Host Extensions）**：优化KVM等Hypervisor，宿主机内核可直接在EL2运行，显著减少虚拟机与宿主机上下文切换开销。
   - **企业级RAS**：支持指令/数据缓存的ECC（纠错码）校验、内存毒化隔离（Memory Poisoning）、PCIe AER（高级错误报告）等，提供99.999%可用性保障。
 - **其他扩展**：LSE（Large System Extensions）高效原子操作（LDADD/LDCAS等），极大提升多线程同步（如数据库锁）；支持ARMv8.2 Crypto扩展；RAS特性；编译器优化支持`-mtune=tsv110`（GCC/Clang/LLVM）。
 ### 3. TaiShan V110核心微架构（4-wide OoO，自定义服务器优化）
-TaiShan V110是华为首款完全自主设计的服务器级ARM核心，采用**4-wide超标量乱序执行**设计，在“性能、功耗、面积（PPA）”之间取得最佳平衡：高核数（64核/芯片）、高并发吞吐量，而非极致单核IPC或超高频率。其设计哲学与桌面端芯片不同，专注于高并发云服务、大数据处理和分布式存储。
+TaiShan V110是华为首款完全自主设计的服务器级ARM核心，采用**4-wide超标量乱序执行**设计，取舍方向是高核数（64核/芯片）与高并发吞吐量，单核IPC和频率让位。它面向高并发云服务、大数据处理和分布式存储，不追求桌面级单核性能。
 #### 前端流水线与分支预测
 - **取指与解码宽度**：4发射（4-wide）超标量前端，每个时钟周期最多从L1指令缓存中获取并解码4条指令（~16–32字节）。
 - **L1I Cache**：64KB，4-way，64B line，ECC。
@@ -42,10 +42,10 @@ TaiShan V110是华为首款完全自主设计的服务器级ARM核心，采用**
 - **调度与重命名**：PRF-based（Physical Register File），ROB规模适中，每个scheduler ~33 entries（ALU/Memory/FP/Vector独立）；Flag rename ~31 entries；支持move elimination等重命名消除，减少假依赖。
 #### 缓存层级子系统
 - **L1 Cache**：每核独占64KB指令缓存（I-Cache）+ 64KB数据缓存（D-Cache），4-way，64B line，ECC；L1D支持2×128-bit访问/周期（2 load或1 load+1 store）。
-- **L2 Cache**：每核独占512KB private（同代ARM中极为充裕），10-cycle latency，~20–32 bytes/cycle（L2→L1D单向）。
+- **L2 Cache**：每核独占512KB private（同代ARM中容量较大），10-cycle latency，~20–32 bytes/cycle（L2→L1D单向）。
 - **L3 Cache (LLC)**：单芯片共享高达64MB（平均每核1MB），按Cluster（4核）切片，Tag在Cluster、Data在NoC附近；带宽：4核Cluster ~21.7 GB/s；支持Shared/Private/Partition三种模式；在分区模式下~36周期（~4MB），接近容量>90周期；跨Cluster/跨Die延迟更高但优于早期公版。
 - **dTLB**：32-entry fully associative，L2 TLB 1024-entry（11-cycle hit）。
-**独特优化**：L3 Partition模式 + HCCS Home Agent（HHA）动态分配，减少跨核延迟；bufferless NoC + LSE原子操作 + 软件硬件协同（NUMA-aware调度），针对云负载深度定制。
+**面向云负载的优化**：L3 Partition模式 + HCCS Home Agent（HHA）动态分配，减少跨核延迟；bufferless NoC + LSE原子操作 + 软硬件协同（NUMA-aware调度）。
 ### 4. 其他全量技术细节
 - **功耗管理**：7nm工艺 + 自定义微架构，支持DVFS、C-states等，实现高能效。
 - **安全性**：ARM TrustZone + 硬件加密加速 + 异构机密计算（部分型号）。
@@ -53,6 +53,6 @@ TaiShan V110是华为首款完全自主设计的服务器级ARM核心，采用**
 - **RAS**：ECC全程、机器检查架构（MCA）、错误隔离。
 - **生态**：OpenEuler、鲲鹏计算联盟（2000+伙伴），GCC/Clang/LLVM针对tsv110优化。
 - **演进**：Kunpeng 920是基础，后续920s/R25等基于相同TSV110微架构小改款。
-### 总结：设计哲学与深刻洞察
-鲲鹏920的设计哲学是典型的**Scale-Out（横向扩展）思维的极致产物**。它没有死磕单核的超高频率或像x86那样堆砌超宽的浮点向量单元，而是通过“高能效的4-wide TaiShan V110单核微架构 + 庞大的64核物理核心阵列 + 顶级的8通道DDR4内存与100G RoCE网络通道 + PCIe 4.0/CCIX”构建了一个专门针对现代云计算、分布式存储和大数据吞吐量量身定制的“数据中心级怪兽”。  
-其核心诉求是在单一7nm芯片上实现高并发吞吐量，在云原生、数据库、分布式存储等场景下表现出色，甚至超越同时期部分x86中端产品，同时能耗更低。局限性包括：128-bit NEON在重度FP/HPC上天然弱于AVX-512；极端共享场景L3一致性开销仍存；分支预测/ROB规模不及同期顶级x86/Neoverse N1。但作为国产服务器CPU的里程碑，它验证了华为在7nm Chiplet、自主微架构、软硬协同上的实力，为后续Kunpeng 930等奠定基础。
+### 总结：设计取向
+鲲鹏920走的是Scale-Out（横向扩展）路线：不追求单核高频，也不像x86那样堆超宽浮点向量单元，而是以高能效的4-wide TaiShan V110单核微架构、64核阵列、8通道DDR4内存、100G RoCE网络和PCIe 4.0/CCIX，面向云计算、分布式存储和大数据吞吐量设计。
+其目标是在单一7nm芯片上实现高并发吞吐量：云原生、数据库、分布式存储等场景下表现出色，部分超过同时期x86中端产品，能耗更低。局限性：128-bit NEON在重度FP/HPC上弱于AVX-512；极端共享场景L3一致性开销仍存；分支预测/ROB规模不及同期顶级x86/Neoverse N1。它验证了华为在7nm Chiplet、自主微架构、软硬协同上的能力，后续Kunpeng 930等以此为基础。

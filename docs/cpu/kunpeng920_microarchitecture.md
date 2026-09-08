@@ -43,7 +43,7 @@ Socket 0                          Socket 1
 
 - 8 个 **CCL（CPU Cluster）** = 4 核簇，共享一个 L3 数据 bank 组；
 - 双向**环形总线**连接 CCL、L3 bank、DDR 控制器（每 die 上下边各一组 DDR4 控制器）；
-- 全 die 共 8 个 L3C PMU（`hisi_scclN_l3c0..7`）、2 个 HHA（Hydra 主线仲裁/一致性）、4 个 DDRC —— 与 sysfs 实测完全对应；
+- 全 die 共 8 个 L3C PMU（`hisi_scclN_l3c0..7`）、2 个 HHA（Hydra 主线仲裁/一致性）、4 个 DDRC，与 sysfs 实测完全对应；
 - **L3 tag 放在 CPU 簇侧而不是数据 bank 侧**（华为独特设计）。
 
 本机 sysfs 证据：
@@ -62,7 +62,7 @@ core_id 以 4 为步长（cpu0 core_id=0, cpu32 core_id=36），physical_package
 
 > ⚠️ **对 SiliFuzz 的直接影响**：`util/platform.cc` 中 `implementer==0x48` 被强制映射为
 > `kArmNeoverseN1`（`util/platform.cc:165-166`）。这是"借用"Neoverse N1 的 PlatformId 做
-> snapshot 兼容性判断，不代表两者微架构相同——本文档第 4 节详细对比两者差异，SDC 实验
+> snapshot 兼容性判断，不代表两者微架构相同（本文档第 4 节详细对比两者差异，SDC 实验
 > 解读时不可把 N1 的公开数据当作本机行为。
 
 ---
@@ -102,7 +102,7 @@ TaiShan v110 是 HiSilicon 首个完全自研的 64 位 ARM 核（此前用 Cort
 ```
 整数侧:  ALU0 ALU1 ALU2   MUL/DIV(第4口)
           └─ 分支可走其中两口，每周期最多 1 个 taken 分支
-FP 侧:   FP0 FP1 —— 都支持 128-bit FMA(FP32, 5周期)
+FP 侧:   FP0 FP1，都支持 128-bit FMA(FP32, 5周期)
           FP64 为 1/4 吞吐; 向量整数加 2 周期(双口);
           向量乘法仅单口; FADD/FMUL 各只占一个口(设计怪点)
 访存:    2×AGU(每周期 2 个 load 或 1 load+1 store)
@@ -123,13 +123,13 @@ FDIV 17；FMA 7（CnC 实测 FP32 FMA 5）；向量整数加 2。
 | dTLB | 32 项全相联 + 1024 项 L2 TLB | — |
 | DRAM | DDR4，读带宽 ~63 GB/s/die（CnC 样机），空载延迟 ~96 ns | 本机见 §5 |
 
-### 3.5 L3 partition 模式——对实验设计最重要的微架构特性
+### 3.5 L3 partition 模式：对实验设计最重要的微架构特性
 
 华为把 L3 tag 放在 CPU 簇侧，且默认运行在 partition 模式：
 - 单核访问近端私有份额（<4 MB）：~36 周期，性能尚可；
 - 单核工作集增大逐步覆盖全 L3：延迟逐渐涨到 >90 周期；
 - **两个核共享同一段数据时，L3 表现退化为 shared 模式行为，全容量范围都是高延迟**
-  ——包括同簇内的两个核共享数据也没有优待；
+  （包括同簇内的两个核共享数据也没有优待）；
 - 每 4 核簇 L3 读带宽 ~21.7 GB/s，是簇级带宽瓶颈（类似 Intel E-core 簇但更严重）。
 
 **实验含义**：任何绑核 + 共享数组的微基准（包括 SDC 的双核压核实验），其 L3 延迟
@@ -158,7 +158,7 @@ HiSilicon 固件对 EL0 可读 ID 寄存器部分字段未完整实现。**可�
 
 **对 SiliFuzz/SDC 的直接约束**：
 - 无 AArch32 → runner 不需要考虑 32 位状态切换；
-- LSE 完整可用（`casal` 实测依赖链 43 cyc——L1 争用下同步原语的代价参考）；
+- LSE 完整可用（`casal` 实测依赖链 43 cyc，L1 争用下同步原语的代价参考）；
 - PAC/BTI 缺失 → 生成 snapshot 时不用避开相关重写（本来也没有）；
 - SHA 仅 256 无 512、无 SM3/SM4 → 加密指令覆盖实验的指令池边界；
 - AIVIVT I-cache → 理论上存在 VIPT 别名；但 64KB/4-way/64B 行 = 256 组 × 64B = 16KB
@@ -169,15 +169,15 @@ HiSilicon 固件对 EL0 可读 ID 寄存器部分字段未完整实现。**可�
 | 项目 | 实测 | 含义 |
 |---|---|---|
 | ACPI 表 | APIC BERT DSDT EINJ ERST FACP GTDT HEST IORT MCFG **MPAM** PCCT **PPTT** **SDEI** SLIT SPCR SPMI SRAT SSDT | 完整的服务器 RAS 栈 |
-| **HEST/EINJ/BERT/ERST** | 1420/368/48/560 字节 | **硬件错误注入接口（EINJ）存在**——SDC 研究可用固件级错误注入路径 |
+| **HEST/EINJ/BERT/ERST** | 1420/368/48/560 字节 | **硬件错误注入接口（EINJ）存在**，SDC 研究可用固件级错误注入路径 |
 | EDAC | `ghes_edac`，mc0 总 32768 MB；2 DIMM 枚举（SOCKET0 CH0 DIMM0 16GB + SOCKET1 CH0 DIMM1 16GB），Registered-DDR4，SECDED | **DDR4 RDIMM + SECDED**：单 bit 可纠正、双 bit 不可纠正；ce/ue 计数当前为 0（8-25 重启以来） |
-| **MPAM** | 1488 字节表 | ARM 内存分区监控（Memory Partitioning & Monitoring）——平台具备缓存/内存带宽 QoS 硬件分区能力，与 L3 partition 模式互补 |
+| **MPAM** | 1488 字节表 | ARM 内存分区监控（Memory Partitioning & Monitoring），平台具备缓存/内存带宽 QoS 硬件分区能力，与 L3 partition 模式互补 |
 | SDEI | 48 字节 | 固件软件委派异常接口（REE 不可屏蔽事件通知） |
 | 中断控制器 | GICv3（+GICv4.1 特性）：16 PPI、640 SPI、0 Extended SPI、DirectLPI、**NMI 不支持**（GICD_TYPER）、split EOI/Deactivate；**2 个 ITS 按 socket 绑定**（ITS0↔node0、ITS1↔node2，SRAT），每个 65536 Devices + 65536 VCPU 表（flat） | LPI 支持完整；内核日志为证 |
-| cpufreq | `cppc_cpufreq`，4 个 policy 域 = 每 NUMA node 一域（32 核/域），performance governor，2.6 GHz 固定 | **调频粒度是 die 级**——同 die 32 核共享一个频率决策 |
+| cpufreq | `cppc_cpufreq`，4 个 policy 域 = 每 NUMA node 一域（32 核/域），performance governor，2.6 GHz 固定 | **调频粒度是 die 级**：同 die 32 核共享一个频率决策 |
 | 定时器 | `cntvct_el0` = 100.000 MHz（实测校准，26.0 cyc/tick @2.6GHz） | 用户态低开销计时可用 |
 
-> 普通用户**不可及**的项（诚实记录）：PPTT 二进制 root-only（0400）无法解码——但内核
+> 普通用户**不可及**的项（诚实记录）：PPTT 二进制 root-only（0400）无法解码，但内核
 > 已消费 PPTT 并输出到 sysfs topology（`cluster_id`/`physical_package_id` 等，§2 已有等价信息）；
 > `/proc/ras` 此内核不存在；ESR/ERR（RAS 错误记录寄存器）EL1-only，错误上报走 ghes_edac。
 
@@ -194,9 +194,8 @@ HiSilicon 固件对 EL0 可读 ID 寄存器部分字段未完整实现。**可�
 | µop cache | 无 | 有 | 无 | 无 |
 | IPC 定位 | SPEC17 INT 单核落后 N1 约 52% | 基准 | — | 落后 v110 7% |
 
-一句话：**v110 是"面积/功耗优先"的自研第一代，整数尚可、FP/向量与分支预测偏弱、
-访存层级靠 L3 partition 模式弥补互联短板**。这就是仓库把 0x48 映射成 N1 只能当作
-"快照格式兼容"而不能当作"性能等价"的原因。
+总结：v110 是面积/功耗优先的自研第一代，整数尚可，FP/向量与分支预测偏弱，访存层级靠 L3 partition 模式弥补互联短板。因此仓库把 0x48 映射成 N1 只能当作
+"快照格式兼容"，不能当作"性能等价"。
 
 ---
 
@@ -238,7 +237,7 @@ $ taskset -c 4 perf stat -e cycles,instructions,l1d_cache,l1d_cache_refill,l2d_c
 
 可用的事件族：`armv8_pmuv3_0`（含 `stall_frontend/backend`、`ll_cache_rd/miss_rd`、
 `inst_spec`、`exe_stall_cycle`、`if_is_stall` 等 Hisilicon 扩展事件）。
-**topdown L1 指标（`bad_speculation` 等）不可用**——2026-09-04 复测确认 v110 无
+**topdown L1 指标（`bad_speculation` 等）不可用**（2026-09-04 复测确认 v110 无
 FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/backend` 近似。
 全部事件名与 raw ID 详见 [kunpeng920_pmu_events.md](kunpeng920_pmu_events.md)。
 
@@ -268,13 +267,13 @@ FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/b
 | 操作 | 实测 cyc/op | 与公开规格对照 |
 |---|---|---|
 | dependent int MUL | 3.42 | 公开 4（loop 摊薄后略低） |
-| dependent udiv（小商早退） | 6.20 | 公开全幅 19——**小商早退路径快得多** |
+| dependent udiv（小商早退） | 6.20 | 公开全幅 19，**小商早退路径快得多** |
 | FP32 FADD / FMUL / FMA | 5.01 / 5.05 / 5.02 | FMA 延迟 = FADD（5），与 CnC 实测一致 |
-| FP32 FSQRT / FDIV | 7.01 / 6.01 | 依赖链口径远低于公开全幅（17）——除法器有投机/早退 |
+| FP32 FSQRT / FDIV | 7.01 / 6.01 | 依赖链口径远低于公开全幅（17），除法器有投机/早退 |
 | CRC32X | 1.00 | 8 B/cyc 单元 |
 | AESD 单轮 | 3.01 | ≈5.3 GB/s 单核 AES |
 | SHA256H | 5.01 | |
-| **CASAL（LSE 原子）** | **43.45** | L1 争用 + acq/rel 全代价——**同步原语干扰实验的基准代价** |
+| **CASAL（LSE 原子）** | **43.45** | L1 争用 + acq/rel 全代价，**同步原语干扰实验的基准代价** |
 | dependent LDR（L1 自引用） | 2.87 | 依赖链 load-to-use ≈ 3（公开 4，或有前递） |
 | STR 同一行 | 1.00 | store buffer 吸收 |
 | DC ZVA（64B） | 4.02 | |
@@ -295,13 +294,13 @@ FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/b
 
 解读：
 - L1 load ~21 B/cyc（循环含串行 acc 加法，理论上限 2×16B ldp = 32 B/cyc）；store ~15.8 B/cyc；
-- 单核全 L3 load 9.3 GB/s，约为公开"簇级 21.7 GB/s"的一半——与"4 核簇共享 L3 tag/带宽"的设计自洽；
+- 单核全 L3 load 9.3 GB/s，约为公开"簇级 21.7 GB/s"的一半，与"4 核簇共享 L3 tag/带宽"的设计自洽；
 - store 在全 L3 工作集下（14.6 GB/s）反高于 load（9.3 GB/s）：write-back 行为 + store buffer 异步吸收，load 侧要等数据。
 
 ### 5.6 其他系统事实
 
 - 内核启动参数含 `nospectre_bhb`、`arm64.nopauth`（指针认证已关）、smmu bypass 两个设备
-  —— SDC 实验不受 spectre 缓解干扰；
+  （SDC 实验不受 spectre 缓解干扰）；
 - `perf_event_paranoid=2`：普通用户可计数内核态之外的 PMU，足够实验用；
 - 网卡 HNS GE/10GE/25GE（含 RDMA）、LSI SAS3408 RAID + HiSilicon SAS/SATA、iBMC 管理口；
 - 仓库 CLAUDE.md 中的 MCE 警告（满核并行触发机器检查重启）与 128 核/4 NUMA 的
@@ -318,7 +317,7 @@ FEAT_PMUv3_METRIC（caps `slots=0`），前端/后端分解用 `stall_frontend/b
    node0/node2 无内存，内存分配会自动落到 node1/node3；
 3. **L3 行 128B vs L1/L2 64B**：做缓存行对齐/伪共享敏感的实验（如 SDC 干扰注入）
    必须以 128B 为 L3 粒度设计，而非 x86 直觉的 64B；
-4. **L3 partition 模式 + 共享退化**：双核共享数据时 L3 延迟全域 >90 周期——
+4. **L3 partition 模式 + 共享退化**：双核共享数据时 L3 延迟全域 >90 周期，
    设计"压力干扰核 + 受害核共享 L3"的实验时，观测到的慢是**设计使然**，不是故障；
 5. **PMU 完备（核心普通用户即可用；uncore 需 root）**：核心 + L3C/HHA/DDRC uncore
    全套就绪（uncore 需 `perf_event_paranoid<=1`，见 §5.3 更正），SDC 论文的环境敏感性

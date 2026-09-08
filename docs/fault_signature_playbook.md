@@ -24,10 +24,10 @@
 
 - 损坏发生在 **load 返回数据**，不在计算/地址生成/存储：寄存器收到"其他位置真实内容
   的字节相位错位副本"（±k·8bit）、陈旧行回放、或全零交付；内存真值完好。
-- **静默**：无 EDAC/APEI/GHES 记录，无 PMU memory_error——低于全部架构化 RAS 粒度。
+- **静默**：无 EDAC/APEI/GHES 记录，无 PMU memory_error，低于全部架构化 RAS 粒度。
 - **负载敏感**：单核 0%，同 socket 满载（≥47 核，低压近似）才显形；满载下 0.5%~5%。
 - 内核侧投影：spurious translation fault（PTW 读出同族受累）、坏指针 Oops。
-- SiliFuzz 检出形态：**outcome:2（MEMORY_MISMATCH）为主**——坏 load 数据被 store 回写
+- SiliFuzz 检出形态：**outcome:2（MEMORY_MISMATCH）为主**，坏 load 数据被 store 回写
   后在 end-state 内存比对显形；偶发 outcome:3（坏值经 FMA 进长存活寄存器）。
 
 ### 触发要素（五要素，负对照界定的充分条件）
@@ -41,14 +41,14 @@
 | ⑤ | 满载执行环境 | 同 socket ≥47 核 burner | 电压裕量压缩，时序违例显形 |
 
 **已证伪的替代形态**（11 个负对照，勿再投入）：纯 FMA、纯 gather、纯分支、纯 NEON、
-密集 GEMM/SVD、纯 C 重写的稀疏分解、L1D 冷压力、三角求解——单独任一都不触发，
+密集 GEMM/SVD、纯 C 重写的稀疏分解、L1D 冷压力、三角求解，单独任一都不触发，
 **必须交错**。
 
 ### 生成器模板（已落地）
 
-- **金标准（长活进程）**：`mru_eigenmc.c`（libc-only，Eigen 机器码内嵌）——状态压力
+- **金标准（长活进程）**：`mru_eigenmc.c`（libc-only，Eigen 机器码内嵌），状态压力
   上界，1.5-5%/千次。用于确认窗口活跃性（背靠背对照）。
-- **框架内（SiliFuzz 快照）**：`tools/sdc_experiment/loadsink_gen.py`——五要素参数化：
+- **框架内（SiliFuzz 快照）**：`tools/sdc_experiment/loadsink_gen.py`，五要素参数化：
   索引模式（shuffled/reversed/strided）× 链长（8-20）× 轮次（单页预算内联合钳制）×
   索引步进（奇数互素）× 数据 seed × fdiv 有无；索引/数据表用 **store 自构造**
   （额外制造 store→load 往返）。检出密度 4/11 轮（每轮 15-20 万次快照执行）。
@@ -67,7 +67,7 @@ for c in ...; do taskset -c $c ./mrueig 100000 <seed> & done
 ### 教训（生成策略层的记忆）
 
 1. **先定故障单元，再定探针形态**：gem5 寄存器 bit-flip 协议下 100% 传播率的纯寄存器
-   链（sdcbench 60,431 次真机播放）对此缺陷 0 检出——优化"损坏传播性"不等于提高
+   链（sdcbench 60,431 次真机播放）对此缺陷 0 检出：优化"损坏传播性"不等于提高
    "损坏产生概率"。
 2. **负载敏感缺陷必须在满载下评估**：单核 gem5 / 单核真机都测不出此类故障。
 3. **负对照清单与正例同等重要**：11 个不触发形态界定了"交错"是本质，防止后续生成器
@@ -84,7 +84,7 @@ for c in ...; do taskset -c $c ./mrueig 100000 <seed> & done
 
 ## 工具承载（经验的可执行形态）
 
-本 playbook 是人读叙事；**同一内容以机器可读+可执行形态承载在变异工具里**，
+本 playbook 是人读叙事；同一内容以机器可读+可执行形态承载在变异工具里，
 两层必须同步修改：
 
 | 承载层 | 文件 | 作用 |
@@ -92,16 +92,16 @@ for c in ...; do taskset -c $c ./mrueig 100000 <seed> & done
 | 数据层 | `tools/sdc_pipeline/fault_signatures.py` | FS 模式的结构化数据（trigger_elements / negative_controls / execution_env），变异器 import 的单一事实源 |
 | 变异层 | `tools/sdc_pipeline/mutators.py` `LoadPathMutator` | 把 FS-001 五要素注入候选：间接寻址链 + load→FMA→store 同址往返 + 长存活 d4 + fdiv，chain×round 页预算钳制 |
 | 过滤层 | `tools/sdc_pipeline/filters.py` `NegativeControlFilter` | 拦截已证伪形态（fs001 管线里的纯寄存器链），适配 pipeline select/score 协议 |
-| 管线层 | `tools/sdc_pipeline/pipeline.py` final_top 闸门 | vault.top_by 绕过 select 的旁路修复——final_top 选取同样过负对照 |
+| 管线层 | `tools/sdc_pipeline/pipeline.py` final_top 闸门 | vault.top_by 绕过 select 的旁路修复，final_top 选取同样过负对照 |
 | 回归层 | `tools/sdc_pipeline/test_fault_signature_mutators.py` | 守护数据完整性/要素携带/拦截行为三件事 |
 
 闭环验证（2026-09-05 实测）：LoadPathMutator + NegativeControlFilter 进 Pipeline
 跑 3 代，final_top 全部为含触发要素的 load 密集形态（ldr×6-14 + fmsub）；
-未接闸门时 ACE 评估器偏置会把纯寄存器链（已证伪形态）带回 top——**这本身就是
-"经验必须进工具"的实证：文档写 100 遍，评估器偏置照样把管线带回老路**。
+未接闸门时 ACE 评估器偏置会把纯寄存器链（已证伪形态）带回 top。这说明光把
+经验写进文档不够：评估器偏置照样会把管线带回老路，经验必须同时进工具。
 
 已知事项：ACE 评估器对 load 密集序列打分偏低（0.125 vs 纯 ALU 链 1.0），
-FS 定向管线的 evaluator 权重应按模式调整（trigger_elements 命中率应进评分）——
+FS 定向管线的 evaluator 权重应按模式调整（trigger_elements 命中率应进评分），
 待 FS-002 案例出现时一并处理。
 
 ## 维护规则

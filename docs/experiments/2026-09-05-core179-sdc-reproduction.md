@@ -5,13 +5,13 @@
 
 ## 事实澄清
 
-- **故障机是 0102（172.168.160.42，192 核 HIP08 4×48），不是 0201（96 核）**。用户口述的"0201 这台 192 核设备"与实测板卡拓扑不符——0102 才有 cpu179（PkgID 19062 / NUMA node 7），0201 核数 96，无 179 号核。
+- **故障机是 0102（172.168.160.42，192 核 HIP08 4×48），不是 0201（96 核）**。用户口述的"0201 这台 192 核设备"与实测板卡拓扑不符：0102 才有 cpu179（PkgID 19062 / NUMA node 7），0201 核数 96，无 179 号核。
 - "179 核 SDC 问题"出自既有法证档案：`vmcore0102/gem5-fi/docs/cases/core179-*`（12 次开机的 135 次 spurious fault + 12 次 Oops 100% 单点 CPU179）+ `gem5-fi-wangxu/docs/cases/sdc1-01-02-core179-diagnostics/`（MRU 最小复现用例）。
-- 本次开机 0102 dmesg 实测 **35→36 条 spurious translation fault 全部 CPU179**——故障当前活跃。
+- 本次开机 0102 dmesg 实测 **35→36 条 spurious translation fault 全部 CPU179**，故障当前活跃。
 
 ## 复现协议（沿用已验证配方，MRU 路线）
 
-1. 构建 libc-only MRU（`mru_eigenmc.c` + `eigen_cabidrv.cpp`，Eigen 5.0.1 机器码内嵌）——纯 Cholesky numeric factorize（cdiv + rank-1 update + 间接寻址 + 长存活累加器交错序列）。
+1. 构建 libc-only MRU（`mru_eigenmc.c` + `eigen_cabidrv.cpp`，Eigen 5.0.1 机器码内嵌），负载为纯 Cholesky numeric factorize（cdiv + rank-1 update + 间接寻址 + 长存活累加器交错序列）。
 2. 同 socket 47 核满载（cpu 144-191 排除 179，每核跑 mrueig burner）。
 3. `taskset -c 179 ./mrueig N 12345`。
 
@@ -29,7 +29,7 @@
 
 ## 与 sdcbench 序列的关系（诚实交代）
 
-此前 60,431 次播放 0 issues 的 sdcbench 序列（纯寄存器链）**打不中此故障**——根因在 load 数据返回通路（fill-buffer/L1D 读出组装级），触发需要"间接寻址 + 长存活寄存器 + 特定交错"的乱序引擎状态泄漏序列。"用例太理想化"的批评被本次复现直接证实：gem5 寄存器翻转协议下 100% 检出率的序列，对真实 load 通路缺陷的检出率为零。**MRU（Eigen 指令序列）才是命中该缺陷的探针。**
+此前 60,431 次播放 0 issues 的 sdcbench 序列（纯寄存器链）**打不中此故障**，根因在 load 数据返回通路（fill-buffer/L1D 读出组装级），触发需要"间接寻址 + 长存活寄存器 + 特定交错"的乱序引擎状态泄漏序列。"用例太理想化"的批评被本次复现直接证实：gem5 寄存器翻转协议下 100% 检出率的序列，对真实 load 通路缺陷的检出率为零。**MRU（Eigen 指令序列）才是命中该缺陷的探针。**
 
 ## 结论
 

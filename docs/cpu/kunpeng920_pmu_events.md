@@ -17,10 +17,10 @@
 
 - 内核驱动：`hisi_uncore_l3c_pmu` / `hisi_uncore_hha_pmu` / `hisi_uncore_ddrc_pmu`（均已加载，`lsmod` 实证）。
 - SCCL 编号 1、3 在 socket 0，5、7 在 socket 1（与 NUMA node0-3 一一对应）。
-- 每实例事件名相同、raw ID 相同，只是设备实例不同——所以下面按"事件族"列出，用哪个 die/实例就换前缀。
+- 每实例事件名相同、raw ID 相同，只是设备实例不同，所以下面按"事件族"列出，用哪个 die/实例就换前缀。
 - `perf list pmu` 共 1832 行；核心 PMU 事件在 `perf list` 里出现在两段：`armv8_pmuv3_0`（架构事件）和 `core imp def`（v110 实现自定义事件）。
 
-核心计数器数量说明：一次 `perf stat` 最多同时打开 **6 个**硬件事件（实测第 7 个起报 `<not supported>`），即 PMCR_EL0.N = 6。`/sys/.../armv8_pmuv3_0/caps/` 中 `slots=0`、`threshold_max=0`——**不支持** FEAT_PMUv3_METRIC（topdown 硬件指标）与 FEAT_PMUv3_TH（事件阈值过滤）。
+核心计数器数量说明：一次 `perf stat` 最多同时打开 **6 个**硬件事件（实测第 7 个起报 `<not supported>`），即 PMCR_EL0.N = 6。`/sys/.../armv8_pmuv3_0/caps/` 中 `slots=0`、`threshold_max=0`：**不支持** FEAT_PMUv3_METRIC（topdown 硬件指标）与 FEAT_PMUv3_TH（事件阈值过滤）。
 
 事件 attr 格式（`/sys/.../armv8_pmuv3_0/format/`）：
 
@@ -106,7 +106,7 @@ watchpoint/breakpoint 至少各 1（寄存器读出值保守，见微架构文�
 | `mem_access` | 0x13 | 数据内存访问（load+store） |
 | `bus_access` | 0x19 | 总线访问 |
 | `bus_cycles` | 0x1d | 总线周期 |
-| `memory_error` | 0x1a | 内存本地错误（可纠正/不可纠正）——**SDC 硬件故障排查直接相关** |
+| `memory_error` | 0x1a | 内存本地错误（可纠正/不可纠正），**SDC 硬件故障排查直接相关** |
 | `dtlb_walk` | 0x34 | dTLB 页表遍历 |
 | `itlb_walk` | 0x35 | iTLB 页表遍历 |
 
@@ -139,7 +139,7 @@ watchpoint/breakpoint 至少各 1（寄存器读出值保守，见微架构文�
 | `hit_on_prf` | **0x6014** | 命中预取数据 |
 | `prf_req` | **0x6013** | LSU 发出的预取请求 |
 
-### 3.2 L1D cache / TLB（读写口径拆分——比架构事件细）
+### 3.2 L1D cache / TLB（读写口径拆分，比架构事件细）
 
 | 事件 | raw | 含义 |
 |---|---|---|
@@ -195,7 +195,7 @@ watchpoint/breakpoint 至少各 1（寄存器读出值保守，见微架构文�
 perf stat -a -e hisi_sccl1_l3c0/rd_cpipe/,hisi_sccl1_hha2/rx_ops_num/,hisi_sccl1_ddrc0/flux_rd/ ...
 ```
 
-⚠️ **普通用户在本机当前配置下打不开 uncore 事件**——详见 §5 的权限分析。事件表本身是完整的（sysfs + perf list 双源实测）。
+⚠️ **普通用户在本机当前配置下打不开 uncore 事件**（详见 §5 的权限分析）。事件表本身是完整的（sysfs + perf list 双源实测）。
 
 ### 4.1 L3C（L3 缓存控制器，每 die 8 实例 × 13 事件）
 
@@ -206,16 +206,16 @@ perf stat -a -e hisi_sccl1_l3c0/rd_cpipe/,hisi_sccl1_hha2/rx_ops_num/,hisi_sccl1
 | `rd_hit_cpipe` | 0x02 | 总读命中 |
 | `wr_hit_cpipe` | 0x03 | 总写命中 |
 | `victim_num` | 0x04 | victim（写回驱逐）数 |
-| `rd_spipe` | 0x20 | spipe 方向（ring 侧）读行——来自其他 CCL/远端 |
+| `rd_spipe` | 0x20 | spipe 方向（ring 侧）读行，来自其他 CCL/远端 |
 | `wr_spipe` | 0x21 | spipe 方向写行 |
 | `rd_hit_spipe` | 0x22 | spipe 读命中 |
 | `wr_hit_spipe` | 0x23 | spipe 写命中 |
-| `back_invalid` | 0x29 | **反向无效化操作数——核间一致性干扰的直接计数器** |
+| `back_invalid` | 0x29 | **反向无效化操作数，核间一致性干扰的直接计数器** |
 | `retry_cpu` | 0x40 | L3C 压制 CPU 操作的重试数 |
 | `retry_ring` | 0x41 | L3C 压制环网操作的重试数（**拥塞信号**） |
 | `prefetch_drop` | 0x42 | L3C 丢弃的预取数 |
 
-> cpipe/spipe 的语义：L3 tag 在 CPU 簇侧（华为独特设计），cpipe 是簇侧管道、spipe 是环网侧管道——见微架构文档 §3.5。
+> cpipe/spipe 的语义：L3 tag 在 CPU 簇侧（华为独特设计），cpipe 是簇侧管道、spipe 是环网侧管道（见微架构文档 §3.5）。
 
 ### 4.2 HHA（Hydra Home Agent，每 die 2 实例 × 26 事件）
 
@@ -299,11 +299,11 @@ exe_stall_cycle -> armv8_pmuv3_0/event=0x7001/
 exe_stall_cycle:u: 1,349,857,070
 ```
 
-（540M 周期中 1.35G 次发射不足——4 宽机器跑纯依赖链加法，每周期最多 1 条退休，符合预期。）
+（540M 周期中 1.35G 次发射不足：4 宽机器跑纯依赖链加法，每周期最多 1 条退休，符合预期。）
 
 ### 5.2 topdown 指标：不可用
 
-`perf stat -e topdown-fe-bound,...` 报 `Unable to find event`——v110 无 FEAT_PMUv3_METRIC，与 caps `slots=0` 一致。**前端/后端/坏推测的分解只能用 `stall_frontend`/`stall_backend`/`br_mis_pred` + `exe_stall_cycle` 组合近似**。（注意：旧版微架构文档 §5.2 提到 topdown L1 指标可用，本次实测不可用，以本文为准。）
+`perf stat -e topdown-fe-bound,...` 报 `Unable to find event`：v110 无 FEAT_PMUv3_METRIC，与 caps `slots=0` 一致。**前端/后端/坏推测的分解只能用 `stall_frontend`/`stall_backend`/`br_mis_pred` + `exe_stall_cycle` 组合近似**。（注意：旧版微架构文档 §5.2 提到 topdown L1 指标可用，本次实测不可用，以本文为准。）
 
 ### 5.3 Uncore 事件：驱动在、设备在，但普通用户打不开
 
@@ -317,7 +317,7 @@ $ perf stat -a -e hisi_sccl1_l3c0/rd_cpipe/ sleep 2
 strace 定位到根因链条：
 
 1. `perf_event_open(..., exclude_kernel=0)` → **EACCES**：`kernel.perf_event_paranoid=2` 禁止普通用户计数内核态；
-2. perf 自动重试加 `exclude_kernel=1` → **EINVAL**：HiSilicon uncore 驱动（`drivers/perf/hisilicon/hisi_uncore_pmu.c`，主线内核行为）**拒绝任何带 exclude_kernel/exclude_hv 的事件**——uncore 计数器本来就是系统级的，没有"内核态过滤"概念；
+2. perf 自动重试加 `exclude_kernel=1` → **EINVAL**：HiSilicon uncore 驱动（`drivers/perf/hisilicon/hisi_uncore_pmu.c`，主线内核行为）**拒绝任何带 exclude_kernel/exclude_hv 的事件**：uncore 计数器本来就是系统级的，没有"内核态过滤"概念；
 3. 两个方向都死 → perf 显示 `<not supported>`。
 
 **结论：uncore 事件需要 root 权限**（`sudo sysctl kernel.perf_event_paranoid=1` 后即可用，或直接以 root 运行 perf）。本账号（sdc，wheel 组）sudo 需密码，本会话未提权验证。旧版微架构文档 §5.3/§6 声称"uncore 全套可用"不准确，应读作"**全套已就绪，但需 root**"。
@@ -342,7 +342,7 @@ strace 定位到根因链条：
 
 配套约束（来自微架构文档，事件选型时必须记住）：
 
-1. L3 行 128 B 而 L1/L2 行 64 B——伪共享/对齐实验按 128 B 设计；
+1. L3 行 128 B 而 L1/L2 行 64 B，伪共享/对齐实验按 128 B 设计；
 2. L3 partition 模式默认开启，"私有 36 周期"只在近端 <4 MB 份额内成立，共享数据全容量高延迟；
 3. 绑核避开跨 socket（NUMA 距离 20/22）；
 4. node0/node2 无本地内存，node0 上的进程默认内存落在 node1/node3。

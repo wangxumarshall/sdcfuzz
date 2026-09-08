@@ -2,7 +2,7 @@
 
 这份文档总结了如何在基于 AArch64 (ARM64) 架构的物理机（如搭载华为鲲鹏 Kunpeng CPU 的 openEuler 机器）上，端到端解决依赖问题、编译构建、以及配合 Centipede 自动产生 SDC (Silent Data Corruption) 漏洞挖掘用例的完整闭环过程。
 
-本指南经过专门设计，**AI 可根据本文档所述步骤实现一键式自动复现**。
+本指南的步骤设计为可由 AI 按文档逐步自动复现。
 
 ---
 
@@ -71,7 +71,7 @@ sudo cp bazel-bin/tools/simple_fix_tool_main /usr/local/bin/
 ## 4. 自动化模糊测试与用例生成 (Automated Corpus Generation)
 
 此阶段需要配合 Centipede 模糊测试引擎与 Unicorn 硬件模拟代理。
-> **⚠️ 核心警告 (Prevent Hardware Crashes)**: 在拥有超多核 (如 128 核) 的服务器上，不要使用默认的 Bazel 满核并行编译或高并发跑 Fuzzing，否则极易触发内核 Machine Check Exceptions (MCE) 硬件过载从而导致物理重启。请严格遵守 `--jobs=32` 和 `-j=10` 的阈值。
+> **⚠️ 硬件保护警告 (Prevent Hardware Crashes)**: 在多核服务器（如 128 核）上，不要使用默认的 Bazel 满核并行编译或高并发 Fuzzing——会触发内核 Machine Check Exception (MCE)，机器被物理重启。请严格遵守 `--jobs=32`（编译）和 `-j=10`（Fuzzing）的上限。
 
 你可以将以下脚本作为一个 Shell 脚本运行（或 AI 一键执行），统一输出在 `~/wangxu/silifuzz/output` 目录下：
 
@@ -117,7 +117,7 @@ echo "✅ 自动化 SDC 用例生成闭环完成。"
 
 当步骤 4 成功产出 `runnable-corpus.*` 切片文件后，即可直接在真机上验证 SDC 缺陷探测能力。
 
-执行以下命令，Orchestrator 将接管所有 CPU 核心，长期循环向处理器投入生成的边界机器码。只要处理器的执行结果与预期不符，即立刻抛出 SDC 告警。
+执行以下命令，Orchestrator 会占用所有 CPU 核心，长期循环投放生成的边界机器码。处理器执行结果与预期不符时，即报出 SDC 告警。
 ```bash
 silifuzz_orchestrator_main --duration=24h \
      --runner=/usr/local/bin/reading_runner_main_nolibc \
